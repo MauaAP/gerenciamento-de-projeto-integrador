@@ -1,4 +1,4 @@
-import { ZodSchema } from "zod";
+import { ZodType } from "zod";
 import { BadRequestException } from "../helpers/exceptions";
 
 /**
@@ -8,10 +8,10 @@ import { BadRequestException } from "../helpers/exceptions";
  * @param body Corpo da requisição
  * @returns Os dados validados já tipados
  */
-export function parseBody<T>(schema: ZodSchema<T>, body: unknown): T {
+export function parseBody<T>(schema: ZodType<T, any, any>, body: unknown): T {
   const result = schema.safeParse(body);
   if (!result.success) {
-    const errorMessage = result.error.errors.map((err) => err.message).join(", ");
+    const errorMessage = result.error.errors.map((err: any) => err.message).join(", ");
     throw new BadRequestException(errorMessage);
   }
   return result.data;
