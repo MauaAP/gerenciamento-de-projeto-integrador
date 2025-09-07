@@ -1,4 +1,3 @@
-// app/shared/helpers/swagger_registry.ts
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 
 export const registry = new OpenAPIRegistry();
