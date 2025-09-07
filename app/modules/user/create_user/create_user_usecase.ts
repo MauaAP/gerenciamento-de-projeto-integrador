@@ -1,3 +1,4 @@
+import type { ROLE } from "app/shared/domain/enums/role";
 import { User } from "../../../shared/domain/entities/user";
 import type { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { Encrypt } from "../../../shared/helpers/encrpyt";
@@ -7,7 +8,7 @@ import { JWToken } from "../../../shared/helpers/jwtoken";
 export interface CreateUserDTO {
   name: string;
   email: string;
-  role: string;
+  role: ROLE;
   password: string;
 }
 
