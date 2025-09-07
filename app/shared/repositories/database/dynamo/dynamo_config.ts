@@ -1,6 +1,6 @@
 // Centralização de configuração do DynamoDB
 
-import { Env } from "app/env";
+import { Env } from "../../../../env";
 
 export const dynamoConfig = {
   tableName: Env.DYNAMO_USER_TABLE,
