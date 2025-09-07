@@ -4,6 +4,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { routes } from "./routes/routes";
 import { errorHandlerMiddleware } from "./shared/middleware/error_middleware";
+import swaggerUi from "swagger-ui-express";
+import { openApiDoc } from "./shared/helpers/swagger";
 
 dotenv.config();
 
@@ -26,6 +28,8 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 routes(app);
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiDoc));
 
 app.use(errorHandlerMiddleware);
 
