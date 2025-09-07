@@ -1,4 +1,4 @@
-import { ROLE } from "app/shared/domain/enums/role";
+import { ROLE } from "../../../shared/domain/enums/role";
 import { User } from "../../domain/entities/user";
 import type { IUserRepository } from "../../domain/interfaces/IUserRepository";
 
