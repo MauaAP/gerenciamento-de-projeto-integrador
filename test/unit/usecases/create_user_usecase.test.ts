@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { CreateUserUseCase } from "../../app/modules/user/create_user/create_user_usecase";
-import { UserRepoMock } from "../../app/shared/repositories/mocks/user_repository_mock";
+import { CreateUserUseCase } from "../../../app/modules/user/create_user/create_user_usecase";
+import { UserRepoMock } from "../../../app/shared/repositories/mocks/user_repository_mock";
 import { RequestCreateUserBuilder } from "../factories/user.factory";
-import { ROLE } from "../../app/shared/domain/enums/role";
-import { BadRequestException } from "../../app/shared/helpers/exceptions";
+import { ROLE } from "../../../app/shared/domain/enums/role";
+import { BadRequestException } from "../../../app/shared/helpers/exceptions";
 
 
 describe("CreateUserUseCase", () => {

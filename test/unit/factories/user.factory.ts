@@ -1,5 +1,5 @@
-import { User } from "../../app/shared/domain/entities/user";
-import { ROLE } from "../../app/shared/domain/enums/role";
+import { User } from "../../../app/shared/domain/entities/user";
+import { ROLE } from "../../../app/shared/domain/enums/role";
 
 export class UserBuilder {
   private _userId = "test-id";

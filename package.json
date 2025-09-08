@@ -17,6 +17,7 @@
   },
   "scripts": {
     "test": "vitest",
+    "test:debug": "node --inspect-brk node_modules/vitest/vitest.mjs run",
     "clean": "rm -rf dist",
     "build": "tsc",
     "start": "node dist/server.js",
