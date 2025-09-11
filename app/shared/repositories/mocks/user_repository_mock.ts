@@ -39,6 +39,21 @@ export class UserRepoMock implements IUserRepository {
       ROLE.STUDENT,
       "ProjetoDuCaralho123"
     ),
+    new User(
+      "c3d2e4f4-8b1a-47c2-88ff-d3e6d683b5e5",
+      "Ana Maria Braga",
+      "anamaria@maua.br",
+      ROLE.PROFESSOR,
+      "PanelaVelha2000"
+    ),
+    new User(
+      "d4e3f5g5-7h8i-49j0-99gg-h1i2j3k4l5m6",
+      "Bruce Wayne",
+      "bataman@maua.br",
+      ROLE.PROFESSOR,
+      "IamBatman2008"
+    )
+
   ];
 
   async createUser(user: User): Promise<User> {
@@ -56,5 +71,10 @@ export class UserRepoMock implements IUserRepository {
 
   async getUserByEmail(email: string): Promise<User | null> {
     return this.users.find((user) => user.email === email) || null;
+  }
+
+  async deleteUserById(userId: string): Promise<User> {
+    const index= this.users.findIndex(user => user.userId === userId)
+    return this.users.splice(index, 1)[0];
   }
 }

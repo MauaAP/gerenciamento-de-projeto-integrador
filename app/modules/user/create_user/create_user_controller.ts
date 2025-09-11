@@ -11,22 +11,33 @@ export class CreateUserController {
 
   async handler(req: Request, res: Response) {
     const userFromToken = req.user as UserFromToken;
+
     const allowedRoles = ["ADMIN", "MODERATOR"];
+
     if (!allowedRoles.includes(userFromToken.role)) {
       throw new ForbiddenException(
         "Você não tem permissão para acessar este recurso"
       );
     }
+
     const { name, email, role, password } = parseBody(
       RegisterUserRequest,
       req.body
     );
+
+    if (userFromToken.role === "MODERATOR" && role === "ADMIN"){
+      throw new ForbiddenException(
+        "Você não tem permissão para adicionar um admin"
+      );
+    }
+
     const { user, token } = await this.usecase.execute({
       name,
       email,
       role,
       password,
     });
+    
     const response = RegisterUserResponse.parse({
       message: "Usuário criado com sucesso",
       user: {
