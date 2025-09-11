@@ -15,6 +15,7 @@ export class Group {
         codSubj: string
         userIdList: string[],
         yearSem: number,
+        projectId: string,
         course: COURSE
     } {
         return {
@@ -22,6 +23,7 @@ export class Group {
             codSubj: this.codSubj,
             userIdList: this.userIdList,
             yearSem: this.yearSem,
+            projectId: this.projectId,
             course: this.course
         };
     }
@@ -31,8 +33,9 @@ export class Group {
         codSubj: string
         userIdList: string[],
         yearSem: number,
+        projectId: string,
         course: COURSE
     }) : Group {
-        return new Group(json.groupId, json.codSubj, json.userIdList, json.yearSem, json.course)
+        return new Group(json.groupId, json.codSubj, json.userIdList, json.yearSem, json.projectId ,json.course)
     }
 }

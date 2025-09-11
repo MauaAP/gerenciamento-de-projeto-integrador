@@ -52,7 +52,50 @@ export class UserRepoMock implements IUserRepository {
       "bataman@maua.br",
       ROLE.PROFESSOR,
       "IamBatman2008"
+    ),
+    new User(
+      "e5f4g6h6-6i7j-4k1l-88hh-i2j3k4l5m6n7",
+      "Peter Parker",
+      "spiderman@maua.br",
+      ROLE.STUDENT,
+      "Spiderman2002"
+    ),
+    new User(
+      "f6g5h7i7-5j6k-4l2m-77gg-h1i2j3k4l5m6",
+      "Clark Kent",
+      "superman@maua.br",
+      ROLE.STUDENT,
+      "Superman2001"
+    ),
+    new User(
+      "b7h6i8j8-6k7l-5m3n-88hh-i2j3k4l5m6n7",
+      "Diana Prince",
+      "wonder@maua.br",
+      ROLE.STUDENT,
+      "WonderWoman2003"
+    ),
+    new User(
+      "c8h7i9j9-7l8m-6n4o-99ii-j2k3l4m5n6o7",
+      "Barry Allen",
+      "",
+      ROLE.STUDENT,
+      "Flash2004"
+    ),
+    new User(
+      "d9i8j0k0-8m9n-7o5p-00jj-k3l4m5n6o7p8",
+      "Hal Jordan",
+      "green@maua.br",
+      ROLE.STUDENT,
+      "GreenLantern2005"
+    ),
+    new User(
+      "805c6a8a-450e-414f-a257-bc8979d31f34",
+      "Arthur Curry",
+      "aquaman@maua.br",
+      ROLE.STUDENT,
+      "Aquaman2007"
     )
+
 
   ];
 
@@ -74,7 +117,7 @@ export class UserRepoMock implements IUserRepository {
   }
 
   async deleteUserById(userId: string): Promise<User> {
-    const index= this.users.findIndex(user => user.userId === userId)
+    const index= this.users.findIndex((user) => user.userId === userId);
     return this.users.splice(index, 1)[0];
   }
 }

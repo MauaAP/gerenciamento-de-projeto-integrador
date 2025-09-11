@@ -1,30 +1,30 @@
 import exp from "constants";
 
 export enum SECTOR {
-    EDUCATIONAL= "EDUCATIONAL",
+    EDUCATIONAL= "EDUCACIONAL",
     GOVERNAMENTAL= "GOVERNAMENTAL",
     INDUSTRIAL= "INDUSTRIAL",
-    HEALTHCARE = "HEALTHCARE",
+    HEALTHCARE = "SAÚDE",
     ONG= "ONG",
-    ENVIRONMENTAL = "ENVIRONMENTAL",
-    FINANCIAL = "FINANCIAL"
+    ENVIRONMENTAL = "AMBIENTAL",
+    FINANCIAL = "FINANCEIRO"
 }
 
 export function toEnum(value: string): SECTOR {
     switch(value) {
-        case "EDUCATIONAL":
+        case "EDUCACIONAL":
             return SECTOR.EDUCATIONAL;
         case "GOVERNAMENTAL":
             return SECTOR.GOVERNAMENTAL;
         case "INDUSTRIAL":
             return SECTOR.INDUSTRIAL;
-        case "HEALTHCARE":
+        case "SAÚDE":
             return SECTOR.HEALTHCARE;
         case "ONG":
             return SECTOR.ONG;
-        case "ENVIRONMENTAL":
+        case "AMBIENTAL":
             return SECTOR.ENVIRONMENTAL;
-        case "FINANCIAL":
+        case "FINANCEIRO":
             return SECTOR.FINANCIAL;
         default:
             throw new Error("Invalid value");

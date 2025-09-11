@@ -10,7 +10,6 @@ export class Presentation {
         presentationId: string,
         date: number, //miliseconds
         groupId: string,
-        projectId: string,
         examinationBoartId: string
     } {
         return {
@@ -25,9 +24,8 @@ export class Presentation {
         presentationId: string;
         date: number; //miliseconds
         groupId: string;
-        projectId: string;
         examinationBoartId: string;
     }): Presentation {
-        return new Presentation(json.presentationId, json.date, json.groupId, json.projectId, json.examinationBoartId)
+        return new Presentation(json.presentationId, json.date, json.groupId, json.examinationBoartId)
     }
 }
