@@ -92,4 +92,16 @@ export class UserRepositoryDynamoDB implements IUserRepository {
     console.log(`[DynamoDB] Usuário atualizado: ${pk}`);
     return User.fromJson(updated);
   }
+
+  async deleteUserById(userId: string): Promise<User> {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const pk = getUserPK(user);
+    const sk = getUserSK();
+    await this.db.delete(pk, sk);
+    console.log(`[DynamoDB] Usuário deletado: ${pk}`);
+    return user;
+  }
 }
