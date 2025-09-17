@@ -2,8 +2,7 @@ import { ForbiddenException } from "app/shared/helpers/exceptions";
 import { UserFromToken } from "app/shared/middleware/jwt_middleware";
 import { Request, Response } from "express";
 import { GetAllUsersUseCase } from "./get_all_users_usecase";
-import { User } from "app/shared/domain/entities/user";
-import { RegisterGetAllUsersResponse } from "./get_all_users_schema";
+import { GetAllUsersResponse } from "./get_all_users_schema";
 
 export class GetAllUsersController {
     constructor(private readonly usecase: GetAllUsersUseCase) {}
@@ -21,10 +20,10 @@ export class GetAllUsersController {
 
         const userList= await this.usecase.execute();
 
-        const response= RegisterGetAllUsersResponse.parse({
+        const response= GetAllUsersResponse.parse({
             message: "Lista de Usuários retornado com sucesso",
             userList
         });
-        res.status(201).json(response)
+        res.status(200).json(response)
     }
 }

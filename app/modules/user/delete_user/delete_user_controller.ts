@@ -35,8 +35,8 @@ export class DeleteUserController {
         })
 
         const response = DeleteUserResponse.parse({
-            message: "Usuário deletado com sucesso",
+            message: "Usuário deletado com sucesso"
         });
-        res.status(201).json(response);
+        res.status(200).json(response);
     }
 }

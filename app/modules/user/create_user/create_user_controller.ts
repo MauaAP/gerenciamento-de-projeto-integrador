@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-
 import { parseBody } from "../../../shared/utils/parse_body";
 import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { ForbiddenException } from "../../../shared/helpers/exceptions";

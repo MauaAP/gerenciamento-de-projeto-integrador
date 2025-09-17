@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException } from "app/shared/helpers/exceptions";
+import { ForbiddenException } from "app/shared/helpers/exceptions";
 import { UserFromToken } from "app/shared/middleware/jwt_middleware";
 import { parseBody } from "app/shared/utils/parse_body";
 import { Request, Response } from "express";
@@ -45,6 +45,6 @@ export class GetUserController {
                 email: selectedUser.email,
             }
         });
-        res.status(201).json(response)
+        res.status(200).json(response)
     }
 }

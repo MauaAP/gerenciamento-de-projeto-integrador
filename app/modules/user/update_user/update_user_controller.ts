@@ -26,7 +26,7 @@ export class UpdateUserController{
 
         if (userFromToken.role === "MODERATOR" && role === "ADMIN"){
             throw new ForbiddenException(
-                "Você não tem permissão para alterar sua role para admin"
+                "Você não tem permissão para alterar uma role para admin"
             );
         }
 
@@ -49,6 +49,6 @@ export class UpdateUserController{
                 email: updateUser.email
             }
         })
-        res.status(201).json(response)
+        res.status(200).json(response)
     }
 }

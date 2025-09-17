@@ -21,7 +21,7 @@ export class DeleteUserUseCase{
         const deletedUser= await this.userRepository.deleteUserById(id)
 
         if (deletedUser === null) {
-            throw new BadRequestException("Usuário não esta no banco")
+            throw new NotFoundException("Usuário não esta no banco")
         }
 
         return deletedUser

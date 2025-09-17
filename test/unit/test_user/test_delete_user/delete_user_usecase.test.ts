@@ -1,5 +1,5 @@
 import { DeleteUserUseCase } from "app/modules/user/delete_user/delete_user_usecase";
-import { BadRequestException, ForbiddenException } from "app/shared/helpers/exceptions";
+import {ForbiddenException, NotFoundException } from "app/shared/helpers/exceptions";
 import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest";
 
@@ -22,8 +22,8 @@ describe("DeleteUserUsecase", () =>{
         expect(result.password).toBe("matue30")
     });
 
-    it("should throw BadRequestException if id doesnt's exist", async () =>{
-        await expect(usecase.execute({id: "7a181d51-4f96-4d97-81b9-16e08aa63776", isAdmin: true})).rejects.toThrow(BadRequestException);
+    it("should throw NotFoundException if id doesnt's exist", async () =>{
+        await expect(usecase.execute({id: "7a181d51-4f96-4d97-81b9-16e08aa63776", isAdmin: true})).rejects.toThrow(NotFoundException);
     });
 
     it("should throw ForbiddenException if trying to delete an admin without being an admin", async () =>{

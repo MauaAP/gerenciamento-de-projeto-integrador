@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { AuthUseCase } from "../../../app/modules/user/auth/auth_usecase";
-import { UserRepoMock } from "../../../app/shared/repositories/mocks/user_repository_mock";
-import { UserBuilder } from "../factories/user.factory";
-import { Encrypt } from "../../../app/shared/helpers/encrpyt";
-import { BadRequestException, ForbiddenException } from "../../../app/shared/helpers/exceptions";
-import { ROLE } from "../../../app/shared/domain/enums/role";
+import { AuthUseCase } from "../../../../app/modules/user/auth/auth_usecase";
+import { UserRepoMock } from "../../../../app/shared/repositories/mocks/user_repository_mock";
+import { UserBuilder } from "../../factories/user.factory";
+import { Encrypt } from "../../../../app/shared/helpers/encrpyt";
+import { BadRequestException, ForbiddenException } from "../../../../app/shared/helpers/exceptions";
+import { ROLE } from "../../../../app/shared/domain/enums/role";
 
 
 describe("AuthUseCase", () => {
