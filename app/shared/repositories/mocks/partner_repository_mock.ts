@@ -1,6 +1,6 @@
 import { SECTOR } from "../../../shared/domain/enums/sector";
 import { Partner } from "../../domain/entities/partner";
-import { IPartnerRepository } from "../../domain/interfaces/IPartnerRepository";
+import { IPartnerRepository, PartnerUpdateOptions } from "../../domain/interfaces/IPartnerRepository";
 
 export class PartnerRepoMock implements IPartnerRepository{
     private partners: Partner[] = [
@@ -59,7 +59,22 @@ export class PartnerRepoMock implements IPartnerRepository{
     }
 
     async deletePartnerById(partnerId: string): Promise<Partner | null> {
-        const index= this.partners.findIndex(partner => partner.partnerId === partnerId);
+        const index= this.partners.findIndex((partner) => partner.partnerId === partnerId);
+        if (index === -1) {
+            return null
+        }
         return this.partners.splice(index, 1)[0];
+    }
+
+    async updatePartner(partnerId: string, updateOptions: PartnerUpdateOptions): Promise<Partner | null> {
+        const partner= this.partners.find((partner) => partner.partnerId === partnerId) || null;
+
+        if(partner === null){
+            return null;
+        }
+
+        Object.assign(partner, updateOptions);
+
+        return partner
     }
 }

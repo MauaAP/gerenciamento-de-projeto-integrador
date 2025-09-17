@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-export const RegisterDeleteUserRequest= z.object({
+export const DeleteUserRequest= z.object({
     id: z.string().length(36, "O id deve conter 36 caractéres"),
 });
 
-export type RegisterUserDeleteRequest = z.infer<typeof RegisterDeleteUserRequest>
+export type DeleteUserRequest = z.infer<typeof DeleteUserRequest>
 
 const UserSchema = z.object({
   id: z.string(),
@@ -12,10 +12,8 @@ const UserSchema = z.object({
   email: z.string()
 });
 
-export const RegisterDeleteUserResponse = z.object({
-    message: z.string(),
-    deleted_user: UserSchema,
-    token: z.string()
+export const DeleteUserResponse = z.object({
+    message: z.string()
 });
 
-export type RegisterDeleteUserResponse = z.infer<typeof RegisterDeleteUserResponse>
+export type DeleteUserResponse = z.infer<typeof DeleteUserResponse>

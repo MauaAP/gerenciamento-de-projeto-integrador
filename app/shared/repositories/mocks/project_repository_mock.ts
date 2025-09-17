@@ -1,5 +1,5 @@
 import { Project } from "../../domain/entities/project";
-import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
+import { IProjectRepository, ProjectUpdateOptions } from "../../../shared/domain/interfaces/IProjectRepository";
 
 export class ProjectRepoMock implements IProjectRepository{
     private projects : Project[] = [
@@ -61,8 +61,23 @@ export class ProjectRepoMock implements IProjectRepository{
         return result.length > 0 ? result : null
     }
 
-    async deleteProjectById(projectId: string): Promise<Project> {
+    async deleteProjectById(projectId: string): Promise<Project | null> {
         const index= this.projects.findIndex((project) => project.projectId === projectId);
+        if (index === -1){
+            return null
+        }
         return this.projects.splice(index, 1)[0]
+    }
+
+    async updateProject(projectId: string, updateOptions: ProjectUpdateOptions): Promise<Project | null> {
+        const project= this.projects.find((project) => project.projectId === projectId) || null;
+
+        if(project === null){
+            return null;
+        }
+
+        Object.assign(project, updateOptions);
+
+        return project
     }
 }

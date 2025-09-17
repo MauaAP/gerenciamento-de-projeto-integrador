@@ -1,6 +1,6 @@
 import { ROLE } from "../../../shared/domain/enums/role";
 import { User } from "../../domain/entities/user";
-import type { IUserRepository } from "../../domain/interfaces/IUserRepository";
+import type { IUserRepository, UserUpdateOptions } from "../../domain/interfaces/IUserRepository";
 
 export class UserRepoMock implements IUserRepository {
   private users: User[] = [
@@ -19,25 +19,11 @@ export class UserRepoMock implements IUserRepository {
       "#Cabecada2006"
     ),
     new User(
-      "f7c9d1e1-9d23-4f6e-94e1-8f45b50f2389",
-      "Luke Skywalker",
-      "luke@tattoine.com.us",
-      ROLE.STUDENT,
-      "#Leia1234"
-    ),
-    new User(
       "a1c6d2e2-9b5a-45d0-98ef-cd25d582a2d3",
       "Roberto Carlos",
       "robertinho@globo.com.br",
       ROLE.PROFESSOR,
       "Perdeu-Perna1900"
-    ),
-    new User(
-      "b5c1d3e3-9c2b-46d1-97ee-c2d5d582a2d4",
-      "Nuncio Perrela",
-      "nunfio@maua.br",
-      ROLE.STUDENT,
-      "ProjetoDuCaralho123"
     ),
     new User(
       "c3d2e4f4-8b1a-47c2-88ff-d3e6d683b5e5",
@@ -52,6 +38,34 @@ export class UserRepoMock implements IUserRepository {
       "bataman@maua.br",
       ROLE.PROFESSOR,
       "IamBatman2008"
+    ),
+    new User(
+      "5157e667-0a2c-45fb-acd3-7a56063db9b1",
+      "Tony Stark",
+      "ironman@maua.br",
+      ROLE.PROFESSOR,
+      "IAmIronMan2009"
+    ),
+    new User(
+      "895c63c7-fb29-4c5d-8c63-a5302e3946e1",
+      "Steve Rogers",
+      "captainamerica@maua.br",
+      ROLE.PROFESSOR,
+      "ICanDoThisAllDay2011"
+    ),
+    new User(
+      "f7c9d1e1-9d23-4f6e-94e1-8f45b50f2389",
+      "Luke Skywalker",
+      "luke@tattoine.com.us",
+      ROLE.STUDENT,
+      "#Leia1234"
+    ),
+    new User(
+      "b5c1d3e3-9c2b-46d1-97ee-c2d5d582a2d4",
+      "Nuncio Perrela",
+      "nunfio@maua.br",
+      ROLE.STUDENT,
+      "ProjetoDuCaralho123"
     ),
     new User(
       "e5f4g6h6-6i7j-4k1l-88hh-i2j3k4l5m6n7",
@@ -96,7 +110,6 @@ export class UserRepoMock implements IUserRepository {
       "Aquaman2007"
     )
 
-
   ];
 
   async createUser(user: User): Promise<User> {
@@ -116,8 +129,23 @@ export class UserRepoMock implements IUserRepository {
     return this.users.find((user) => user.email === email) || null;
   }
 
-  async deleteUserById(userId: string): Promise<User> {
+  async deleteUserById(userId: string): Promise<User | null> {
     const index= this.users.findIndex((user) => user.userId === userId);
+    if (index === -1){
+      return null
+    }
     return this.users.splice(index, 1)[0];
+  }
+
+  async updateUser(userId: string, updateOptions: UserUpdateOptions): Promise<User | null> {
+      const user= this.users.find((user) => user.userId === userId) || null;
+
+      if(user === null){
+        return null;
+      }
+
+      Object.assign(user, updateOptions);
+
+      return user;
   }
 }

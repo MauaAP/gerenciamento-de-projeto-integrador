@@ -3,7 +3,7 @@ import { ForbiddenException } from "app/shared/helpers/exceptions";
 import { UserFromToken } from "app/shared/middleware/jwt_middleware";
 import { parseBody } from "app/shared/utils/parse_body";
 import { DeleteUserUseCase } from "./delete_user_usecase";
-import { RegisterDeleteUserRequest, RegisterDeleteUserResponse } from "./delete_user_schema";
+import { DeleteUserRequest, DeleteUserResponse } from "./delete_user_schema";
 import { Request, Response } from "express";
 
 export class DeleteUserController {
@@ -25,7 +25,7 @@ export class DeleteUserController {
         }
 
         const {id} = parseBody(
-            RegisterDeleteUserRequest,
+            DeleteUserRequest,
             req.body
         );
 
@@ -34,13 +34,8 @@ export class DeleteUserController {
             isAdmin
         })
 
-        const response = RegisterDeleteUserResponse.parse({
+        const response = DeleteUserResponse.parse({
             message: "Usuário deletado com sucesso",
-            deleted_user: {
-                id: deletedUser.userId,
-                name: deletedUser.name,
-                email: deletedUser.email,
-            }
         });
         res.status(201).json(response);
     }

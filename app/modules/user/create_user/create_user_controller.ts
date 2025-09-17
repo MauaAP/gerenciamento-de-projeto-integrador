@@ -10,7 +10,7 @@ export class CreateUserController {
   constructor(private readonly usecase: CreateUserUseCase) {}
 
   async handler(req: Request, res: Response) {
-    const userFromToken = req.user as UserFromToken;
+    const userFromToken= req.user as UserFromToken;
 
     const allowedRoles = ["ADMIN", "MODERATOR"];
 

@@ -1,5 +1,3 @@
-import exp from "constants";
-
 export enum SECTOR {
     EDUCATIONAL= "EDUCACIONAL",
     GOVERNAMENTAL= "GOVERNAMENTAL",

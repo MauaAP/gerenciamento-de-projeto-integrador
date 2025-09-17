@@ -1,9 +1,7 @@
 import { parseBody } from "app/shared/utils/parse_body";
 import { describe, expect, it } from "vitest";
-import { RegisterDeleteUserRequest} from "../../../app//modules/user/delete_user/delete_user_schema"
-import { assert } from "console";
+import { RegisterDeleteUserRequest} from "../../../app/modules/user/delete_user/delete_user_schema"
 import { BadRequestException } from "../../../app/shared/helpers/exceptions";
-import { rejects } from "assert";
 
 describe("DeleteUserSchema -Zod validation", () => {
 

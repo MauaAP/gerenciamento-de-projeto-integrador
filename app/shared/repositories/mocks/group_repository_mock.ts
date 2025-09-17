@@ -1,7 +1,6 @@
 import { Group } from "app/shared/domain/entities/group";
 import { COURSE } from "app/shared/domain/enums/course";
-import { GroupByfilter, IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
-import { g } from "vitest/dist/chunks/suite.B2jumIFP";
+import { GroupFilter, GroupUpdateOptions, IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
 
 export class GroupRepositoryMock implements IGroupRepository {
     private groups: Group[] = [
@@ -10,7 +9,7 @@ export class GroupRepositoryMock implements IGroupRepository {
             "TTI202",
             ["f7c9d1e1-9d23-4f6e-94e1-8f45b50f2389", "e5f4g6h6-6i7j-4k1l-88hh-i2j3k4l5m6n7", "f6g5h7i7-5j6k-4l2m-77gg-h1i2j3k4l5m6", "b5c1d3e3-9c2b-46d1-97ee-c2d5d582a2d4"],
             202501,
-            "",
+            "ab077c10-674c-4b88-b4c5-38cb35ea0ef6",
             COURSE.CIC
         ),
         new Group(
@@ -68,9 +67,9 @@ export class GroupRepositoryMock implements IGroupRepository {
         return this.groups.find((group) => group.groupId === group_id) || null;
     }
 
-    async getGroupByfilter(filter: GroupByfilter) : Promise<Group[] | null> {
+    async getGroupByFilter(filter: GroupFilter) : Promise<Group[] | null> {
         const result= this.groups.filter((group) => 
-            (!filter.userId||group.userIdList.includes(filter.userId)) &&
+            (!filter.userId || group.userIdList.includes(filter.userId)) &&
             (!filter.codSubj || group.codSubj === filter.codSubj) && 
             (!filter.yearSem || group.yearSem === filter.yearSem) && 
             (!filter.projectId || group.projectId === filter.projectId) && 
@@ -80,5 +79,23 @@ export class GroupRepositoryMock implements IGroupRepository {
     }
     // comentar com o luca que aqui caso nao seja passado nenhum filtro, retorna todos os grupos, sugerir remover o metodo fetchGroup e usar esse metodo para isso
 
-    
+    async deleteGroup(groupId: string): Promise<Group | null> {
+        const index= this.groups.findIndex((group) => group.groupId === groupId);
+
+        if (index === -1) return null;
+
+        return this.groups.splice(index, 1)[0];
+    }
+
+    async updateGroup(groupId: string, updateOptions: GroupUpdateOptions): Promise<Group | null> {
+        const group= this.groups.find((group) => group.groupId === groupId) || null;
+
+        if(group === null){
+            return null;
+        }
+
+        Object.assign(group, updateOptions);
+
+        return group
+    }
 }
