@@ -6,6 +6,7 @@ import type { IUserRepository } from "../domain/interfaces/IUserRepository";
 import { dynamoConfig } from "./database/dynamo/dynamo_config";
 import { IPartnerRepository } from "../domain/interfaces/IPartnerRepository";
 import { PartnerRepoMock } from "./mocks/partner_repository_mock";
+import { PartnerRepositoryDynamoDB } from "./database/dynamo/partner_repository_dynamo";
 
 export class UserRepository {
   public userRepo: IUserRepository;
