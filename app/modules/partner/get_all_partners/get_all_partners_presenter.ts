@@ -1,7 +1,7 @@
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
 import express, { Request, Response } from "express";
 import { GetAllPartnersUseCase } from "./get_all_partners_usecase";
-import { PartnerRepository } from "app/shared/repositories/repository";
+import { PartnerRepository } from "../../../shared/repositories/repository";
 import { GetAllPartnersController } from "./get_all_partners_controller";
 
 const router= express.Router();

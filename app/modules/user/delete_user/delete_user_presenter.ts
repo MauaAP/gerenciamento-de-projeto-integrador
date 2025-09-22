@@ -1,7 +1,7 @@
-import { UserRepository } from "app/shared/repositories/repository";
+import { UserRepository } from "../../../shared/repositories/repository";
 import { DeleteUserUseCase } from "./delete_user_usecase";
 import { DeleteUserController } from "./delete_user_controller";
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
 import express, { Request, Response } from "express";
 
 const router= express.Router()

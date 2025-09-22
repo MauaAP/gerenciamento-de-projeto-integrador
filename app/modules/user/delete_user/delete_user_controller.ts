@@ -1,7 +1,7 @@
 
-import { ForbiddenException } from "app/shared/helpers/exceptions";
-import { UserFromToken } from "app/shared/middleware/jwt_middleware";
-import { parseBody } from "app/shared/utils/parse_body";
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
+import { parseBody } from "../../../shared/utils/parse_body";
 import { DeleteUserUseCase } from "./delete_user_usecase";
 import { DeleteUserRequest, DeleteUserResponse } from "./delete_user_schema";
 import { Request, Response } from "express";

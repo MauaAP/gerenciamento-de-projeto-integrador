@@ -1,6 +1,6 @@
-import { UpdateUserUseCase } from "app/modules/user/update_user/update_user_usecase"
-import { NotFoundException } from "app/shared/helpers/exceptions"
-import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock"
+import { UpdateUserUseCase } from "../../../modules/user/update_user/update_user_usecase"
+import { NotFoundException } from "../../../shared/helpers/exceptions"
+import { UserRepoMock } from "../../../shared/repositories/mocks/user_repository_mock"
 import { describe, it, expect, beforeEach } from "vitest"
 
 describe("UpdateUserUsecase", () => {

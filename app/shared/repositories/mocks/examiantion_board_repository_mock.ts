@@ -1,5 +1,5 @@
-import { ExaminationBoard } from "app/shared/domain/entities/examination_board";
-import { IExaminationBoardRepository } from "app/shared/domain/interfaces/IExaminationBoardRepository";
+import { ExaminationBoard } from "../../../shared/domain/entities/examination_board";
+import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository";
 
 export class ExaminationBoardRepositoryMock implements IExaminationBoardRepository {
     private examinationBoards: ExaminationBoard [] = [

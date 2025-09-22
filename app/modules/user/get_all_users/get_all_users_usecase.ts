@@ -1,5 +1,5 @@
-import { User } from "app/shared/domain/entities/user";
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
+import { User } from "../../../shared/domain/entities/user";
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 
 export class GetAllUsersUseCase {
     constructor(private readonly userRepository: IUserRepository) {}

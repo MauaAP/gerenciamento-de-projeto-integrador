@@ -1,6 +1,6 @@
-import { User } from "app/shared/domain/entities/user";
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
-import { ForbiddenException, NotFoundException } from "app/shared/helpers/exceptions";
+import { User } from "../../../shared/domain/entities/user";
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
+import { ForbiddenException, NotFoundException } from "../../../shared/helpers/exceptions";
 export interface GetUserDTO {
   id?: string,
   email?: string,

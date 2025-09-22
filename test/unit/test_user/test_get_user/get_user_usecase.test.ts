@@ -1,5 +1,5 @@
-import { GetUserUseCase } from "app/modules/user/get_user/get_user_usecase"
-import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock"
+import { GetUserUseCase } from "../../../modules/user/get_user/get_user_usecase"
+import { UserRepoMock } from "../../../shared/repositories/mocks/user_repository_mock"
 import { describe, it, expect, beforeEach } from "vitest"
 
 describe("GetUserUsecase", () => {

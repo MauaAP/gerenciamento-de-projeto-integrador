@@ -1,8 +1,8 @@
-import { PartnerRepository } from "app/shared/repositories/repository";
+import { PartnerRepository } from "../../../shared/repositories/repository";
 import express, { Request, Response } from "express";
 import { CreatePartnerUseCase } from "./create_partner_usecase";
 import { CreatePartnerController } from "./create_partner_controller";
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
 
 const router= express.Router();
 const repository= new PartnerRepository();

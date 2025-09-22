@@ -1,6 +1,6 @@
-import type { IPartnerRepository, PartnerUpdateOptions } from "app/shared/domain/interfaces/IPartnerRepository";
+import type { IPartnerRepository, PartnerUpdateOptions } from "../../../../shared/domain/interfaces/IPartnerRepository";
 import type { DynamoDBResources } from "./dynamo_datasource";
-import type { Partner } from "app/shared/domain/entities/partner";
+import type { Partner } from "../../../../shared/domain/entities/partner";
 
 export class PartnerRepositoryDynamoDB implements IPartnerRepository {
   private db: DynamoDBResources;

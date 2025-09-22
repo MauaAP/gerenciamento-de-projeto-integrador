@@ -1,6 +1,6 @@
-import { DeleteUserUseCase } from "app/modules/user/delete_user/delete_user_usecase";
-import {ForbiddenException, NotFoundException } from "app/shared/helpers/exceptions";
-import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock";
+import { DeleteUserUseCase } from "../../../modules/user/delete_user/delete_user_usecase";
+import {ForbiddenException, NotFoundException } from "../../../shared/helpers/exceptions";
+import { UserRepoMock } from "../../../shared/repositories/mocks/user_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest";
 
 describe("DeleteUserUsecase", () =>{

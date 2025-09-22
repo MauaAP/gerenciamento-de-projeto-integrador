@@ -1,8 +1,8 @@
-import { UserRepository } from "app/shared/repositories/repository";
+import { UserRepository } from "../../../shared/repositories/repository";
 import express, { Request, Response } from "express";
 import { GetAllUsersUseCase } from "./get_all_users_usecase";
 import { GetAllUsersController } from "./get_all_users_controller";
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
 
 const router= express.Router();
 const repository= new UserRepository(); 

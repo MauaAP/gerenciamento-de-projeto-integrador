@@ -1,6 +1,6 @@
-import { ForbiddenException } from "app/shared/helpers/exceptions";
-import { UserFromToken } from "app/shared/middleware/jwt_middleware";
-import { parseBody } from "app/shared/utils/parse_body";
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
+import { parseBody } from "../../../shared/utils/parse_body";
 import { Request, Response } from "express";
 import { GetPartnerRequest, GetPartnerResponse } from "./get_partner_schema";
 import { GetPartnerUseCase } from "./get_partner_usecase";

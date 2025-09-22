@@ -1,6 +1,6 @@
-import { User } from "app/shared/domain/entities/user";
-import { IUserRepository, UserUpdateOptions } from "app/shared/domain/interfaces/IUserRepository";
-import {NotFoundException } from "app/shared/helpers/exceptions";
+import { User } from "../../../shared/domain/entities/user";
+import { IUserRepository, UserUpdateOptions } from "../../../shared/domain/interfaces/IUserRepository";
+import {NotFoundException } from "../../../shared/helpers/exceptions";
 import { Encrypt } from "../../../shared/helpers/encrpyt";
 
 export interface UpdateUserDTO {

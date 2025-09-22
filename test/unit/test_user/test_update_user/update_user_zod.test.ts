@@ -1,5 +1,5 @@
-import { UpdateUserRequest } from "app/modules/user/update_user/update_user_schema";
-import { parseBody } from "app/shared/utils/parse_body";
+import { UpdateUserRequest } from "../../../modules/user/update_user/update_user_schema";
+import { parseBody } from "../../../shared/utils/parse_body";
 import { describe, expect, it } from "vitest";
 
 describe("UpdateUserSchema -Zod validation", () => {

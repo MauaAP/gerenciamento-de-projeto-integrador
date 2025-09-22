@@ -1,4 +1,4 @@
-import { ROLE } from "app/shared/domain/enums/role";
+import { ROLE } from "../../../shared/domain/enums/role";
 import { z } from "zod";
 
 export const UpdateUserRequest= z.object({

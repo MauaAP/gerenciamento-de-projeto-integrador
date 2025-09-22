@@ -1,6 +1,6 @@
-import { Group } from "app/shared/domain/entities/group";
-import { COURSE } from "app/shared/domain/enums/course";
-import { GroupFilter, GroupUpdateOptions, IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
+import { Group } from "../../../shared/domain/entities/group";
+import { COURSE } from "../../../shared/domain/enums/course";
+import { GroupFilter, GroupUpdateOptions, IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
 
 export class GroupRepositoryMock implements IGroupRepository {
     private groups: Group[] = [

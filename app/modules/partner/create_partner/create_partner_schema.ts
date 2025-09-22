@@ -1,4 +1,4 @@
-import { SECTOR } from "app/shared/domain/enums/sector";
+import { SECTOR } from "../../../shared/domain/enums/sector";
 import { z } from "zod";
 
 export const RegisterPartnerRequest = z.object({

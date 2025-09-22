@@ -1,5 +1,5 @@
-import { Partner } from "app/shared/domain/entities/partner";
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
+import { Partner } from "../../../shared/domain/entities/partner";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
 
 export class GetAllPartnersUseCase {
     constructor(private readonly partnerRepository: IPartnerRepository) {}

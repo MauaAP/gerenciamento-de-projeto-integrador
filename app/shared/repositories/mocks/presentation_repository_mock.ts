@@ -1,5 +1,5 @@
-import { Presentation } from "app/shared/domain/entities/presentation";
-import { IPresentationRepository, PresentationFilter, PresentationUpdateOptions } from "app/shared/domain/interfaces/IPresentationRepository";
+import { Presentation } from "../../../shared/domain/entities/presentation";
+import { IPresentationRepository, PresentationFilter, PresentationUpdateOptions } from "../../../shared/domain/interfaces/IPresentationRepository";
 
 export class PresentationRepositoryMock implements IPresentationRepository {
     private presentations: Presentation[] = [

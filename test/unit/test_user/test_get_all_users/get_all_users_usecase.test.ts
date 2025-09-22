@@ -1,5 +1,5 @@
-import { GetAllUsersUseCase } from "app/modules/user/get_all_users/get_all_users_usecase";
-import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock";
+import { GetAllUsersUseCase } from "../../../modules/user/get_all_users/get_all_users_usecase";
+import { UserRepoMock } from "../../../shared/repositories/mocks/user_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest"
 
 describe("GetAllUsersUsecase", () => {

@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
 import { AuthController } from "./auth_controller";
 import { AuthUseCase } from "./auth_usecase";
-import { Repository } from "../../../shared/repositories/repository";
+import { UserRepository } from "../../../shared/repositories/repository";
 
 const router = express.Router();
-const repository = new Repository();
+const repository = new UserRepository();
 const authUsecase = new AuthUseCase(repository.userRepo);
 const authController = new AuthController(authUsecase);
 

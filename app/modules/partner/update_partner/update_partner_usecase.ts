@@ -1,6 +1,6 @@
-import { Partner } from "app/shared/domain/entities/partner";
-import { IPartnerRepository, PartnerUpdateOptions } from "app/shared/domain/interfaces/IPartnerRepository";
-import { NotFoundException } from "app/shared/helpers/exceptions";
+import { Partner } from "../../../shared/domain/entities/partner";
+import { IPartnerRepository, PartnerUpdateOptions } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { NotFoundException } from "../../../shared/helpers/exceptions";
 
 export interface UpdatePartnerDTO {
     id: string;

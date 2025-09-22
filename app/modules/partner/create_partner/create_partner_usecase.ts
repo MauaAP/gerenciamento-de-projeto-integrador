@@ -1,7 +1,7 @@
-import { Partner } from "app/shared/domain/entities/partner";
-import { SECTOR } from "app/shared/domain/enums/sector";
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
-import { BadRequestException } from "app/shared/helpers/exceptions";
+import { Partner } from "../../../shared/domain/entities/partner";
+import { SECTOR } from "../../../shared/domain/enums/sector";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { BadRequestException } from "../../../shared/helpers/exceptions";
 export interface CreatePartnerDTO {
     name: string,
     sector: SECTOR

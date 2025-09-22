@@ -1,5 +1,5 @@
-import { GetUserRequest } from "app/modules/user/get_user/get_user_schema";
-import { parseBody } from "app/shared/utils/parse_body";
+import { GetUserRequest } from "../../../modules/user/get_user/get_user_schema";
+import { parseBody } from "../../../shared/utils/parse_body";
 import { describe, expect, it } from "vitest";
 
 describe("GetUserSchema -Zod validation", () => {
