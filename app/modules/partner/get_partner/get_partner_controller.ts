@@ -31,7 +31,7 @@ export class GetPartnerController {
 
         const response= GetPartnerResponse.parse({
             message: "Parceiro retornado com sucesso",
-            user: {
+            partner: {
                 id: selectedPartner.partnerId,
                 name: selectedPartner.name,
                 sector: selectedPartner.sector
