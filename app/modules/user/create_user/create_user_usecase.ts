@@ -25,7 +25,7 @@ export class CreateUserUseCase {
     const userId = crypto.randomUUID();
     const user = new User(userId, name, email, role, hashedPassword);
     await this.userRepository.createUser(user);
-    const token = JWToken.encode(user.userId);
+    const token = JWToken.encode(user.userId, user.role);
     return { user, token };
   }
 }
