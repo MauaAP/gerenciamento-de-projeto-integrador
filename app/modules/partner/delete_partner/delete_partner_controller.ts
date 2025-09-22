@@ -11,7 +11,7 @@ export class DeletePartnerController {
     async handler(req: Request, res: Response) {
         const userFromToken= req.user as UserFromToken;
 
-        const allowedRoles= ["ADIMIN", "MODERATOR"];
+        const allowedRoles= ["ADMIN", "MODERATOR"];
 
         if (!allowedRoles.includes(userFromToken.role)) {
             throw new ForbiddenException(
