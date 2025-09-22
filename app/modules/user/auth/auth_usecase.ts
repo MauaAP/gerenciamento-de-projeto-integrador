@@ -20,7 +20,7 @@ export class AuthUseCase {
     if (!valid) {
       throw new ForbiddenException("Usuário ou senha inválidos");
     }
-    const token = JWToken.encode(user.userId);
+    const token = JWToken.encode(user.userId, user.role);
     return {
       message: "Login realizado com sucesso",
       token,
