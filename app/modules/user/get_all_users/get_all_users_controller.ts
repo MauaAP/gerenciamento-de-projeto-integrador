@@ -3,6 +3,7 @@ import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { Request, Response } from "express";
 import { GetAllUsersUseCase } from "./get_all_users_usecase";
 import { GetAllUsersResponse } from "./get_all_users_schema";
+import type { User } from "app/shared/domain/entities/user";
 
 export class GetAllUsersController {
     constructor(private readonly usecase: GetAllUsersUseCase) {}
@@ -20,9 +21,13 @@ export class GetAllUsersController {
 
         const userList= await this.usecase.execute();
 
-        const response= GetAllUsersResponse.parse({
+        const response = GetAllUsersResponse.parse({
             message: "Lista de Usuários retornado com sucesso",
-            userList
+            userList: userList.map((user: User) => ({
+            id: user.userId,
+            name: user.name,
+            email: user.email,
+            })),
         });
         res.status(200).json(response)
     }
