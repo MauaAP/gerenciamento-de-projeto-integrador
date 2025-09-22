@@ -13,7 +13,7 @@ export class Project {
         extensionHours?: number
     } {
         return {
-            projectId: this.partnerId,
+            projectId: this.projectId,
             title: this.title,
             partnerId: this.partnerId,
             extensionHours: this.extensionHours
