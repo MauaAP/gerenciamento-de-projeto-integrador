@@ -25,7 +25,7 @@ export const routes = (app: Express) => {
   app.use("/api", CreateUserPresenter);
   app.use("/api", AuthPresenter);
   // app.use("/api", DeleteUserPresenter);
-  // app.use("/api", GetAllUsersPresenter);
+  app.use("/api", GetAllUsersPresenter);
   // app.use("/api", GetUserPresenter);
   // app.use("/api", UpdateUserPresenter);
 
