@@ -1,6 +1,9 @@
 import { DynamoDBResources } from "./dynamo_datasource";
 import { User } from "../../../domain/entities/user";
-import type { IUserRepository, UserUpdateOptions } from "../../../domain/interfaces/IUserRepository";
+import type {
+  IUserRepository,
+  UserUpdateOptions,
+} from "../../../domain/interfaces/IUserRepository";
 
 function getUserPK(user: User): string {
   if (user.role === "STUDENT") return `STUDENT#${user.userId}`;
@@ -40,15 +43,13 @@ export class UserRepositoryDynamoDB implements IUserRepository {
   }
 
   async fetchUsers(): Promise<User[]> {
-    const roles = ["STUDENT", "PROFESSOR", "MODERATOR", "ADMIN"];
-    let allUsers: User[] = [];
-    for (const role of roles) {
-      // queryAll precisa suportar begins_with
-      const items = await this.db.queryAll(`${role}#`, undefined);
-      allUsers = allUsers.concat(items.map(User.fromJson));
-    }
-    console.log(`[DynamoDB] Busca de usuários: ${allUsers.length} encontrados`);
-    return allUsers;
+    const items = await this.db.scanAll({
+      FilterExpression: "#sk = :profile",
+      ExpressionAttributeNames: { "#sk": "SK" },
+      ExpressionAttributeValues: { ":profile": "PROFILE" },
+    });
+    console.log(`[DynamoDB] FetchUsers retornou ${items.length} itens`);
+    return items.map(User.fromJson);
   }
 
   async getUserById(userId: string): Promise<User | null> {
@@ -74,11 +75,18 @@ export class UserRepositoryDynamoDB implements IUserRepository {
       "GSI_Email",
       "email"
     );
-    console.log(`[DynamoDB] Busca por email: ${email} - ${items.length > 0 ? "Encontrado" : "Não encontrado"}`);
+    console.log(
+      `[DynamoDB] Busca por email: ${email} - ${
+        items.length > 0 ? "Encontrado" : "Não encontrado"
+      }`
+    );
     return items.length > 0 ? User.fromJson(items[0]) : null;
   }
 
-  async updateUser(userId: string, updateOptions: UserUpdateOptions): Promise<User | null> {
+  async updateUser(
+    userId: string,
+    updateOptions: UserUpdateOptions
+  ): Promise<User | null> {
     const current = await this.getUserById(userId);
     if (!current) {
       return null;
