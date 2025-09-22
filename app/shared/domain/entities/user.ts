@@ -6,7 +6,7 @@ export class User {
     public name: string,
     public email: string,
     public role: ROLE,
-    public password: string 
+    public password: string
   ) {}
 
   toJson(): {
@@ -31,6 +31,8 @@ export class User {
     email: string;
     role: ROLE;
     password: string;
+    PK?: string;
+    SK?: string;
   }): User {
     return new User(json.userId, json.name, json.email, json.role, json.password);
   }

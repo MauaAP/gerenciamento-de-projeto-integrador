@@ -1,6 +1,6 @@
 import { DynamoDBResources } from "./dynamo_datasource";
 import { User } from "../../../domain/entities/user";
-import type { IUserRepository } from "../../../domain/interfaces/IUserRepository";
+import type { IUserRepository, UserUpdateOptions } from "../../../domain/interfaces/IUserRepository";
 
 function getUserPK(user: User): string {
   if (user.role === "STUDENT") return `STUDENT#${user.userId}`;
@@ -27,7 +27,14 @@ export class UserRepositoryDynamoDB implements IUserRepository {
     }
     const pk = getUserPK(user);
     const sk = getUserSK();
-    await this.db.put(user.toJson(), pk, sk);
+
+    const item = {
+      PK: pk,
+      SK: sk,
+      ...user.toJson(), // contém userId, name, email, role, password
+    };
+
+    await this.db.put(item, pk, sk);
     console.log(`[DynamoDB] Usuário criado: ${pk} - ${user.email}`);
     return user;
   }
@@ -36,6 +43,7 @@ export class UserRepositoryDynamoDB implements IUserRepository {
     const roles = ["STUDENT", "PROFESSOR", "MODERATOR", "ADMIN"];
     let allUsers: User[] = [];
     for (const role of roles) {
+      // queryAll precisa suportar begins_with
       const items = await this.db.queryAll(`${role}#`, undefined);
       allUsers = allUsers.concat(items.map(User.fromJson));
     }
@@ -59,6 +67,7 @@ export class UserRepositoryDynamoDB implements IUserRepository {
   }
 
   async getUserByEmail(email: string): Promise<User | null> {
+    // Necessário criar GSI_Email na tabela
     const items = await this.db.queryAll(
       email,
       undefined,
@@ -69,27 +78,32 @@ export class UserRepositoryDynamoDB implements IUserRepository {
     return items.length > 0 ? User.fromJson(items[0]) : null;
   }
 
-  async deleteUser(userId: string): Promise<void> {
-    const roles = ["STUDENT", "PROFESSOR", "MODERATOR", "ADMIN"];
-    for (const role of roles) {
-      const pk = `${role}#${userId}`;
-      const sk = getUserSK();
-      await this.db.delete(pk, sk);
-      console.log(`[DynamoDB] Usuário deletado: ${pk}`);
+  async updateUser(userId: string, updateOptions: UserUpdateOptions): Promise<User | null> {
+    const current = await this.getUserById(userId);
+    if (!current) {
+      return null;
     }
-  }
-
-  async updateUser(user: Partial<User> & { userId: string; role: string }): Promise<User> {
-    const current = await this.getUserById(user.userId);
-    if (!current) throw new Error("User not found");
     const pk = getUserPK(current);
     const sk = getUserSK();
     const updateDict: Partial<User> = {};
-    if (user.name) updateDict.name = user.name;
-    if (user.email) updateDict.email = user.email;
-    if (user.password) updateDict.password = user.password;
+    if (updateOptions.name) updateDict.name = updateOptions.name;
+    if (updateOptions.email) updateDict.email = updateOptions.email;
+    if (updateOptions.password) updateDict.password = updateOptions.password;
+
     const updated = await this.db.update(pk, sk, updateDict);
     console.log(`[DynamoDB] Usuário atualizado: ${pk}`);
     return User.fromJson(updated);
+  }
+
+  async deleteUserById(userId: string): Promise<User> {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const pk = getUserPK(user);
+    const sk = getUserSK();
+    await this.db.delete(pk, sk);
+    console.log(`[DynamoDB] Usuário deletado: ${pk}`);
+    return user;
   }
 }

@@ -8,10 +8,17 @@ export function errorHandlerMiddleware(
   next: NextFunction
 ) {
   if (err instanceof BaseApplicationException) {
-    // Se a exception tem statusCode, use, senão 500
-    const status = (err as any).statusCode || 500;
+    const status = err.statusCode || 500;
+
+    // Se a exceção tiver detalhes (ex: lista de erros do Zod)
+    if (err.details) {
+      return res.status(status).json({ errors: err.details });
+    }
+
+    // Senão, devolve apenas a mensagem
     return res.status(status).json({ error: err.message });
   }
-  // Erro desconhecido
+
+  // Erro não tratado
   return res.status(500).json({ error: "Erro interno do servidor" });
 }

@@ -1,4 +1,4 @@
-import type { ROLE } from "app/shared/domain/enums/role";
+import type { ROLE } from "../../../shared/domain/enums/role";
 import { User } from "../../../shared/domain/entities/user";
 import type { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { Encrypt } from "../../../shared/helpers/encrpyt";
