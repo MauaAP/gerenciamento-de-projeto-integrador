@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const GetUserRequest = z.object({
-    id: z.string().length(36, "O id deve conter 36 caractéres").optional(),
+    id: z.string().length(36, "O id deve conter 36 caracteres").optional(),
     email: z.string().email("Endereço de e-mail inválido").optional()
 }).refine(
     (data) => (data.id !== undefined && data.email === undefined) || (data.id === undefined && data.email !== undefined),

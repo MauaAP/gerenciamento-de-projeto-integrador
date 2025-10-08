@@ -13,7 +13,7 @@ export class UpdatePartnerUseCase {
         const updatePartner= await this.partnerRepository.updatePartner(id, updateOptions)
 
         if (updatePartner === null){
-            throw new NotFoundException("Usuário não esta no banco")
+            throw new NotFoundException("Usuário não está no banco")
         }
 
         return updatePartner

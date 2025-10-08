@@ -4,6 +4,6 @@ import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRe
 export class GetAllPartnersUseCase {
     constructor(private readonly partnerRepository: IPartnerRepository) {}
     async execute(): Promise<Partner[]>{
-        return this.partnerRepository.fetchPartners();
+        return await this.partnerRepository.fetchPartners();
     }
 }

@@ -2,10 +2,10 @@ import { ROLE } from "../../../shared/domain/enums/role";
 import { z } from "zod";
 
 export const UpdateUserRequest= z.object({
-    id: z.string().length(36, "O id deve conter 36 caractéres"),
-    name: z.string().min(1, "O nome deve ter pelo menos um caracter").optional(),
+    id: z.string({message: "Id do parceiro é obrigatório"}).length(36, "O id deve conter 36 caracteres"),
+    name: z.string({message: "Nome deve ter pelo menos um caracter"}).optional(),
     email: z.string().email("Endereço de e-mail inválido").optional(),
-    role: z.nativeEnum(ROLE).optional(),
+    role: z.nativeEnum(ROLE , {errorMap: () => ({message: "Setor selecionado não está entre os disponíveis"})}).optional(),
     password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres").optional()
 }).refine(
   (data) => (data.name !== undefined || data.email !== undefined || data.role !== undefined || data.password !== undefined),

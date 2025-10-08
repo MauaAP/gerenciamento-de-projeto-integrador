@@ -11,13 +11,6 @@ export interface UpdateUserDTO {
 export class UpdateUserUseCase {
     constructor(private readonly userRepository: IUserRepository) {}
     async execute({id, updateOptions}: UpdateUserDTO): Promise<User> {
-        // const existingUser = await this.userRepository.getUserById(id);
-        // if (!existingUser) {
-        //     throw new NotFoundException("Usuário não esta no banco")
-        // }
-        
-        // conversar com o luca de remover essa parte
-
         if (updateOptions.password){
             updateOptions.password= await Encrypt.hashPassword(updateOptions.password)
         }
@@ -25,7 +18,7 @@ export class UpdateUserUseCase {
         const updatedUser= await this.userRepository.updateUser(id, updateOptions)
 
         if (updatedUser === null){
-            throw new NotFoundException("Usuário não esta no banco")
+            throw new NotFoundException("Usuário não está no banco")
         }
 
         return updatedUser

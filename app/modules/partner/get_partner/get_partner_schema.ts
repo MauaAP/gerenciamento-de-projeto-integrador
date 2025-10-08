@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const GetPartnerRequest= z.object({
-    id: z.string().length(36, "O id deve conter 36 caractéres").optional(),
-    name: z.string().min(1, "O nome deve ter pelo menos um caracter").optional()
+    id: z.string().length(36, "O id deve conter 36 caracteres").optional(),
+    name: z.string({message: "Nome deve ter pelo menos um caracter"}).optional()
 }).refine(
     (data) => (data.id !== undefined && data.name === undefined) || (data.id === undefined && data.name !== undefined),
     {

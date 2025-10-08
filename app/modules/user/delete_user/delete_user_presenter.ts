@@ -6,8 +6,8 @@ import express, { Request, Response } from "express";
 
 const router= express.Router()
 const repository = new UserRepository();
-const deleteUserUseCase= new DeleteUserUseCase(repository.userRepo)
-const deleteUserController= new DeleteUserController(deleteUserUseCase)
+const deleteUserUseCase= new DeleteUserUseCase(repository.userRepo);
+const deleteUserController= new DeleteUserController(deleteUserUseCase);
 
 router.delete("/user", authenticateToken, async(req: Request, res: Response) =>{
     await deleteUserController.handler(req, res)

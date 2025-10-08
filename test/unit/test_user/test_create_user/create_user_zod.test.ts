@@ -1,12 +1,8 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { CreateUserUseCase } from "../../../../app/modules/user/create_user/create_user_usecase";
-import { UserRepoMock } from "../../../../app/shared/repositories/mocks/user_repository_mock";
-import { RequestCreateUserBuilder } from "../../factories/user.factory";
+import { describe, it, expect } from "vitest";
 import { ROLE } from "../../../../app/shared/domain/enums/role";
 import { BadRequestException } from "../../../../app/shared/helpers/exceptions";
 import { RegisterUserRequest } from "../../../../app/modules/user/create_user/create_user_schema";
 import { parseBody } from "../../../../app/shared/utils/parse_body";
-import { ZodError } from "zod";
 
 describe("CreateUserUseCase - Zod validation", () => {
   it("should throw BadRequestException if name is missing", () => {

@@ -1,5 +1,5 @@
-import { GetUserUseCase } from "../../../modules/user/get_user/get_user_usecase"
-import { UserRepoMock } from "../../../shared/repositories/mocks/user_repository_mock"
+import { GetUserUseCase } from "../../../../app/modules/user/get_user/get_user_usecase"
+import { UserRepoMock } from "../../../../app/shared/repositories/mocks/user_repository_mock"
 import { describe, it, expect, beforeEach } from "vitest"
 
 describe("GetUserUsecase", () => {
@@ -45,12 +45,12 @@ describe("GetUserUsecase", () => {
         await expect(usecase.execute({ id: "7a181d51-4f96-4d97-81b9-16e08aa63742", isAdmin: false })).rejects.toThrow("Você não tem permissão para vizualizar um admin");
     });
 
-    it("should throw (Usuario nao esta no banco) if id doesn't exist", async () => {
-        await expect(usecase.execute({ id: "7a181d51-4f96-4d97-81b9-16e08aa63776", isAdmin: true })).rejects.toThrow("Usuario nao esta no banco");
+    it("should throw (Usuario nao está no banco) if id doesn't exist", async () => {
+        await expect(usecase.execute({ id: "7a181d51-4f96-4d97-81b9-16e08aa63776", isAdmin: true })).rejects.toThrow("Usuario nao está no banco");
     });
 
-    it("should throw (Usuario nao esta no banco) if email doesn't exist", async () => {
-        await expect(usecase.execute({ email: "thor@gmail.com", isAdmin: true })).rejects.toThrow("Usuario nao esta no banco");
+    it("should throw (Usuario nao está no banco) if email doesn't exist", async () => {
+        await expect(usecase.execute({ email: "thor@gmail.com", isAdmin: true })).rejects.toThrow("Usuario nao está no banco");
     });
 
 });

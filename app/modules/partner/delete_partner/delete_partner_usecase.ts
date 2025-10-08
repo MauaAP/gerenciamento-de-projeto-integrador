@@ -9,16 +9,10 @@ export class DeletePartnerUseCase {
     constructor(private readonly partnerRepository: IPartnerRepository) {}
 
     async execute({id}: DeletePartnerDTO): Promise<Partner> {
-        const existingPartner= await this.partnerRepository.getPartnerById(id)
-
-        if (!existingPartner) {
-            throw new NotFoundException("Parceiro não esta no banco")
-        }
-
         const deletedPartner= await this.partnerRepository.deletePartnerById(id)
 
         if (deletedPartner === null) {
-            throw new NotFoundException("Parceiro não esta no banco")
+            throw new NotFoundException("Parceiro não está no banco")
         }
 
         return deletedPartner

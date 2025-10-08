@@ -2,9 +2,9 @@ import { SECTOR } from "../../../shared/domain/enums/sector";
 import { z } from "zod";
 
 export const UpdatePartnerRequest= z.object({
-    id: z.string().length(36, "O id deve conter 36 caractéres"),
-    name: z.string().min(1, "O nome deve ter pelo menos um caracter").optional(),
-    sector: z.nativeEnum(SECTOR).optional()
+    id: z.string({message: "Id do parceiro é obrigatório"}).length(36, "O id deve conter 36 caracteres"),
+    name: z.string({message: "Nome deve ter pelo menos um caracter"}).optional(),
+    sector: z.nativeEnum(SECTOR, {errorMap: () => ({message: "Setor selecionado não está entre os disponíveis"})}).optional()
 }).refine(
     (data) => (data.name !== undefined || data.sector !== undefined),
     {
