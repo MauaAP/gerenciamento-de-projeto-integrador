@@ -15,7 +15,7 @@ export interface ProjectWithPartnerName {
 }
 
 export class GetProjectUseCase {
-    constructor(private readonly projectRepository: IProjectRepository, private readonly partnerRepository: IPartnerRepository) { }
+    constructor(private readonly projectRepository: IProjectRepository, private readonly partnerRepository: IPartnerRepository) {}
 
     async execute({ id, partnerId }: GetProjectDTO): Promise<ProjectWithPartnerName[]> {
         const selectedProject = id

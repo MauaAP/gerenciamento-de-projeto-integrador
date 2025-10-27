@@ -1,7 +1,5 @@
-import { Project } from "app/shared/domain/entities/project";
 import { UserFromToken } from "app/shared/middleware/jwt_middleware";
 import { Request, Response } from "express";
-import { title } from "process";
 import { GetAllProjectsResponse } from "./get_all_projects_schema";
 import { ForbiddenException } from "app/shared/helpers/exceptions";
 import { GetAllProjectsUseCase } from "./get_all_projects_usecase";

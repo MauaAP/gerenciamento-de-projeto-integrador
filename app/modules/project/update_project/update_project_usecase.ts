@@ -1,6 +1,6 @@
 import { Project } from "app/shared/domain/entities/project";
 import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
-import { IProjectRepository, ProjectUpdateOptions } from "app/shared/domain/interfaces/IProjectRepository";
+import { IProjectRepository} from "app/shared/domain/interfaces/IProjectRepository";
 import { BadRequestException, NotFoundException } from "app/shared/helpers/exceptions";
 
 interface UpdateProjectDTO {

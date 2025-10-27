@@ -2,8 +2,8 @@ import { SECTOR } from "../../../shared/domain/enums/sector";
 import { z } from "zod";
 
 export const CreatePartnerRequest = z.object({
-    name: z.string({ message: "Nome é obrigatório" }),
-    sector: z.nativeEnum(SECTOR, { errorMap: () => ({ message: "Setor é obrigatório" }) })
+    name: z.string({ message: "Name é obrigatório" }),
+    sector: z.nativeEnum(SECTOR, { errorMap: () => ({ message: "Sector é obrigatório" }) })
 })
 
 export type CreatePartnerRequest = z.infer<typeof CreatePartnerRequest>;

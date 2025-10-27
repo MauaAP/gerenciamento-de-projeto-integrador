@@ -30,7 +30,7 @@ export class CreateProjectController {
         })
 
         const response= CreateProjectResponse.parse({
-            message: "Grupo criado com sucesso",
+            message: "Projeto criado com sucesso",
             project : {
                 id: newProject.projectId,
                 title: newProject.title,

@@ -2,7 +2,7 @@ import { GetProjectRequest } from "app/modules/project/get_project/get_project_s
 import { parseBody } from "app/shared/utils/parse_body";
 import { describe, expect, it } from "vitest";
 
-describe("GetPartnerSchema -Zod validation", () => {
+describe("GetProjectSchema -Zod validation", () => {
     it("should pass the zod validation, for id", () =>{
         expect(parseBody(GetProjectRequest, {id: "e9c7d747-9e8e-4d34-935e-473c2c16be83"})).toEqual({
              id: "e9c7d747-9e8e-4d34-935e-473c2c16be83"});
@@ -33,6 +33,8 @@ describe("GetPartnerSchema -Zod validation", () => {
             expect(error.statusCode).toBe(400)
         }
     });
+
+    
 
     it("should throw (Você deve informar o id ou o partnerId (exatamente um)) if id and partnerId are provided", () =>{
         try {

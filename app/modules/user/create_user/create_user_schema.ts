@@ -2,12 +2,12 @@ import { ROLE } from "../../../shared/domain/enums/role";
 import { z } from "zod";
 
 export const RegisterUserRequest = z.object({
-  name: z.string().min(1, "Nome é obrigatório"),
+  name: z.string().min(1, "Name é obrigatório"),
   role: z.nativeEnum(ROLE, {
     errorMap: () => ({ message: "Cargo é obrigatório" }),
   }),
-  email: z.string().email("Endereço de e-mail inválido"),
-  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+  email: z.string().email("email inválido"),
+  password: z.string().min(6, "A password deve ter pelo menos 6 caracteres"),
 });
 
 export type RegisterUserRequest = z.infer<typeof RegisterUserRequest>;

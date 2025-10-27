@@ -3,7 +3,7 @@ import { PartnerRepoMock } from "app/shared/repositories/mocks/partner_repositor
 import { ProjectRepoMock } from "app/shared/repositories/mocks/project_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest"
 
-describe("GetPartnerUsecase", () => {
+describe("GetProjectUsecase", () => {
     let projectRepo: ProjectRepoMock;
     let partnerRepo: PartnerRepoMock;
     let useCase: GetProjectUseCase;
