@@ -30,7 +30,7 @@ export type DynamoConfig = {
   gsiSortKey?: string;
 };
 
-export class DynamoRepositoryError extends Error {}
+export class DynamoRepositoryError extends Error { }
 
 export class DynamoDBResources {
   private config: DynamoConfig;
@@ -151,7 +151,7 @@ export class DynamoDBResources {
     indexName?: string,
     partitionKeyName?: string
   ): Promise<any[]> {
-    // Nome do PK: se for index, pode ser diferente
+    // Name do PK: se for index, pode ser diferente
     const pk = partitionKeyName || this.config.partitionKey!;
     const sk = this.config.sortKey!;
 
