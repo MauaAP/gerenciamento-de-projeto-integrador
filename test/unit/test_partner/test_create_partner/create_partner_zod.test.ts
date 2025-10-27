@@ -5,11 +5,11 @@ import { describe, it, expect } from "vitest";
 describe("CreatePartnerUseCase - Zod validation", () => {
     it("should throw BadRequestException if name is missing", () => {
         try {
-            parseBody(CreatePartnerRequest, {sector: "INDUSTRIAL"});
+            parseBody(CreatePartnerRequest, { sector: "INDUSTRIAL" });
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("Nome é obrigatório")
+            expect(error.message).toBe("Name é obrigatório")
             expect(error.statusCode).toBe(400)
         }
     });
@@ -20,7 +20,7 @@ describe("CreatePartnerUseCase - Zod validation", () => {
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("Setor é obrigatório")
+            expect(error.message).toBe("Sector é obrigatório")
             expect(error.statusCode).toBe(400)
         }
     });
