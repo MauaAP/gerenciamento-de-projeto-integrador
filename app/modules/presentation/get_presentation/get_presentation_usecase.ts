@@ -1,11 +1,11 @@
-import { COURSE } from "app/shared/domain/enums/course";
-import { IExaminationBoardRepository } from "app/shared/domain/interfaces/IExaminationBoardRepository";
-import { IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
-import { IPresentationRepository } from "app/shared/domain/interfaces/IPresentationRepository";
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
-import { NotFoundException } from "app/shared/helpers/exceptions";
+import { COURSE } from "../../../shared/domain/enums/course";
+import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository";
+import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { IPresentationRepository } from "../../../shared/domain/interfaces/IPresentationRepository";
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
+import { NotFoundException } from "../../../shared/helpers/exceptions";
 
 interface GetPresentationInputInterface {
     id?: string,

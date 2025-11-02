@@ -1,10 +1,10 @@
-import { IExaminationBoardRepository } from "app/shared/domain/interfaces/IExaminationBoardRepository";
-import { IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
-import { IPresentationRepository } from "app/shared/domain/interfaces/IPresentationRepository";
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
+import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository";
+import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
+import { IPresentationRepository } from "../../../shared/domain/interfaces/IPresentationRepository";
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase";
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
 
 export class GetAllPresentationsUseCase {
     constructor(

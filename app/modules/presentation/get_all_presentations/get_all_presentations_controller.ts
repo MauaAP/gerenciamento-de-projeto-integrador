@@ -1,5 +1,5 @@
-import { ForbiddenException } from "app/shared/helpers/exceptions";
-import { UserFromToken } from "app/shared/middleware/jwt_middleware";
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { Request, Response } from "express";
 import { GetAllPresentationsResponse } from "./get_all_presentations_schema";
 import { GetAllPresentationsUseCase } from "./get_all_presentations_usecase";

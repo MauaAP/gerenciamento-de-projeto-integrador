@@ -1,8 +1,8 @@
-import { ForbiddenException } from "app/shared/helpers/exceptions";
-import { UserFromToken } from "app/shared/middleware/jwt_middleware";
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { Request, Response } from "express";
 import { UpdatePresentationRequest, UpdatePresentationResponse } from "./update_presentation_schema";
-import { parseBody } from "app/shared/utils/parse_body";
+import { parseBody } from "../../../shared/utils/parse_body";
 import { UpdatePresentationUseCase } from "./update_presentation_usecase";
 
 
@@ -20,7 +20,7 @@ export class UpdatePresentationController{
             );
         }
 
-        const {id, date, groupId, examinationBoartId}= parseBody(
+        const {id, date, groupId, examinationBoartId, sala}= parseBody(
             UpdatePresentationRequest,
             req.body
         );
@@ -30,7 +30,8 @@ export class UpdatePresentationController{
             updateOptions: {
                 date,
                 groupId,
-                examinationBoartId
+                examinationBoartId,
+                sala
             }
         })
 

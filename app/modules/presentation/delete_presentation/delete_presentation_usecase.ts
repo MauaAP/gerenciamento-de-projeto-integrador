@@ -1,6 +1,6 @@
-import { Presentation } from "app/shared/domain/entities/presentation";
-import { IPresentationRepository } from "app/shared/domain/interfaces/IPresentationRepository";
-import { NotFoundException } from "app/shared/helpers/exceptions";
+import { Presentation } from "../../../shared/domain/entities/presentation";
+import { IPresentationRepository } from "../../../shared/domain/interfaces/IPresentationRepository";
+import { NotFoundException } from "../../../shared/helpers/exceptions";
 
 export class DeletePresentationUseCase{
     constructor(private readonly presentationRepository: IPresentationRepository){}

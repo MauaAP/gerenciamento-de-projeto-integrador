@@ -1,4 +1,4 @@
-import { PresentationRepository } from "app/shared/repositories/repository";
+import { PresentationRepository } from "../../../shared/repositories/repository";
 import express, { Request, Response } from "express";
 import { UpdatePresentationUseCase } from "./update_presentation_usecase";
 import { UpdatePresentationController } from "./update_presentation_controller";
@@ -13,6 +13,7 @@ const updatePresentationUseCase= new UpdatePresentationUseCase(
     repository.examinationBoardRepo,
     repository.userRepo,
     repository.projectRepo,
+    repository.partnerRepo
 );
 
 const updatePresentationController= new UpdatePresentationController(updatePresentationUseCase);

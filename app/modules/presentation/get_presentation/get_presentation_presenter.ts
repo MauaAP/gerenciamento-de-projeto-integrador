@@ -1,8 +1,8 @@
-import { PresentationRepository } from "app/shared/repositories/repository";
+import { PresentationRepository } from "../../../shared/repositories/repository";
 import express, { Request, Response } from "express";
 import { GetPresentationUseCase } from "./get_presentation_usecase";
 import { GetPresentationController } from "./get_presentation_controller";
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
 
 const router= express.Router();
 
