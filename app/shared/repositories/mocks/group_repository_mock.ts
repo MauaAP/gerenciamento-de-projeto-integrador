@@ -2,14 +2,14 @@ import { Group } from "../../../shared/domain/entities/group";
 import { COURSE } from "../../../shared/domain/enums/course";
 import { GroupFilter, GroupUpdateOptions, IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
 
-export class GroupRepositoryMock implements IGroupRepository {
+export class GroupRepoMock implements IGroupRepository {
     private groups: Group[] = [
         new Group(
             "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
             "TTI202",
             ["f7c9d1e1-9d23-4f6e-94e1-8f45b50f2389", "e5f4g6h6-6i7j-4k1l-88hh-i2j3k4l5m6n7", "f6g5h7i7-5j6k-4l2m-77gg-h1i2j3k4l5m6", "b5c1d3e3-9c2b-46d1-97ee-c2d5d582a2d4"],
             202501,
-            "ab077c10-674c-4b88-b4c5-38cb35ea0ef6",
+            "4d2419c0-4955-4412-900f-e1d49b87f92b",
             COURSE.CIC
         ),
         new Group(

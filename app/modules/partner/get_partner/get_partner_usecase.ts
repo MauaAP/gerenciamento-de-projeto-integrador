@@ -16,7 +16,7 @@ export class GetPartnerUseCase {
         : await this.PartnerRepository.getPartnerByname(name!)
 
         if(selectedPartner === null){
-            throw new NotFoundException("Parceiro não esta no banco")
+            throw new NotFoundException("Parceiro não está no banco")
         }
 
         return selectedPartner

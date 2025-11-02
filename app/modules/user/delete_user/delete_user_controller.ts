@@ -1,4 +1,3 @@
-
 import { ForbiddenException } from "../../../shared/helpers/exceptions";
 import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { parseBody } from "../../../shared/utils/parse_body";

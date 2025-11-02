@@ -16,7 +16,7 @@ export class PartnerRepoMock implements IPartnerRepository{
         ),
         new Partner(
             "61d2408e-8b16-402b-9ee8-e1d9bc9b2ab3",
-            "Rokusen",
+            "Rokuzen",
             SECTOR.HEALTHCARE
         ),
         new Partner(

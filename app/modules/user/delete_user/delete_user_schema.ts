@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const DeleteUserRequest= z.object({
-  id: z.string().length(36, "O id deve conter 36 caractéres")
+  id: z.string({message: "id deve ser dado em string"}).length(36, "O id deve conter 36 caracteres")
 });
 
 export type DeleteUserRequest = z.infer<typeof DeleteUserRequest>

@@ -1,7 +1,7 @@
 import { ExaminationBoard } from "../../../shared/domain/entities/examination_board";
 import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository";
 
-export class ExaminationBoardRepositoryMock implements IExaminationBoardRepository {
+export class ExaminationBoardRepoMock implements IExaminationBoardRepository {
     private examinationBoards: ExaminationBoard [] = [
         new ExaminationBoard(
             "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",

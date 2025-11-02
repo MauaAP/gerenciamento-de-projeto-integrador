@@ -42,8 +42,8 @@ export class UnprocessableEntityException extends BaseApplicationException {
 
 // Bad request (400) — agora herdando corretamente
 export class BadRequestException extends BaseApplicationException {
-  constructor(details: any) {
-    super("Bad Request", 400, details);
+  constructor(message: string = "Bad Request", details?: any) {
+    super(message, 400, details);
   }
 }
 

@@ -11,7 +11,7 @@ export class DeleteUserUseCase{
     async execute({id, isAdmin} : DeleteUserDTO): Promise<User> {
         const existingUser = await this.userRepository.getUserById(id);
         if (!existingUser) {
-            throw new NotFoundException("Usuário não esta no banco")
+            throw new NotFoundException("Usuário não está no banco")
         }
         if (!isAdmin && existingUser.role === "ADMIN"){
             throw new ForbiddenException(
@@ -21,7 +21,7 @@ export class DeleteUserUseCase{
         const deletedUser= await this.userRepository.deleteUserById(id)
 
         if (deletedUser === null) {
-            throw new NotFoundException("Usuário não esta no banco")
+            throw new NotFoundException("Usuário não está no banco")
         }
 
         return deletedUser

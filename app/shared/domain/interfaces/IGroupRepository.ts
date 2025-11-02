@@ -2,11 +2,11 @@ import { Group } from "../entities/group";
 import { COURSE } from "../enums/course";
 
 export type GroupFilter = {
-        userId?: string;
-        codSubj?: string;
-        yearSem?: number;
-        projectId?: string;
-        course?: COURSE;
+    userId?: string;
+    codSubj?: string;
+    yearSem?: number;
+    projectId?: string;
+    course?: COURSE;
 };
 
 export type GroupUpdateOptions = {

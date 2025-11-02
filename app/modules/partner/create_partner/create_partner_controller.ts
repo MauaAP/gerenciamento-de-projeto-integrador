@@ -2,7 +2,7 @@ import { ForbiddenException } from "../../../shared/helpers/exceptions";
 import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { parseBody } from "../../../shared/utils/parse_body";
 import { Request, Response } from "express";
-import { RegisterPartnerRequest, RegisterPartnerResponse } from "./create_partner_schema";
+import { CreatePartnerRequest, CreatePartnerResponse } from "./create_partner_schema";
 import { CreatePartnerUseCase } from "./create_partner_usecase";
 
 export class CreatePartnerController {
@@ -20,7 +20,7 @@ export class CreatePartnerController {
         }
 
         const {name, sector} = parseBody(
-            RegisterPartnerRequest,
+            CreatePartnerRequest,
             req.body
         );
 
@@ -29,12 +29,12 @@ export class CreatePartnerController {
             sector
         });
 
-        const response= RegisterPartnerResponse.parse({
+        const response= CreatePartnerResponse.parse({
             message: "Parceiro criado com sucesso",
             partner: {
                 id: partner.partnerId,
                 name: partner.name,
-                sector: partner.sector //perguntar para o luca como ele vai passar para string aqui
+                sector: partner.sector
             }
         });
         res.status(201).json(response)

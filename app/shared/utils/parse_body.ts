@@ -7,9 +7,12 @@ export function parseBody<T>(schema: ZodType<T, any, any>, body: unknown): T {
     // Gera lista de erros detalhados
     const errors = result.error.errors.map((err) => ({
       path: err.path.join("."),   // ex: "email"
-      message: err.message        // ex: "Endereço de e-mail inválido"
+      message: err.message        // ex: "email inválido"
     }));
-    throw new BadRequestException(errors);
+
+    // Usa a primeira mensagem de erro como mensagem principal
+    const primaryErrorMessage = result.error.errors[0]?.message || "Erro de validação";
+    throw new BadRequestException(primaryErrorMessage, errors);
   }
   return result.data;
 }

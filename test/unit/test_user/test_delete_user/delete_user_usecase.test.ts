@@ -1,6 +1,6 @@
-import { DeleteUserUseCase } from "../../../modules/user/delete_user/delete_user_usecase";
-import {ForbiddenException, NotFoundException } from "../../../shared/helpers/exceptions";
-import { UserRepoMock } from "../../../shared/repositories/mocks/user_repository_mock";
+import { DeleteUserUseCase } from "../../../../app/modules/user/delete_user/delete_user_usecase";
+import {ForbiddenException, NotFoundException } from "../../../../app/shared/helpers/exceptions";
+import { UserRepoMock } from "../../../../app/shared/repositories/mocks/user_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest";
 
 describe("DeleteUserUsecase", () =>{
@@ -23,7 +23,14 @@ describe("DeleteUserUsecase", () =>{
     });
 
     it("should throw NotFoundException if id doesnt's exist", async () =>{
-        await expect(usecase.execute({id: "7a181d51-4f96-4d97-81b9-16e08aa63776", isAdmin: true})).rejects.toThrow(NotFoundException);
+        try {
+            await usecase.execute({id: "7a181d51-4f96-4d97-81b9-16e08aa63889", isAdmin: true})
+        }
+        catch (error: any) {
+            expect(error.constructor.name).toBe("NotFoundException");
+            expect(error.message).toBe("Usuário não está no banco")
+            expect(error.statusCode).toBe(404)
+        }
     });
 
     it("should throw ForbiddenException if trying to delete an admin without being an admin", async () =>{

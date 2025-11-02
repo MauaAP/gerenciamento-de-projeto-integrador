@@ -16,7 +16,7 @@ export class GetUserUseCase {
             : await this.UserRepository.getUserByEmail(email!)
 
         if (selectedUser === null) {
-            throw new NotFoundException("Usuario nao esta no banco");
+            throw new NotFoundException("Usuario nao está no banco");
         }
         if (!isAdmin && selectedUser.role === "ADMIN"){
             throw new ForbiddenException(

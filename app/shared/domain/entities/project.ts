@@ -3,7 +3,7 @@ export class Project {
         public projectId: string,
         public title: string,
         public partnerId: string,
-        public extensionHours?: number //seconds
+        public extensionHours?: number //hours
     ) {}
 
     toJson() : {

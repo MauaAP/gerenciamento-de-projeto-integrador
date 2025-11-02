@@ -13,7 +13,7 @@ export class CreatePartnerUseCase {
         const existingPartner= await this.partnerRepository.getPartnerByname(name)
         
         if (existingPartner) {
-            throw new BadRequestException("Email já cadastrado");
+            throw new BadRequestException("Parceiro já cadastrado");
         }
 
         const partnerId= crypto.randomUUID();

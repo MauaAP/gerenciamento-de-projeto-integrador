@@ -24,15 +24,15 @@ export const routes = (app: Express) => {
   // User
   app.use("/api", CreateUserPresenter);
   app.use("/api", AuthPresenter);
-  // app.use("/api", DeleteUserPresenter);
+  app.use("/api", DeleteUserPresenter);
   app.use("/api", GetAllUsersPresenter);
-  // app.use("/api", GetUserPresenter);
-  // app.use("/api", UpdateUserPresenter);
+  app.use("/api", GetUserPresenter);
+  app.use("/api", UpdateUserPresenter);
 
   // Partner
-  // app.use("/api", CreatePartnerPresenter);
-  // app.use("/api", DeletePartnerPresenter);
-  // app.use("/api", GetAllPartnersPresenter);
-  // app.use("/api", GetPartnerPresenter);
-  // app.use("/api", UpdatePartnerPresenter);
+  app.use("/api", CreatePartnerPresenter);
+  app.use("/api", DeletePartnerPresenter);
+  app.use("/api", GetAllPartnersPresenter);
+  app.use("/api", GetPartnerPresenter);
+  app.use("/api", UpdatePartnerPresenter);
 };
