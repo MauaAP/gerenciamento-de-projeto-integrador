@@ -37,7 +37,7 @@ export class GetGroupController {
 
         const response= GetGroupResponse.parse({
             message: "Projeto(s) retornado(s) com sucesso",
-            groups: groupList.map((group) => ({
+            group: groupList.map((group) => ({
                 id: group.id,
                 codSubj: group.codSubj,
                 userNameList: group.userNameList,
