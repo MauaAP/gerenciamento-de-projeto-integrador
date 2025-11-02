@@ -1,5 +1,6 @@
 import { COURSE } from "app/shared/domain/enums/course";
 import { GroupFilter, IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
+import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
 import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
 import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
 import { BadRequestException, NotFoundException } from "app/shared/helpers/exceptions";
@@ -14,7 +15,11 @@ export interface GroupOficialModel {
     codSubj: string;
     userNameList: string[];
     yearSem: number;
-    projectTitle: string;
+    project: {
+        title: string;
+        partnerName: string;
+        extensionHours?: number;
+    }
     course: COURSE;
 }
 
@@ -22,7 +27,8 @@ export class GetGroupUseCase {
     constructor(
         private readonly groupRepository: IGroupRepository,
         private readonly userRepository: IUserRepository,
-        private readonly projectRepository: IProjectRepository
+        private readonly projectRepository: IProjectRepository,
+        private readonly partnerRepository: IPartnerRepository
     ) {}
 
     async execute({id, groupFilter}: GetGroupDTO): Promise<GroupOficialModel[]>{
@@ -42,6 +48,8 @@ export class GetGroupUseCase {
                 // aqui pego o projeto
                 const project= await this.projectRepository.getProjectById(group.projectId);
 
+                // aqui pego o parceiro
+                const partner= await this.partnerRepository.getPartnerById(project!.partnerId);
 
                 // aqui seleciono o nome dos usuarios e atribuo a uma nova lista
                 const userNameList: string[] = []
@@ -61,7 +69,11 @@ export class GetGroupUseCase {
                     codSubj: group.codSubj,
                     userNameList: userNameList,
                     yearSem: group.yearSem,
-                    projectTitle: project!.title,
+                    project: {
+                        title: project!.title,
+                        partnerName: partner!.name,
+                        extensionHours: project!.extensionHours
+                    },
                     course: group.course
                 };
             })

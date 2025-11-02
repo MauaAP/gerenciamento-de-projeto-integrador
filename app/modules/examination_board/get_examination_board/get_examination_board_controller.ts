@@ -21,7 +21,7 @@ export class GetExaminationBoardController {
 
         const {id, professorId} = parseBody(
             GetExaminationBoardRequest,
-            req.body
+            req.query
         );
 
         const examinationBoardList= await this.usecase.execute({

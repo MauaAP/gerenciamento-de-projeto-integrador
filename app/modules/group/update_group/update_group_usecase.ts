@@ -3,7 +3,7 @@ import { IProjectRepository } from "app/shared/domain/interfaces/IProjectReposit
 import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
 import { GroupOficialModel } from "../get_group/get_group_usecase";
 import { BadRequestException, NotFoundException } from "app/shared/helpers/exceptions";
-import { Group } from "app/shared/domain/entities/group";
+import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
 
 interface UpdateGroupDTO {
     id: string,
@@ -14,10 +14,11 @@ export class UpdateGroupUseCase {
     constructor(
             private readonly groupRepository: IGroupRepository,
             private readonly userRepository: IUserRepository,
-            private readonly projectRepository: IProjectRepository
+            private readonly projectRepository: IProjectRepository,
+            private readonly PartnerRepository: IPartnerRepository
     ) {}
 
-    async execute({id, updateOptions}: UpdateGroupDTO): Promise<{updatedGroup: Group, userNameList: string[], projectTitle: string}>{
+    async execute({id, updateOptions}: UpdateGroupDTO): Promise<GroupOficialModel>{
         if(updateOptions?.userIdList){
             for (const userId of updateOptions.userIdList){
                 const existingUser= await this.userRepository.getUserById(userId);
@@ -49,8 +50,23 @@ export class UpdateGroupUseCase {
             userNameList.push(user!.name);
         }
 
-        const projectTitle= (await this.projectRepository.getProjectById(updatedGroup.projectId))!.title
+        const project= (await this.projectRepository.getProjectById(updatedGroup.projectId))
 
-        return {updatedGroup, userNameList, projectTitle}
+        const partner= await this.PartnerRepository.getPartnerById(project!.partnerId)
+
+        const partnerName= partner!.name 
+
+        return {
+            id: updatedGroup.groupId,
+            codSubj: updatedGroup.codSubj,
+            userNameList: userNameList,
+            yearSem: updatedGroup.yearSem,
+            project: {
+                title: project!.title,
+                partnerName: partnerName,
+                extensionHours: project!.extensionHours
+            },
+            course: updatedGroup.course
+        }
     }
 }

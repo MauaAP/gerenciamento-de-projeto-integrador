@@ -1,6 +1,7 @@
 import type { IPartnerRepository, PartnerUpdateOptions } from "../../../../shared/domain/interfaces/IPartnerRepository";
 import type { DynamoDBResources } from "./dynamo_datasource";
 import { Partner } from "../../../../shared/domain/entities/partner";
+import { NotFoundException } from "app/shared/helpers/exceptions";
 function getPartnerPK(partnerId: string): string{
   return `PARTNER#${partnerId}`;
 }
@@ -31,6 +32,7 @@ export class PartnerRepositoryDynamoDB implements IPartnerRepository {
     
     return partner
   }
+
   fetchPartners(): Promise<Partner[]> {
     throw new Error("Method not implemented.");
     // conversar de talvez usar o querryAll, talvez precise tirar o partitionKeyValue de obrigatorio
@@ -74,7 +76,7 @@ export class PartnerRepositoryDynamoDB implements IPartnerRepository {
     const partner= await this.getPartnerById(partnerId);
 
     if(!partner)
-      throw new Error("Partner not fount");
+      throw new NotFoundException("Partner not fount");
 
     const pk= getPartnerPK(partnerId);
     const sk= getPartnerSK();

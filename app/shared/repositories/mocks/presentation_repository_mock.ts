@@ -1,7 +1,7 @@
 import { Presentation } from "../../../shared/domain/entities/presentation";
 import { IPresentationRepository, PresentationFilter, PresentationUpdateOptions } from "../../../shared/domain/interfaces/IPresentationRepository";
 
-export class PresentationRepositoryMock implements IPresentationRepository {
+export class PresentationRepoMock implements IPresentationRepository {
     private presentations: Presentation[] = [
         new Presentation(
             "8c77b6b9-a249-4318-a982-b07972bd1fb9",
@@ -29,7 +29,7 @@ export class PresentationRepositoryMock implements IPresentationRepository {
         ),
         new Presentation(
             "a259782e-f3bf-4cd5-b335-b178d8306cbe",
-            1764509400000,
+            1719235800000,
             "3ed81785-bf6c-4e83-9543-d4c7e8c9d27b",
             "3896e005-bc5c-4839-a43b-463ae9c3583c"
         ),

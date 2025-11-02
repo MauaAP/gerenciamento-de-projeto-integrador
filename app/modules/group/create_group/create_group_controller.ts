@@ -24,7 +24,7 @@ export class CreateGroupController {
             req.body
         );
 
-        const {newGroup, userNameList, projectTitle}= await this.usecase.execute({
+        const createdGroup= await this.usecase.execute({
             codSubj,
             userIdList,
             yearSem,
@@ -35,12 +35,16 @@ export class CreateGroupController {
         const response= CreateGroupResponse.parse({
             message: "Grupo criado com sucesso",
             group: {
-                id: newGroup.groupId,
-                codSubj: newGroup.codSubj,
-                userNameList: userNameList,
-                yearSem: newGroup.yearSem,
-                projectTitle: projectTitle,
-                course: newGroup.course
+                id: createdGroup.id,
+                codSubj: createdGroup.codSubj,
+                userNameList: createdGroup.userNameList,
+                yearSem: createdGroup.yearSem,
+                project: {
+                    title: createdGroup.project.title,
+                    partnerName: createdGroup.project.partnerName,
+                    extensionHours: createdGroup.project.extensionHours
+                },
+                course: createdGroup.course
             }
         });
         res.status(201).json(response)

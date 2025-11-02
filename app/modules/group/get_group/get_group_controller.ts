@@ -21,7 +21,7 @@ export class GetGroupController {
 
         const {id, userId, codSubj, yearSem, projectId, course} = parseBody(
             GetGroupRequest,
-            req.body
+            req.query
         );
 
         const groupList= await this.usecase.execute({
@@ -42,7 +42,11 @@ export class GetGroupController {
                 codSubj: group.codSubj,
                 userNameList: group.userNameList,
                 yearSem: group.yearSem,
-                projectTitle: group.projectTitle,
+                project: {
+                    title: group.project.title,
+                    partnerName: group.project.partnerName,
+                    extensionHours: group.project.extensionHours
+                },
                 course: group.course
             }))
         });

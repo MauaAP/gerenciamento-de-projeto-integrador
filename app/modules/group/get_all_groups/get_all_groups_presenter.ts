@@ -8,7 +8,7 @@ const router= express.Router();
 
 const repository= new GroupRepository()
 
-const getAllGroupsUseCase= new GetAllGroupsUseCase(repository.groupRepo, repository.userRepo, repository.projectRepo);
+const getAllGroupsUseCase= new GetAllGroupsUseCase(repository.groupRepo, repository.userRepo, repository.projectRepo, repository.partnerRepo);
 
 const getAllGroupsController= new GetAllGroupsController(getAllGroupsUseCase);
 
