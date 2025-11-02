@@ -3,7 +3,29 @@ import { z } from "zod";
 
 export const CreatePartnerRequest = z.object({
     name: z.string({ message: "Name é obrigatório" }),
-    sector: z.nativeEnum(SECTOR, { errorMap: () => ({ message: "Sector é obrigatório" }) })
+    sector: z.enum([
+        "EDUCACIONAL",
+        "GOVERNAMENTAL",
+        "INDUSTRIAL",
+        "SAÚDE",
+        "ONG",
+        "AMBIENTAL",
+        "FINANCEIRO"
+    ], { 
+        errorMap: () => ({ message: "Sector é obrigatório. Valores aceitos: EDUCACIONAL, GOVERNAMENTAL, INDUSTRIAL, SAÚDE, ONG, AMBIENTAL, FINANCEIRO" }) 
+    }).transform((val) => {
+        // Transformar o valor string para o enum correto
+        const sectorMap: Record<string, SECTOR> = {
+            "EDUCACIONAL": SECTOR.EDUCATIONAL,
+            "GOVERNAMENTAL": SECTOR.GOVERNAMENTAL,
+            "INDUSTRIAL": SECTOR.INDUSTRIAL,
+            "SAÚDE": SECTOR.HEALTHCARE,
+            "ONG": SECTOR.ONG,
+            "AMBIENTAL": SECTOR.ENVIRONMENTAL,
+            "FINANCEIRO": SECTOR.FINANCIAL
+        };
+        return sectorMap[val];
+    })
 })
 
 export type CreatePartnerRequest = z.infer<typeof CreatePartnerRequest>;
