@@ -1,9 +1,9 @@
-import { COURSE } from "app/shared/domain/enums/course";
-import { GroupFilter, IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
-import { BadRequestException, NotFoundException } from "app/shared/helpers/exceptions";
+import { COURSE } from "../../../shared/domain/enums/course";
+import { GroupFilter, IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
+import { BadRequestException, NotFoundException } from "../../../shared/helpers/exceptions";
 
 interface GetGroupDTO {
     id?: string,

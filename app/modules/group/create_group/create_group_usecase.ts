@@ -1,10 +1,10 @@
-import { Group } from "app/shared/domain/entities/group";
-import { COURSE } from "app/shared/domain/enums/course";
-import { IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
-import { BadRequestException } from "app/shared/helpers/exceptions";
+import { Group } from "../../../shared/domain/entities/group";
+import { COURSE } from "../../../shared/domain/enums/course";
+import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
+import { BadRequestException } from "../../../shared/helpers/exceptions";
 import { GroupOficialModel } from "../get_group/get_group_usecase";
 
 interface CreateGroupDTO {

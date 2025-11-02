@@ -1,5 +1,5 @@
-import { IExaminationBoardRepository } from "app/shared/domain/interfaces/IExaminationBoardRepository";
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
+import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository";
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { ExaminationBoardOficialModel } from "../get_examination_board/get_examination_board_usecase";
 
 export class GetAllExaminationBoardsUseCase{

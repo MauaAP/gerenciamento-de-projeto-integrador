@@ -1,5 +1,5 @@
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
-import { GroupRepository } from "app/shared/repositories/repository";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
+import { GroupRepository } from "../../../shared/repositories/repository";
 import express, { Request, Response } from "express";
 import { GetAllGroupsController } from "./get_all_groups_controller";
 import { GetAllGroupsUseCase } from "./get_all_groups_usecase";

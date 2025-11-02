@@ -1,6 +1,6 @@
-import { Group } from "app/shared/domain/entities/group";
-import { IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
-import { NotFoundException } from "app/shared/helpers/exceptions";
+import { Group } from "../../../shared/domain/entities/group";
+import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
+import { NotFoundException } from "../../../shared/helpers/exceptions";
 
 export class DeleteGroupUseCase{
     constructor(

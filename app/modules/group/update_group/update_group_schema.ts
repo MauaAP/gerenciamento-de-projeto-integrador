@@ -1,4 +1,4 @@
-import { COURSE } from "app/shared/domain/enums/course"
+import { COURSE } from "../../../shared/domain/enums/course"
 import { z } from "zod"
 import { GroupSchema } from "../create_group/create_group_schema"
 export const UpdateGroupRequest = z.object({

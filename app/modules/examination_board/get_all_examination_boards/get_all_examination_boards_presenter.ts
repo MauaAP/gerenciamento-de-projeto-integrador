@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
-import { ExaminationBoardRepository } from "app/shared/repositories/repository";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
+import { ExaminationBoardRepository } from "../../../shared/repositories/repository";
 import { GetAllExaminationBoardsUseCase } from "./get_all_examination_boards_usecase";
 import { GetAllExaminationBoardsController } from "./get_all_examination_boards_controller";
 

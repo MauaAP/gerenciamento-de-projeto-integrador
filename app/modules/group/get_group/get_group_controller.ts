@@ -1,8 +1,8 @@
-import { UserFromToken } from "app/shared/middleware/jwt_middleware"
-import { parseBody } from "app/shared/utils/parse_body";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware"
+import { parseBody } from "../../../shared/utils/parse_body";
 import { Request, Response } from "express";
 import { GetGroupRequest, GetGroupResponse } from "./get_group_schema";
-import { ForbiddenException } from "app/shared/helpers/exceptions";
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
 import { GetGroupUseCase } from "./get_group_usecase";
 
 export class GetGroupController {

@@ -1,6 +1,6 @@
-import { ForbiddenException } from "app/shared/helpers/exceptions";
-import { UserFromToken } from "app/shared/middleware/jwt_middleware"
-import { parseBody } from "app/shared/utils/parse_body";
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware"
+import { parseBody } from "../../../shared/utils/parse_body";
 import { Request, Response } from "express"
 import { CreateGroupRequest, CreateGroupResponse } from "./create_group_schema";
 import { CreateGroupUseCase } from "./create_group_usecase";

@@ -1,8 +1,8 @@
-import { IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
+import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { GroupOficialModel } from "../get_group/get_group_usecase";
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
 
 export class GetAllGroupsUseCase {
     constructor(

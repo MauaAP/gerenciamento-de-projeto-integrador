@@ -1,7 +1,7 @@
-import { ForbiddenException } from "app/shared/helpers/exceptions";
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
 import { Request, Response } from "express";
 import { GetAllGroupsResponse } from "./get_all_groups_schema";
-import { UserFromToken } from "app/shared/middleware/jwt_middleware";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { GetAllGroupsUseCase } from "./get_all_groups_usecase";
 
 export class GetAllGroupsController {

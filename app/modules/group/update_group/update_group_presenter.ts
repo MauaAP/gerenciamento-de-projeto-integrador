@@ -1,8 +1,8 @@
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
 import express, { Request, Response } from "express";
 import { UpdateGroupController } from "./update_group_controller";
 import { UpdateGroupUseCase } from "./update_group_usecase";
-import { GroupRepository } from "app/shared/repositories/repository";
+import { GroupRepository } from "../../../shared/repositories/repository";
 
 const router = express.Router();
 

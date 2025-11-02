@@ -1,6 +1,6 @@
-import { ForbiddenException } from "app/shared/helpers/exceptions";
-import { UserFromToken } from "app/shared/middleware/jwt_middleware";
-import { parseBody } from "app/shared/utils/parse_body";
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
+import { parseBody } from "../../../shared/utils/parse_body";
 import { Request, Response } from "express"
 import { CreatePresentationRequest, CreatePresentationResponse } from "./create_presentation_schema";
 import { CreatePresentationUseCase } from "./create_presentation_usecase";
@@ -18,7 +18,7 @@ export class CreatePresentationController {
             );
         }
 
-        const {date, groupId, examinationBoartId} = parseBody(
+        const {date, groupId, examinationBoartId, sala} = parseBody(
             CreatePresentationRequest,
             req.body
         );
@@ -26,7 +26,8 @@ export class CreatePresentationController {
         const newPresentation= await this.usecase.execute({
             date,
             groupId,
-            examinationBoartId
+            examinationBoartId,
+            sala
         });
 
         const response= CreatePresentationResponse.parse({

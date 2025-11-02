@@ -1,9 +1,9 @@
-import { GroupUpdateOptions, IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository";
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository";
+import { GroupUpdateOptions, IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { GroupOficialModel } from "../get_group/get_group_usecase";
-import { BadRequestException, NotFoundException } from "app/shared/helpers/exceptions";
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
+import { BadRequestException, NotFoundException } from "../../../shared/helpers/exceptions";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
 
 interface UpdateGroupDTO {
     id: string,

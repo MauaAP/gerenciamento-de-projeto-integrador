@@ -1,4 +1,4 @@
-import { COURSE } from "app/shared/domain/enums/course"
+import { COURSE } from "../../../shared/domain/enums/course"
 import { z } from "zod"
 
 export const CreateGroupRequest = z.object({
