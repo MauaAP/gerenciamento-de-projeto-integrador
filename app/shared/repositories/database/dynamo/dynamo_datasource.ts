@@ -58,18 +58,36 @@ export class DynamoDBResources {
     partitionKey: string,
     sortKey?: string
   ): Promise<void> {
+    console.log("[DynamoDBResources] ========== put INICIANDO ==========");
+    console.log("[DynamoDBResources] Item recebido:", JSON.stringify(item, null, 2));
+    console.log("[DynamoDBResources] PartitionKey recebido:", partitionKey);
+    console.log("[DynamoDBResources] SortKey recebido:", sortKey);
+    console.log("[DynamoDBResources] TableName:", this.config.tableName);
+    console.log("[DynamoDBResources] Region:", this.config.region);
+    
     const pk = this.config.partitionKey!;
     const sk = this.config.sortKey!;
     const itemToPut = { ...item, [pk]: partitionKey };
     if (sortKey) itemToPut[sk] = sortKey;
+    
+    console.log("[DynamoDBResources] Item final para salvar:", JSON.stringify(itemToPut, null, 2));
+    
     try {
+      console.log("[DynamoDBResources] Enviando PutCommand para DynamoDB...");
       await this.docClient.send(
         new PutCommand({
           TableName: this.config.tableName,
           Item: itemToPut,
         })
       );
+      console.log("[DynamoDBResources] ✅ PutCommand executado com sucesso");
     } catch (e: any) {
+      console.error("[DynamoDBResources] ❌❌❌ ERRO NO PUT ❌❌❌");
+      console.error("[DynamoDBResources] Error name:", e.name);
+      console.error("[DynamoDBResources] Error message:", e.message);
+      console.error("[DynamoDBResources] Error code:", e.code);
+      console.error("[DynamoDBResources] Error stack:", e.stack);
+      console.error("[DynamoDBResources] Error completo:", JSON.stringify(e, Object.getOwnPropertyNames(e), 2));
       throw new DynamoRepositoryError(e.message);
     }
   }

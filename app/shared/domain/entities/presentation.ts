@@ -3,20 +3,23 @@ export class Presentation {
         public presentationId: string,
         public date: number, //miliseconds
         public groupId: string,
-        public examinationBoartId: string
+        public examinationBoartId: string,
+        public sala: string
     ){}
 
     toJson(): {
         presentationId: string,
         date: number, //miliseconds
         groupId: string,
-        examinationBoartId: string
+        examinationBoartId: string,
+        sala: string
     } {
         return {
             presentationId: this.presentationId,
             date: this.date,
             groupId: this.groupId,
-            examinationBoartId: this.examinationBoartId
+            examinationBoartId: this.examinationBoartId,
+            sala: this.sala
         };
     }
 
@@ -25,7 +28,8 @@ export class Presentation {
         date: number; //miliseconds
         groupId: string;
         examinationBoartId: string;
+        sala?: string;
     }): Presentation {
-        return new Presentation(json.presentationId, json.date, json.groupId, json.examinationBoartId)
+        return new Presentation(json.presentationId, json.date, json.groupId, json.examinationBoartId, json.sala || "")
     }
 }

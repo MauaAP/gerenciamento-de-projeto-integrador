@@ -1,10 +1,10 @@
-import { UserFromToken } from "app/shared/middleware/jwt_middleware";
-import { parseBody } from "app/shared/utils/parse_body";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
+import { parseBody } from "../../../shared/utils/parse_body";
 import { Request, Response } from "express";
 import { GetProjectRequest, GetProjectResponse } from "./get_project_schema";
-import { Project } from "app/shared/domain/entities/project";
+import { Project } from "../../../shared/domain/entities/project";
 import { GetProjectUseCase } from "./get_project_usecase";
-import { ForbiddenException } from "app/shared/helpers/exceptions";
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
 export class GetProjectController {
     constructor(private readonly usecase: GetProjectUseCase) {}
 

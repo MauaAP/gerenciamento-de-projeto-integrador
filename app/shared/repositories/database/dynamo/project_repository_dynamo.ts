@@ -10,6 +10,10 @@ function getProjectSK(): string {
   return "METADATA";
 }
 
+function getPartnerPK(partnerId: string): string {
+  return `PARTNER#${partnerId}`;
+}
+
 export class ProjectRepositoryDynamoDB implements IProjectRepository {
   private db: DynamoDBResources;
 
@@ -27,13 +31,36 @@ export class ProjectRepositoryDynamoDB implements IProjectRepository {
     };
 
     await this.db.put(item, pk, sk);
+    
+    // Criar relacionamento bidirecional: PARTNER#ID + SK: PROJECT#ID
+    const partnerPK = getPartnerPK(project.partnerId);
+    const relationshipItem = {
+      PK: partnerPK,
+      SK: `PROJECT#${project.projectId}`,
+      projectId: project.projectId,
+      title: project.title
+    };
+    await this.db.put(relationshipItem, partnerPK, `PROJECT#${project.projectId}`);
+    
     console.log(`[DynamoDB] Projeto criado: ${pk} - ${project.title}`);
     
     return project
   }
 
-  fetchProjects(): Promise<Project[]> {
-    throw new Error("Method not implemented.");
+  async fetchProjects(): Promise<Project[]> {
+    const items = await this.db.scanAll({
+      FilterExpression: "begins_with(#pk, :projectPrefix) AND #sk = :metadata",
+      ExpressionAttributeNames: { 
+        "#pk": "PK",
+        "#sk": "SK"
+      },
+      ExpressionAttributeValues: { 
+        ":projectPrefix": "PROJECT#",
+        ":metadata": "METADATA"
+      },
+    });
+    console.log(`[DynamoDB] FetchProjects retornou ${items.length} itens`);
+    return items.map(Project.fromJson);
   }
 
   async getProjectById(projectId: string): Promise<Project | null> {
@@ -53,7 +80,30 @@ export class ProjectRepositoryDynamoDB implements IProjectRepository {
   }
 
   async getProjectByPartnerId(partnerId: string): Promise<Project[] | null> {
-    throw new Error("Method not implemented.");
+    const partnerPK = getPartnerPK(partnerId);
+    const items = await this.db.queryAll(
+      partnerPK,
+      "PROJECT#"
+    );
+    
+    if (items.length === 0) {
+      console.log(`[DynamoDB] Busca por PartnerId: ${partnerId} - Nenhum projeto encontrado`);
+      return null;
+    }
+    
+    // Buscar os projetos completos usando os IDs encontrados
+    const projects: Project[] = [];
+    for (const item of items) {
+      if (item.projectId) {
+        const project = await this.getProjectById(item.projectId);
+        if (project) {
+          projects.push(project);
+        }
+      }
+    }
+    
+    console.log(`[DynamoDB] Busca por PartnerId: ${partnerId} - ${projects.length} projetos encontrados`);
+    return projects.length > 0 ? projects : null;
   }
   
   async deleteProjectById(projectId: string): Promise<Project | null> {
@@ -66,6 +116,11 @@ export class ProjectRepositoryDynamoDB implements IProjectRepository {
     const sk= getProjectSK();
 
     await this.db.delete(pk, sk);
+    
+    // Deletar relacionamento bidirecional: PARTNER#ID + SK: PROJECT#ID
+    const partnerPK = getPartnerPK(project.partnerId);
+    await this.db.delete(partnerPK, `PROJECT#${projectId}`);
+    
     console.log(`[DynamoDB] Projeto deletado: ${pk} - ${project.title}`);
 
     return project;
@@ -84,6 +139,24 @@ export class ProjectRepositoryDynamoDB implements IProjectRepository {
     const updateDict: Partial<Project>= {};
 
     if(updateOptions.title) updateDict.title= updateOptions.title;
+    
+    // Atualizar relacionamento bidirecional quando partnerId mudar
+    if(updateOptions.partnerId && updateOptions.partnerId !== currentProject.partnerId) {
+      // Deletar relacionamento antigo: PARTNER#OLD_ID + SK: PROJECT#ID
+      const oldPartnerPK = getPartnerPK(currentProject.partnerId);
+      await this.db.delete(oldPartnerPK, `PROJECT#${currentProject.projectId}`);
+      
+      // Criar novo relacionamento: PARTNER#NEW_ID + SK: PROJECT#ID
+      const newPartnerPK = getPartnerPK(updateOptions.partnerId);
+      const relationshipItem = {
+        PK: newPartnerPK,
+        SK: `PROJECT#${currentProject.projectId}`,
+        projectId: currentProject.projectId,
+        title: updateOptions.title || currentProject.title
+      };
+      await this.db.put(relationshipItem, newPartnerPK, `PROJECT#${currentProject.projectId}`);
+    }
+    
     if(updateOptions.partnerId) updateDict.partnerId= updateOptions.partnerId;
     if(updateOptions.extensionHours) updateDict.extensionHours= updateOptions.extensionHours;
 

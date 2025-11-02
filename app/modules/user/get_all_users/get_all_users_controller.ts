@@ -3,7 +3,7 @@ import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { Request, Response } from "express";
 import { GetAllUsersUseCase } from "./get_all_users_usecase";
 import { GetAllUsersResponse } from "./get_all_users_schema";
-import type { User } from "app/shared/domain/entities/user";
+import type { User } from "../../../shared/domain/entities/user";
 
 export class GetAllUsersController {
     constructor(private readonly usecase: GetAllUsersUseCase) {}

@@ -1,6 +1,6 @@
-import { ProjectRepository } from "app/shared/repositories/repository";
+import { ProjectRepository } from "../../../shared/repositories/repository";
 import express, { Request, Response } from "express";
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
 import { GetAllProjectsUseCase } from "./get_all_projects_usecase";
 import { GetAllProjectsController } from "./get_all_projects_controller";
 

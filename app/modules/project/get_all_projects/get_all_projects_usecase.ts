@@ -1,7 +1,7 @@
-import { Project } from "app/shared/domain/entities/project";
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
+import { Project } from "../../../shared/domain/entities/project";
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
 import { ProjectWithPartnerName } from "../get_project/get_project_usecase";
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
 
 export class GetAllProjectsUseCase {
     constructor(private readonly projectRepository: IProjectRepository, private readonly partnerRepository: IPartnerRepository) {}

@@ -1,6 +1,6 @@
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
-import { NotFoundException } from "app/shared/helpers/exceptions";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
+import { NotFoundException } from "../../../shared/helpers/exceptions";
 
 interface GetProjectDTO {
     id?: string,

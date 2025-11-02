@@ -1,7 +1,7 @@
-import { UserFromToken } from "app/shared/middleware/jwt_middleware";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { Request, Response } from "express";
 import { GetAllProjectsResponse } from "./get_all_projects_schema";
-import { ForbiddenException } from "app/shared/helpers/exceptions";
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
 import { GetAllProjectsUseCase } from "./get_all_projects_usecase";
 
 export class GetAllProjectsController {

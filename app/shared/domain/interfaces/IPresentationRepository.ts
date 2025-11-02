@@ -8,8 +8,8 @@ export type PresentationFilter = {
 export type PresentationUpdateOptions = {
     date?: number,
     groupId?: string,
-    examinationBoartId? : string
-
+    examinationBoartId? : string,
+    sala?: string
 }
 
 

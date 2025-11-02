@@ -1,6 +1,6 @@
-import { Project } from "app/shared/domain/entities/project";
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
-import { NotFoundException } from "app/shared/helpers/exceptions";
+import { Project } from "../../../shared/domain/entities/project";
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
+import { NotFoundException } from "../../../shared/helpers/exceptions";
 
 export class DeleteProjectUseCase {
     constructor(private readonly projectRepository: IProjectRepository) {}

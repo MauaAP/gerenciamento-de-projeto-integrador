@@ -6,11 +6,17 @@ import type {
 } from "../../../domain/interfaces/IUserRepository";
 
 function getUserPK(user: User): string {
-  if (user.role === "STUDENT") return `STUDENT#${user.userId}`;
-  if (user.role === "PROFESSOR") return `PROFESSOR#${user.userId}`;
-  if (user.role === "MODERATOR") return `MODERATOR#${user.userId}`;
-  if (user.role === "ADMIN") return `ADMIN#${user.userId}`;
-  return user.userId; // fallback
+  if (user.role === "STUDENT") return `ALUNO#${user.userId}`;
+  if (user.role === "PROFESSOR") return `PROF#${user.userId}`;
+  if (user.role === "MODERATOR" || user.role === "ADMIN") return `ADMIN#${user.userId}`;
+  return `ALUNO#${user.userId}`; // fallback
+}
+
+function getUserPKById(userId: string, role: string): string {
+  if (role === "STUDENT") return `ALUNO#${userId}`;
+  if (role === "PROFESSOR") return `PROF#${userId}`;
+  if (role === "MODERATOR" || role === "ADMIN") return `ADMIN#${userId}`;
+  return `ALUNO#${userId}`; // fallback
 }
 
 function getUserSK(): string {
@@ -53,9 +59,9 @@ export class UserRepositoryDynamoDB implements IUserRepository {
   }
 
   async getUserById(userId: string): Promise<User | null> {
-    const roles = ["STUDENT", "PROFESSOR", "MODERATOR", "ADMIN"];
-    for (const role of roles) {
-      const pk = `${role}#${userId}`;
+    const prefixes = ["ALUNO", "PROF", "ADMIN"];
+    for (const prefix of prefixes) {
+      const pk = `${prefix}#${userId}`;
       const sk = getUserSK();
       const item = await this.db.get(pk, sk);
       if (item) {
@@ -68,7 +74,6 @@ export class UserRepositoryDynamoDB implements IUserRepository {
   }
 
   async getUserByEmail(email: string): Promise<User | null> {
-    // Necessário criar GSI_Email na tabela
     const items = await this.db.queryAll(
       email,
       undefined,
