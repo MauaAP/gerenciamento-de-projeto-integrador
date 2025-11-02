@@ -36,11 +36,12 @@ export class GetExaminationBoardUseCase {
                 
                 for (const professorId of examinationBoard.professorIdList){
                     const existingProfessor= await this.userRepository.getUserById(professorId);
+                    
+                    // acredit que aqui nao precise pois o professorId vem do banco
+                    // if (!existingProfessor)
+                    //     throw new BadRequestException("Algum professor selecionado não está no banco");
         
-                    if (!existingProfessor)
-                        throw new BadRequestException("Algum professor selecionado não está no banco");
-        
-                    professorNameList.push(existingProfessor.name);
+                    professorNameList.push(existingProfessor!.name);
                 }
 
                 return {

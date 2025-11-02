@@ -24,7 +24,7 @@ export class UpdateGroupController{
             req.body
         );
 
-        const {updatedGroup, userNameList, projectTitle}= await this.usecase.execute({
+        const updatedGroup= await this.usecase.execute({
             id,
             updateOptions: {
                 codSubj,
@@ -38,11 +38,15 @@ export class UpdateGroupController{
         const response= UpdateGroupResponse.parse({
             message: "Grupo foi alterado com sucesso",
             group: {
-                id: updatedGroup.groupId,
+                id: updatedGroup.id,
                 codSubj: updatedGroup.codSubj,
-                userNameList: userNameList,
+                userNameList: updatedGroup.userNameList,
                 yearSem: updatedGroup.yearSem,
-                projectTitle: projectTitle,
+                project: {
+                    title: updatedGroup.project.title,
+                    partnerName: updatedGroup.project.partnerName,
+                    extensionHours: updatedGroup.project.extensionHours
+                },
                 course: updatedGroup.course
             }
         });

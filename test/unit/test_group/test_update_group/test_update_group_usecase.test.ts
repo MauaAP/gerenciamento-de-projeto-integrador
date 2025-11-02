@@ -1,6 +1,7 @@
 import { UpdateGroupUseCase } from "app/modules/group/update_group/update_group_usecase";
 import { COURSE } from "app/shared/domain/enums/course";
 import { GroupRepoMock } from "app/shared/repositories/mocks/group_repository_mock";
+import { PartnerRepoMock } from "app/shared/repositories/mocks/partner_repository_mock";
 import { ProjectRepoMock } from "app/shared/repositories/mocks/project_repository_mock";
 import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest"
@@ -9,6 +10,7 @@ describe("UpdateGroupUseCase", () => {
     let groupRepo: GroupRepoMock;
     let userRepo: UserRepoMock;
     let projectRepo: ProjectRepoMock;
+    let partnerRepo: PartnerRepoMock;
     let useCase: UpdateGroupUseCase
 
 
@@ -16,18 +18,21 @@ describe("UpdateGroupUseCase", () => {
             groupRepo = new GroupRepoMock();
             userRepo = new UserRepoMock();
             projectRepo = new ProjectRepoMock();
-            useCase = new UpdateGroupUseCase(groupRepo, userRepo, projectRepo);
+            partnerRepo = new PartnerRepoMock();
+            useCase = new UpdateGroupUseCase(groupRepo, userRepo, projectRepo, partnerRepo);
     });
 
     it("should update the group in repository mock and return it, with user names and project title", async () => {
         const result= await useCase.execute({ id: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2", updateOptions: { codSubj: "TTI303", yearSem: 202502, course: COURSE.SIN, userIdList: ["f7c9d1e1-9d23-4f6e-94e1-8f45b50f2389", "b5c1d3e3-9c2b-46d1-97ee-c2d5d582a2d4"], projectId: "4d2419c0-4955-4412-900f-e1d49b87f92b" } })
 
-        expect(result.updatedGroup.groupId).toBe("14e97d3c-d309-43d4-bfa0-7724e1e54fb2")
-        expect(result.updatedGroup.codSubj).toBe("TTI303")
-        expect(result.updatedGroup.yearSem).toBe(202502)
-        expect(result.updatedGroup.course).toBe("SISTEMAS DE INFORMAÇÃO")
+        expect(result.id).toBe("14e97d3c-d309-43d4-bfa0-7724e1e54fb2")
+        expect(result.codSubj).toBe("TTI303")
+        expect(result.yearSem).toBe(202502)
+        expect(result.course).toBe("SISTEMAS DE INFORMAÇÃO")
         expect(result.userNameList).toEqual(["Luke Skywalker", "Nuncio Perrela"])
-        expect(result.projectTitle).toBe("Bot de investimentos com a Mastercard")
+        expect(result.project.title).toBe("Bot de investimentos com a Mastercard")
+        expect(result.project.partnerName).toBe("Mastercard")
+        expect(result.project.extensionHours).toBe(undefined)
     });
 
     it("should throw NotFoundException if id doesn't exist", async () => {

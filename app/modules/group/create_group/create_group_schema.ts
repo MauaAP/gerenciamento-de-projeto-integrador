@@ -19,7 +19,11 @@ export const GroupSchema = z.object({
     codSubj: z.string(),
     userNameList: z.array(z.string()),
     yearSem: z.number(),
-    projectTitle: z.string(),
+    project: z.object({
+        title: z.string(),
+        partnerName: z.string(),
+        extensionHours: z.number().optional()
+    }),
     course: z.string()
 })
 

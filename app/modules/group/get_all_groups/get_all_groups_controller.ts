@@ -27,7 +27,11 @@ export class GetAllGroupsController {
                 codSubj: group.codSubj,
                 userNameList: group.userNameList,
                 yearSem: group.yearSem,
-                projectTitle: group.projectTitle,
+                project: {
+                    title: group.project.title,
+                    partnerName: group.project.partnerName,
+                    extensionHours: group.project.extensionHours
+                },
                 course: group.course
             }))
         });

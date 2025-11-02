@@ -91,7 +91,7 @@ export class UserRepoMock implements IUserRepository {
     new User(
       "c8h7i9j9-7l8m-6n4o-99ii-j2k3l4m5n6o7",
       "Barry Allen",
-      "",
+      "flash@maua.br",
       ROLE.STUDENT,
       "Flash2004"
     ),
