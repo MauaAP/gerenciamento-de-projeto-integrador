@@ -1,19 +1,20 @@
-import { ExaminationBoard } from "app/shared/domain/entities/examination_board"
-import { Group } from "app/shared/domain/entities/group"
-import { Presentation } from "app/shared/domain/entities/presentation"
-import { IExaminationBoardRepository } from "app/shared/domain/interfaces/IExaminationBoardRepository"
-import { IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository"
-import { IPresentationRepository } from "app/shared/domain/interfaces/IPresentationRepository"
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository"
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository"
-import { BadRequestException, NotFoundException } from "app/shared/helpers/exceptions"
+import { ExaminationBoard } from "../../../shared/domain/entities/examination_board"
+import { Group } from "../../../shared/domain/entities/group"
+import { Presentation } from "../../../shared/domain/entities/presentation"
+import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository"
+import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository"
+import { IPresentationRepository } from "../../../shared/domain/interfaces/IPresentationRepository"
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository"
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository"
+import { BadRequestException, NotFoundException } from "../../../shared/helpers/exceptions"
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase"
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository"
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository"
 
 interface CreatePresentationInputInterface {
     date: number,
     groupId: string,
-    examinationBoartId: string
+    examinationBoartId: string,
+    sala: string
 }
 
 export class CreatePresentationUseCase {
@@ -26,7 +27,7 @@ export class CreatePresentationUseCase {
         private readonly partnerRepository: IPartnerRepository
     ) {}
 
-    async execute({date, groupId, examinationBoartId}: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
+    async execute({date, groupId, examinationBoartId, sala}: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
         // taking group
         const existingGroup = await this.groupRepository.getGroupById(groupId);
 
@@ -63,9 +64,18 @@ export class CreatePresentationUseCase {
 
         const presentationId = crypto.randomUUID();
 
-        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoartId);
+        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoartId, sala);
 
-        await this.presentationRepository.createPresentation(newPresentation);
+        // Passar professorIds e alunoIds para criar relacionamentos com GSI
+        const professorIds = existingExaminationBoard.professorIdList;
+        const alunoIds = existingGroup.userIdList;
+        
+        // Type assertion para passar parâmetros opcionais
+        await (this.presentationRepository.createPresentation as any)(
+            newPresentation, 
+            professorIds, 
+            alunoIds
+        );
 
         return {
             id: newPresentation.presentationId,
