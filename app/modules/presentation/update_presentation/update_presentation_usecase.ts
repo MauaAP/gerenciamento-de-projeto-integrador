@@ -1,18 +1,19 @@
-import { IExaminationBoardRepository } from "app/shared/domain/interfaces/IExaminationBoardRepository"
-import { IGroupRepository } from "app/shared/domain/interfaces/IGroupRepository"
-import { IPresentationRepository } from "app/shared/domain/interfaces/IPresentationRepository"
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository"
-import { IUserRepository } from "app/shared/domain/interfaces/IUserRepository"
-import { NotFoundException } from "app/shared/helpers/exceptions"
+import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository"
+import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository"
+import { IPresentationRepository } from "../../../shared/domain/interfaces/IPresentationRepository"
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository"
+import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository"
+import { NotFoundException } from "../../../shared/helpers/exceptions"
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase"
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository"
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository"
 
 interface UpdatePresentationInputInterface {
     id: string,
     updateOptions: {
         date?: number,
         groupId?: string,
-        examinationBoartId? : string
+        examinationBoartId? : string,
+        sala?: string
     }
 }
 

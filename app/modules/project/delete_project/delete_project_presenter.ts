@@ -1,8 +1,8 @@
-import { ProjectRepository } from "app/shared/repositories/repository";
+import { ProjectRepository } from "../../../shared/repositories/repository";
 import express, { Request, Response } from "express";
 import { DeleteProjectUseCase } from "./delete_project_usecase";
 import { DeleteProjectController } from "./delete_project_controller";
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
 
 const router= express.Router()
 const repository= new ProjectRepository();

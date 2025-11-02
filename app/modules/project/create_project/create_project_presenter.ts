@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import { CreateProjectUseCase } from "./create_project_usecase";
 import { CreateProjectController } from "./create_project_controller";
-import { ProjectRepository } from "app/shared/repositories/repository";
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
+import { ProjectRepository } from "../../../shared/repositories/repository";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
 
 const router= express.Router();
 

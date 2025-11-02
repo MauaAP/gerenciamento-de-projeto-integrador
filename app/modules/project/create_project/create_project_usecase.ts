@@ -1,7 +1,7 @@
-import { Project } from "app/shared/domain/entities/project";
-import { IPartnerRepository } from "app/shared/domain/interfaces/IPartnerRepository";
-import { IProjectRepository } from "app/shared/domain/interfaces/IProjectRepository";
-import { BadRequestException } from "app/shared/helpers/exceptions";
+import { Project } from "../../../shared/domain/entities/project";
+import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
+import { BadRequestException } from "../../../shared/helpers/exceptions";
 interface CreateProjectDTO{
     title: string,
     partnerId: string,

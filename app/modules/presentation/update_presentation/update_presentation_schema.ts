@@ -8,9 +8,11 @@ export const UpdatePresentationRequest = z.object({
 
     groupId: z.string({message: "groupId deve ser dado em string"}).length(36, "O group id deve conter 36 caracteres").optional(),
 
-    examinationBoartId: z.string({message: "examinationBoardId deve ser dado em string"}).length(36, "O examinationBoard id deve conter 36 caracteres").optional()
+    examinationBoartId: z.string({message: "examinationBoardId deve ser dado em string"}).length(36, "O examinationBoard id deve conter 36 caracteres").optional(),
+    
+    sala: z.string({message: "A sala deve ser uma string"}).optional()
 }).refine(
-    (data) => (data.date !== undefined || data.groupId !== undefined || data.examinationBoartId !== undefined),
+    (data) => (data.date !== undefined || data.groupId !== undefined || data.examinationBoartId !== undefined || data.sala !== undefined),
     {
         message: "Você deve passar algum atributo para ser alterado"
     }
