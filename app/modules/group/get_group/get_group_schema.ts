@@ -9,7 +9,7 @@ export const GetGroupRequest = z.object({
 
     codSubj: z.string().optional(),
 
-    yearSem: z.number({ message: "O yearSem deve ser dadas em numero" }).min(1, { message: "O yearSem deve ser maior que 0" }).optional(),
+    yearSem: z.coerce.number({ message: "O yearSem deve ser dadas em numero" }).min(1, { message: "O yearSem deve ser maior que 0" }).optional(),
 
     projectId: z.string({ message: "projectId é obrigatório" }).length(36, "O projectId deve conter 36 caracteres").optional(),
 
