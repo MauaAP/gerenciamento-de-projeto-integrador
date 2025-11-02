@@ -6,6 +6,8 @@ export const CreatePresentationRequest= z.object({
     groupId: z.string({message: "O groupId deve ser dado em string"}).length(36, "O groupId deve conter 36 caracteres"),
 
     examinationBoartId: z.string({message: "O examinationBoartId deve ser dado em string"}).length(36, "O examinationBoartId deve conter 36 caracteres"),
+    
+    sala: z.string({message: "A sala deve ser uma string"}).min(1, "A sala é obrigatória"),
 });
 
 export const PresentationSchema= z.object({
