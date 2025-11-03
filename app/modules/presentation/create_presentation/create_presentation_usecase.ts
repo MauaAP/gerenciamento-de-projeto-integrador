@@ -1,20 +1,18 @@
-import { ExaminationBoard } from "../../../shared/domain/entities/examination_board"
-import { Group } from "../../../shared/domain/entities/group"
 import { Presentation } from "../../../shared/domain/entities/presentation"
 import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository"
 import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository"
 import { IPresentationRepository } from "../../../shared/domain/interfaces/IPresentationRepository"
 import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository"
 import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository"
-import { BadRequestException, NotFoundException } from "../../../shared/helpers/exceptions"
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase"
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository"
+import { NotFoundException } from "../../../shared/helpers/exceptions"
 
 interface CreatePresentationInputInterface {
     date: number,
     groupId: string,
-    examinationBoartId: string,
-    sala: string
+    examinationBoardId: string,
+    classRoom: string
 }
 
 export class CreatePresentationUseCase {
@@ -25,9 +23,9 @@ export class CreatePresentationUseCase {
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
         private readonly partnerRepository: IPartnerRepository
-    ) {}
+    ) { }
 
-    async execute({date, groupId, examinationBoartId, sala}: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
+    async execute({ date, groupId, examinationBoardId, classRoom }: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
         // taking group
         const existingGroup = await this.groupRepository.getGroupById(groupId);
 
@@ -44,12 +42,12 @@ export class CreatePresentationUseCase {
         }
 
         //taking group projectTitle
-        const project= await this.projectRepository.getProjectById(existingGroup.projectId);
+        const project = await this.projectRepository.getProjectById(existingGroup.projectId);
 
-        const partner= await this.partnerRepository.getPartnerById(project!.partnerId)
+        const partner = await this.partnerRepository.getPartnerById(project!.partnerId)
 
         // taking examination board
-        const existingExaminationBoard = await this.examinationBoardRepository.getExaminationBoardById(examinationBoartId);
+        const existingExaminationBoard = await this.examinationBoardRepository.getExaminationBoardById(examinationBoardId);
 
         if (!existingExaminationBoard)
             throw new NotFoundException("Banca avaliadora selecionada não está no banco");
@@ -64,22 +62,23 @@ export class CreatePresentationUseCase {
 
         const presentationId = crypto.randomUUID();
 
-        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoartId, sala);
+        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoardId, classRoom);
 
         // Passar professorIds e alunoIds para criar relacionamentos com GSI
         const professorIds = existingExaminationBoard.professorIdList;
         const alunoIds = existingGroup.userIdList;
-        
+
         // Type assertion para passar parâmetros opcionais
         await (this.presentationRepository.createPresentation as any)(
-            newPresentation, 
-            professorIds, 
+            newPresentation,
+            professorIds,
             alunoIds
         );
 
         return {
             id: newPresentation.presentationId,
             date: newPresentation.date,
+            classRoom: newPresentation.classRoom,
             group: {
                 codSubj: existingGroup.codSubj,
                 userNameList: userNameList,

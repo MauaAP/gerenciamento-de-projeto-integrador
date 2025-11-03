@@ -2,14 +2,14 @@ import { Presentation } from "../entities/presentation";
 export type PresentationFilter = {
     date?: number,
     groupId?: string,
-    examinationBoartId?: string
+    examinationBoardId?: string
 }
 
 export type PresentationUpdateOptions = {
     date?: number,
     groupId?: string,
-    examinationBoartId? : string,
-    sala?: string
+    examinationBoardId?: string,
+    classRoom?: string
 }
 
 

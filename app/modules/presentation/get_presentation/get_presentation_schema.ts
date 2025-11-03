@@ -4,13 +4,13 @@ import { PresentationSchema } from "../create_presentation/create_presentation_s
 export const GetPresentationRequest = z.object({
     id: z.string({ message: "O id deve ser dado em string" }).length(36, "O id deve conter 36 caracteres").optional(),
 
-    date: z.number({message: "date deve ser dada em numero"}).optional(),
+    date: z.number({ message: "date deve ser dada em numero" }).optional(),
 
-    groupId: z.string({message: "groupId deve ser dado em string"}).length(36, "O group id deve conter 36 caracteres").optional(),
+    groupId: z.string({ message: "groupId deve ser dado em string" }).length(36, "O group id deve conter 36 caracteres").optional(),
 
-    examinationBoartId: z.string({message: "examinationBoardId deve ser dado em string"}).length(36, "O examinationBoart id deve conter 36 caracteres").optional()
+    examinationBoardId: z.string({ message: "examinationBoardId deve ser dado em string" }).length(36, "O examinationBoard id deve conter 36 caracteres").optional()
 }).refine((data) => {
-    const filterFields = [data.date, data.groupId, data.examinationBoartId];
+    const filterFields = [data.date, data.groupId, data.examinationBoardId];
 
     const hasFilter = filterFields.some(f => f !== undefined);
 

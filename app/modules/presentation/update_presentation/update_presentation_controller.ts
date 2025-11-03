@@ -6,40 +6,41 @@ import { parseBody } from "../../../shared/utils/parse_body";
 import { UpdatePresentationUseCase } from "./update_presentation_usecase";
 
 
-export class UpdatePresentationController{
-    constructor(private readonly usecase: UpdatePresentationUseCase) {}
+export class UpdatePresentationController {
+    constructor(private readonly usecase: UpdatePresentationUseCase) { }
 
     async handler(req: Request, res: Response) {
-        const userFromToken= req.user as UserFromToken;
+        const userFromToken = req.user as UserFromToken;
 
-        const allowedRoles= ["ADMIN", "MODERATOR"];
-        
-        if(!allowedRoles.includes(userFromToken.role)) {
+        const allowedRoles = ["ADMIN", "MODERATOR"];
+
+        if (!allowedRoles.includes(userFromToken.role)) {
             throw new ForbiddenException(
                 "Você não tem permissão para acessar este recurso"
             );
         }
 
-        const {id, date, groupId, examinationBoartId, sala}= parseBody(
+        const { id, date, groupId, examinationBoardId, classRoom } = parseBody(
             UpdatePresentationRequest,
             req.body
         );
 
-        const updatedPresentation= await this.usecase.execute({
+        const updatedPresentation = await this.usecase.execute({
             id,
             updateOptions: {
                 date,
                 groupId,
-                examinationBoartId,
-                sala
+                examinationBoardId,
+                classRoom
             }
         })
 
-        const response= UpdatePresentationResponse.parse({
+        const response = UpdatePresentationResponse.parse({
             message: "Apresentação foi alterada com sucesso",
             presentation: {
                 id: updatedPresentation.id,
                 date: updatedPresentation.date,
+                classRoom: updatedPresentation.classRoom,
                 group: {
                     codSubj: updatedPresentation.group.codSubj,
                     userNameList: updatedPresentation.group.userNameList,

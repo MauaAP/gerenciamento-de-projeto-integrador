@@ -6,37 +6,38 @@ import { GetPresentationRequest, GetPresentationResponse } from "./get_presentat
 import { GetPresentationUseCase } from "./get_presentation_usecase";
 
 export class GetPresentationController {
-    constructor(private readonly usecase: GetPresentationUseCase) {}
+    constructor(private readonly usecase: GetPresentationUseCase) { }
 
-    async handler(req: Request, res: Response){
-        const userFromToken= req.user as UserFromToken;
+    async handler(req: Request, res: Response) {
+        const userFromToken = req.user as UserFromToken;
 
-        const allowedRoles= ["ADMIN", "MODERATOR", "PROFESSOR", "STUDENT"];
+        const allowedRoles = ["ADMIN", "MODERATOR", "PROFESSOR", "STUDENT"];
 
         if (!allowedRoles.includes(userFromToken.role))
             throw new ForbiddenException(
                 "Você não tem permissão para acessar este recurso"
             );
 
-        const { id, date, groupId, examinationBoartId } = parseBody(
+        const { id, date, groupId, examinationBoardId } = parseBody(
             GetPresentationRequest,
             req.query
         );
 
-        const presentationList= await this.usecase.execute({
+        const presentationList = await this.usecase.execute({
             id,
             presentationFilter: {
                 date,
                 groupId,
-                examinationBoartId
+                examinationBoardId
             }
         });
 
-        const response= GetPresentationResponse.parse({
+        const response = GetPresentationResponse.parse({
             message: "Apresentação(ões) retornada(s) com sucesso",
             presentations: presentationList.map((presentation) => ({
                 id: presentation.id,
                 date: presentation.date,
+                classRoom: presentation.classRoom,
                 group: {
                     codSubj: presentation.group.codSubj,
                     userNameList: presentation.group.userNameList,

@@ -3,27 +3,27 @@ import { IPresentationRepository, PresentationFilter, PresentationUpdateOptions 
 import { DynamoDBResources } from "./dynamo_datasource";
 
 function getPresentationPK(presentationId: string): string {
-  return `APRESENTACAO#${presentationId}`;
+    return `APRESENTACAO#${presentationId}`;
 }
 
 function getPresentationSK(): string {
-  return "METADATA";
+    return "METADATA";
 }
 
 function getGroupPK(groupId: string): string {
-  return `GROUP#${groupId}`;
+    return `GROUP#${groupId}`;
 }
 
 function getExaminationBoardPK(examinationBoardId: string): string {
-  return `BANCA#${examinationBoardId}`;
+    return `BANCA#${examinationBoardId}`;
 }
 
 function getAlunoPK(userId: string): string {
-  return `ALUNO#${userId}`;
+    return `ALUNO#${userId}`;
 }
 
 function getProfPK(professorId: string): string {
-  return `PROF#${professorId}`;
+    return `PROF#${professorId}`;
 }
 
 export class PresentationRepositoryDynamoDB implements IPresentationRepository {
@@ -32,10 +32,10 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
     constructor(db: DynamoDBResources) {
         this.db = db;
     }
-    
+
     async createPresentation(presentation: Presentation, professorIds?: string[], alunoIds?: string[]): Promise<Presentation> {
         const pk = getPresentationPK(presentation.presentationId);
-        
+
         // 1. Criar item principal: APRESENTACAO#ID + SK: METADATA
         const metadataItem = {
             PK: pk,
@@ -55,10 +55,10 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
         // 3. Criar relacionamento: APRESENTACAO#ID + SK: BANCA#ID
         const bancaRelationshipItem = {
             PK: pk,
-            SK: `BANCA#${presentation.examinationBoartId}`,
-            examinationBoardId: presentation.examinationBoartId
+            SK: `BANCA#${presentation.examinationBoardId}`,
+            examinationBoardId: presentation.examinationBoardId
         };
-        await this.db.put(bancaRelationshipItem, pk, `BANCA#${presentation.examinationBoartId}`);
+        await this.db.put(bancaRelationshipItem, pk, `BANCA#${presentation.examinationBoardId}`);
 
         // 4. Criar relacionamentos com professores: APRESENTACAO#ID + SK: PROF#ID (com GSI2)
         if (professorIds && professorIds.length > 0) {
@@ -91,18 +91,18 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
         }
 
         console.log(`[DynamoDB] Apresentação criada: ${pk}`);
-        
+
         return presentation;
     }
 
     async fetchPresentation(): Promise<Presentation[]> {
         const items = await this.db.scanAll({
             FilterExpression: "begins_with(#pk, :presentationPrefix) AND #sk = :metadata",
-            ExpressionAttributeNames: { 
+            ExpressionAttributeNames: {
                 "#pk": "PK",
                 "#sk": "SK"
             },
-            ExpressionAttributeValues: { 
+            ExpressionAttributeValues: {
                 ":presentationPrefix": "APRESENTACAO#",
                 ":metadata": "METADATA"
             },
@@ -144,10 +144,10 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
         }
 
         // Filtro por examinationBoardId - Query APRESENTACAO#ID onde SK = BANCA#ID
-        if (filter.examinationBoartId) {
+        if (filter.examinationBoardId) {
             const allPresentations = await this.fetchPresentation();
-            const filtered = allPresentations.filter(p => p.examinationBoartId === filter.examinationBoartId);
-            
+            const filtered = allPresentations.filter(p => p.examinationBoardId === filter.examinationBoardId);
+
             for (const pres of filtered) {
                 if (!presentationIds.has(pres.presentationId)) {
                     presentations.push(pres);
@@ -160,18 +160,18 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
         if (filter.date) {
             const items = await this.db.scanAll({
                 FilterExpression: "begins_with(#pk, :presentationPrefix) AND #sk = :metadata AND #date = :date",
-                ExpressionAttributeNames: { 
+                ExpressionAttributeNames: {
                     "#pk": "PK",
                     "#sk": "SK",
                     "#date": "date"
                 },
-                ExpressionAttributeValues: { 
+                ExpressionAttributeValues: {
                     ":presentationPrefix": "APRESENTACAO#",
                     ":metadata": "METADATA",
                     ":date": filter.date
                 },
             });
-            
+
             const filtered = items.map(Presentation.fromJson);
             for (const pres of filtered) {
                 if (!presentationIds.has(pres.presentationId)) {
@@ -182,7 +182,7 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
         }
 
         // Se nenhum filtro foi aplicado, retornar todas as apresentações
-        if (!filter.groupId && !filter.examinationBoartId && !filter.date) {
+        if (!filter.groupId && !filter.examinationBoardId && !filter.date) {
             return await this.fetchPresentation();
         }
 
@@ -233,7 +233,7 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
             // Atualizar relacionamento GROUP
             // Deletar relacionamento antigo
             await this.db.delete(pk, `GROUP#${currentPresentation.groupId}`);
-            
+
             // Criar novo relacionamento
             const groupRelationshipItem = {
                 PK: pk,
@@ -241,25 +241,25 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
                 groupId: updateOptions.groupId
             };
             await this.db.put(groupRelationshipItem, pk, `GROUP#${updateOptions.groupId}`);
-            
+
             updateDict.groupId = updateOptions.groupId;
         }
-        if (updateOptions.examinationBoartId) {
+        if (updateOptions.examinationBoardId) {
             // Atualizar relacionamento BANCA
             // Deletar relacionamento antigo
-            await this.db.delete(pk, `BANCA#${currentPresentation.examinationBoartId}`);
-            
+            await this.db.delete(pk, `BANCA#${currentPresentation.examinationBoardId}`);
+
             // Criar novo relacionamento
             const bancaRelationshipItem = {
                 PK: pk,
-                SK: `BANCA#${updateOptions.examinationBoartId}`,
-                examinationBoardId: updateOptions.examinationBoartId
+                SK: `BANCA#${updateOptions.examinationBoardId}`,
+                examinationBoardId: updateOptions.examinationBoardId
             };
-            await this.db.put(bancaRelationshipItem, pk, `BANCA#${updateOptions.examinationBoartId}`);
-            
-            updateDict.examinationBoartId = updateOptions.examinationBoartId;
+            await this.db.put(bancaRelationshipItem, pk, `BANCA#${updateOptions.examinationBoardId}`);
+
+            updateDict.examinationBoardId = updateOptions.examinationBoardId;
         }
-        if (updateOptions.sala) updateDict.sala = updateOptions.sala;
+        if (updateOptions.classRoom) updateDict.classRoom = updateOptions.classRoom;
 
         const updated = await this.db.update(pk, sk, updateDict);
         console.log(`[DynamoDB] Apresentação atualizada: ${pk}`);

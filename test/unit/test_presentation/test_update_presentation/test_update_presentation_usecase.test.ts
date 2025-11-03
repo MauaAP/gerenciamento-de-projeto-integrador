@@ -27,22 +27,23 @@ describe("UpdatePresentationUseCase", () => {
     });
 
     it("should update the presentation in repository mock and return it, with group, examination board, user names and project title", async () => {
-        const result= await useCase.execute({ 
-            id: "8c77b6b9-a249-4318-a982-b07972bd1fb9", 
-            updateOptions: { 
-                date: 1750854600000, 
-                groupId: "25f08e4d-e41a-4c5f-9c3b-8835e2f65c43", examinationBoartId: "d28a5fcb-22e8-4955-b6cd-b48986e41176" 
-            } 
+        const result = await useCase.execute({
+            id: "8c77b6b9-a249-4318-a982-b07972bd1fb9",
+            updateOptions: {
+                date: 1750854600000,
+                groupId: "25f08e4d-e41a-4c5f-9c3b-8835e2f65c43", examinationBoardId: "d28a5fcb-22e8-4955-b6cd-b48986e41176"
+            }
         })
 
         expect(result.id).toBe("8c77b6b9-a249-4318-a982-b07972bd1fb9")
         expect(result.date).toBe(1750854600000)
+        expect(result.classRoom).toBe("Sala A101")
         expect(result.group.codSubj).toBe("TTI101")
         expect(result.group.yearSem).toBe(202401)
         expect(result.group.course).toBe("CIÊNCIAS DA COMPUTAÇÃO")
         expect(result.group.userNameList).toEqual([
-            "Luke Skywalker", 
-            "Peter Parker", 
+            "Luke Skywalker",
+            "Peter Parker",
             "Clark Kent",
             "Nuncio Perrela"
         ])
@@ -79,7 +80,7 @@ describe("UpdatePresentationUseCase", () => {
 
     it("should throw NotFoundException if examination board doesn't exist", async () => {
         try {
-            await useCase.execute({ id: "8c77b6b9-a249-4318-a982-b07972bd1fb9", updateOptions: { examinationBoartId: "00000000-0000-0000-0000-000000000000" } });
+            await useCase.execute({ id: "8c77b6b9-a249-4318-a982-b07972bd1fb9", updateOptions: { examinationBoardId: "00000000-0000-0000-0000-000000000000" } });
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("NotFoundException");

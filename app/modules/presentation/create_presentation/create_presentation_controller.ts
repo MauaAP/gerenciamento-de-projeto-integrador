@@ -6,35 +6,36 @@ import { CreatePresentationRequest, CreatePresentationResponse } from "./create_
 import { CreatePresentationUseCase } from "./create_presentation_usecase";
 
 export class CreatePresentationController {
-    constructor(private readonly usecase: CreatePresentationUseCase) {}
+    constructor(private readonly usecase: CreatePresentationUseCase) { }
 
     async handler(req: Request, res: Response) {
-        const userFromToken= req.user as UserFromToken;
+        const userFromToken = req.user as UserFromToken;
 
-        const allowedRoles= ["ADMIN", "MODERATOR"]
+        const allowedRoles = ["ADMIN", "MODERATOR"]
 
-        if (!allowedRoles.includes(userFromToken.role)){
+        if (!allowedRoles.includes(userFromToken.role)) {
             throw new ForbiddenException("Você não tem permissão para acessar este recurso"
             );
         }
 
-        const {date, groupId, examinationBoartId, sala} = parseBody(
+        const { date, groupId, examinationBoardId, classRoom } = parseBody(
             CreatePresentationRequest,
             req.body
         );
 
-        const newPresentation= await this.usecase.execute({
+        const newPresentation = await this.usecase.execute({
             date,
             groupId,
-            examinationBoartId,
-            sala
+            examinationBoardId,
+            classRoom
         });
 
-        const response= CreatePresentationResponse.parse({
+        const response = CreatePresentationResponse.parse({
             message: "Apresentação criada com sucesso",
             presentation: {
                 id: newPresentation.id,
                 date: newPresentation.date,
+                classRoom: newPresentation.classRoom,
                 group: {
                     codSubj: newPresentation.group.codSubj,
                     userNameList: newPresentation.group.userNameList,

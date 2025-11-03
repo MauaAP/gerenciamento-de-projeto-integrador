@@ -12,13 +12,14 @@ interface GetPresentationInputInterface {
     presentationFilter?: {
         date?: number,
         groupId?: string,
-        examinationBoartId?: string
+        examinationBoardId?: string
     }
 }
 
 export interface PresentationOficialModel {
     id: string;
     date: number;
+    classRoom: string;
     group: {
         codSubj: string;
         userNameList: string[];
@@ -43,12 +44,12 @@ export class GetPresentationUseCase {
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
         private readonly partnerRepository: IPartnerRepository
-    ) {}
+    ) { }
 
-    async execute({id, presentationFilter}: GetPresentationInputInterface): Promise<PresentationOficialModel[]>{
+    async execute({ id, presentationFilter }: GetPresentationInputInterface): Promise<PresentationOficialModel[]> {
         const selectedPresentation = id
-        ? await this.presentationRepository.getPresentationById(id)
-        : await this.presentationRepository.getPresentationByFilter(presentationFilter!)
+            ? await this.presentationRepository.getPresentationById(id)
+            : await this.presentationRepository.getPresentationByFilter(presentationFilter!)
 
         if (selectedPresentation == null)
             throw new NotFoundException("Nenhuma apresentação encontrada");
@@ -57,9 +58,9 @@ export class GetPresentationUseCase {
 
         const presentationOficialModel = await Promise.all(
             presentations.map(async (presentation) => {
-                
+
                 // aqui pego o grupo
-                const group= await this.groupRepository.getGroupById(presentation.groupId);
+                const group = await this.groupRepository.getGroupById(presentation.groupId);
 
                 // taking group user names
                 const userNameList: string[] = []
@@ -70,11 +71,11 @@ export class GetPresentationUseCase {
                 }
 
                 //taking group projectTitle
-                const project= await this.projectRepository.getProjectById(group!.projectId);
+                const project = await this.projectRepository.getProjectById(group!.projectId);
 
-                const partner= await this.partnerRepository.getPartnerById(project!.partnerId)
+                const partner = await this.partnerRepository.getPartnerById(project!.partnerId)
 
-                const examinationBoard = await this.examinationBoardRepository.getExaminationBoardById(presentation.examinationBoartId);
+                const examinationBoard = await this.examinationBoardRepository.getExaminationBoardById(presentation.examinationBoardId);
 
                 // taking examinationBoard user names
                 const professorNameList: string[] = []
@@ -88,6 +89,7 @@ export class GetPresentationUseCase {
                 return {
                     id: presentation.presentationId,
                     date: presentation.date,
+                    classRoom: presentation.classRoom,
                     group: {
                         codSubj: group!.codSubj,
                         userNameList: userNameList,

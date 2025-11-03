@@ -12,8 +12,8 @@ interface UpdatePresentationInputInterface {
     updateOptions: {
         date?: number,
         groupId?: string,
-        examinationBoartId? : string,
-        sala?: string
+        examinationBoardId?: string,
+        classRoom?: string
     }
 }
 
@@ -25,32 +25,32 @@ export class UpdatePresentationUseCase {
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
         private readonly partnerRepository: IPartnerRepository
-    ) {}
+    ) { }
 
-    async execute({id, updateOptions}: UpdatePresentationInputInterface): Promise<PresentationOficialModel>{
+    async execute({ id, updateOptions }: UpdatePresentationInputInterface): Promise<PresentationOficialModel> {
 
-        if(updateOptions?.groupId){
-            const group= await this.groupRepository.getGroupById(updateOptions.groupId);
+        if (updateOptions?.groupId) {
+            const group = await this.groupRepository.getGroupById(updateOptions.groupId);
 
-            if (!group){
+            if (!group) {
                 throw new NotFoundException("Grupo não está no banco");
             }
         }
 
-        if(updateOptions?.examinationBoartId){
-            const examinationBoard= await this.examinationBoardRepository.getExaminationBoardById(updateOptions.examinationBoartId);
+        if (updateOptions?.examinationBoardId) {
+            const examinationBoard = await this.examinationBoardRepository.getExaminationBoardById(updateOptions.examinationBoardId);
 
-            if (!examinationBoard){
+            if (!examinationBoard) {
                 throw new NotFoundException("Banca avaliadora não está no banco");
             }
         }
 
-        const updatedPresentation= await this.presentationRepository.updatePresentation(id, updateOptions)
+        const updatedPresentation = await this.presentationRepository.updatePresentation(id, updateOptions)
 
         if (updatedPresentation == null)
             throw new NotFoundException("Apresentação não está no banco");
 
-        const group= await this.groupRepository.getGroupById(updatedPresentation.groupId);
+        const group = await this.groupRepository.getGroupById(updatedPresentation.groupId);
 
         // taking group user names
         const userNameList: string[] = []
@@ -61,12 +61,12 @@ export class UpdatePresentationUseCase {
         }
 
         //taking group projectTitle
-        const project= await this.projectRepository.getProjectById(group!.projectId);
+        const project = await this.projectRepository.getProjectById(group!.projectId);
 
-        const partner= await this.partnerRepository.getPartnerById(project!.partnerId)
+        const partner = await this.partnerRepository.getPartnerById(project!.partnerId)
 
         // taking examination board
-        const examinationBoard = await this.examinationBoardRepository.getExaminationBoardById(updatedPresentation.examinationBoartId);
+        const examinationBoard = await this.examinationBoardRepository.getExaminationBoardById(updatedPresentation.examinationBoardId);
 
         const professorNameList: string[] = []
         for (const professorId of examinationBoard!.professorIdList) {
@@ -78,6 +78,7 @@ export class UpdatePresentationUseCase {
         return {
             id: updatedPresentation.presentationId,
             date: updatedPresentation.date,
+            classRoom: updatedPresentation.classRoom,
             group: {
                 codSubj: group!.codSubj,
                 userNameList: userNameList,

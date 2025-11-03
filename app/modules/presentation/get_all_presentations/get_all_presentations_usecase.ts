@@ -14,30 +14,30 @@ export class GetAllPresentationsUseCase {
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
         private readonly partnerRepository: IPartnerRepository
-    ) {}
+    ) { }
 
-    async execute(): Promise<PresentationOficialModel[]>{
-        const presentationList= await this.presentationRepository.fetchPresentation()
+    async execute(): Promise<PresentationOficialModel[]> {
+        const presentationList = await this.presentationRepository.fetchPresentation()
 
         const presentationOficialModel = await Promise.all(
             presentationList.map(async (presentation) => {
-                
-                const group= await this.groupRepository.getGroupById(presentation.groupId);
+
+                const group = await this.groupRepository.getGroupById(presentation.groupId);
 
                 // taking group user names
                 const userNameList: string[] = []
                 for (const userId of group!.userIdList) {
-                    const user= await this.userRepository.getUserById(userId);
+                    const user = await this.userRepository.getUserById(userId);
 
                     userNameList.push(user!.name)
                 }
 
                 // taking group project title
-                const project= await this.projectRepository.getProjectById(group!.projectId);
+                const project = await this.projectRepository.getProjectById(group!.projectId);
 
-               const partner= await this.partnerRepository.getPartnerById(project!.partnerId)
+                const partner = await this.partnerRepository.getPartnerById(project!.partnerId)
 
-                const examinationBoard= await this.examinationBoardRepository.getExaminationBoardById(presentation.examinationBoartId);
+                const examinationBoard = await this.examinationBoardRepository.getExaminationBoardById(presentation.examinationBoardId);
 
                 // taking examinationBoard user names
                 const professorNameList: string[] = []
@@ -51,6 +51,7 @@ export class GetAllPresentationsUseCase {
                 return {
                     id: presentation.presentationId,
                     date: presentation.date,
+                    classRoom: presentation.classRoom,
                     group: {
                         codSubj: group!.codSubj,
                         userNameList: userNameList,

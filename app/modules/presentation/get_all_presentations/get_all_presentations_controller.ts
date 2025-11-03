@@ -25,6 +25,7 @@ export class GetAllPresentationsController {
             presentations: presentationsList.map((presentation) => ({
                 id: presentation.id,
                 date: presentation.date,
+                classRoom: presentation.classRoom,
                 group: {
                     codSubj: presentation.group.codSubj,
                     userNameList: presentation.group.userNameList,

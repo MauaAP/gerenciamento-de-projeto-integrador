@@ -14,11 +14,11 @@ describe("GetPresentationUseCase - Zod validation", () => {
         const result = parseBody(GetPresentationRequest, {
             date: 1750854600000,
             groupId: "3896e005-bc5c-4839-a43b-463ae9c3583c",
-            examinationBoartId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
+            examinationBoardId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
         });
         expect(result.date).toBe(1750854600000);
         expect(result.groupId).toBe("3896e005-bc5c-4839-a43b-463ae9c3583c");
-        expect(result.examinationBoartId).toBe("d7e6218a-001b-4fd6-9d97-ddf985f6ab5b");
+        expect(result.examinationBoardId).toBe("d7e6218a-001b-4fd6-9d97-ddf985f6ab5b");
     });
 
     it("should throw BadRequestException if neither id nor date filter is provided", () => {
@@ -38,7 +38,7 @@ describe("GetPresentationUseCase - Zod validation", () => {
                 id: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
                 date: 1750854600000,
                 groupId: "3896e005-bc5c-4839-a43b-463ae9c3583c",
-                examinationBoartId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
+                examinationBoardId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
             });
         }
         catch (error: any) {
@@ -115,12 +115,12 @@ describe("GetPresentationUseCase - Zod validation", () => {
         }
     });
 
-    it("should throw BadRequestException if examinationBoartId is not a string", () => {
+    it("should throw BadRequestException if examinationBoardId is not a string", () => {
         try {
             parseBody(GetPresentationRequest, {
                 date: 1750854600000,
                 groupId: "3896e005-bc5c-4839-a43b-463ae9c3583c",
-                examinationBoartId: 12345,
+                examinationBoardId: 12345,
             });
         }
         catch (error: any) {
@@ -130,17 +130,17 @@ describe("GetPresentationUseCase - Zod validation", () => {
         }
     });
 
-    it("should throw BadRequestException if examinationBoartId is not 36 characters", () => {
+    it("should throw BadRequestException if examinationBoardId is not 36 characters", () => {
         try {
             parseBody(GetPresentationRequest, {
                 date: 1750854600000,
                 groupId: "3896e005-bc5c-4839-a43b-463ae9c3583c",
-                examinationBoartId: "short-examination-board-id",
+                examinationBoardId: "short-examination-board-id",
             });
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("O examinationBoart id deve conter 36 caracteres")
+            expect(error.message).toBe("O examinationBoard id deve conter 36 caracteres")
             expect(error.statusCode).toBe(400)
         }
     });

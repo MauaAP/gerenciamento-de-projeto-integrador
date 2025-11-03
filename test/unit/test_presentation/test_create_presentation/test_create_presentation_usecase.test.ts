@@ -30,7 +30,8 @@ describe("CreatePresentationUseCase", () => {
         const request = {
             date: 1770000000000,
             groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-            examinationBoartId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b"
+            examinationBoardId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
+            classRoom: "Sala 101"
         };
 
         const result = await useCase.execute(request);
@@ -38,9 +39,9 @@ describe("CreatePresentationUseCase", () => {
         expect(result.id).toBeDefined();
         expect(result.date).toEqual(request.date);
         // expect(result.groupId).toEqual(request.groupId);
-        // expect(result.examinationBoartId).toEqual(request.examinationBoartId);
+        // expect(result.examinationBoardId).toEqual(request.examinationBoardId);
         // expect(result.existingGroup.groupId).toEqual(request.groupId);
-        // expect(result.existingExaminationBoard.examinationBoardId).toEqual(request.examinationBoartId);
+        // expect(result.existingExaminationBoard.examinationBoardId).toEqual(request.examinationBoardId);
         expect(result.group.codSubj).toEqual("TTI202");
         expect(result.group.userNameList).toEqual([
             "Luke Skywalker",
@@ -66,11 +67,12 @@ describe("CreatePresentationUseCase", () => {
             const request = {
                 date: 1770000000000,
                 groupId: "non-existent-group-id",
-                examinationBoartId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b"
+                examinationBoardId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
+                classRoom: "Sala 101"
             };
             await useCase.execute(request)
         }
-        catch(error: any) {
+        catch (error: any) {
             expect(error.name).toBe("NotFoundException");
             expect(error.message).toBe("Grupo não está no banco");
             expect(error.statusCode).toBe(404);
@@ -82,11 +84,12 @@ describe("CreatePresentationUseCase", () => {
             const request = {
                 date: 1770000000000,
                 groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-                examinationBoartId: "non-existent-examination-board-id"
+                examinationBoardId: "non-existent-examination-board-id",
+                classRoom: "Sala 101"
             };
             await useCase.execute(request)
         }
-        catch(error: any) {
+        catch (error: any) {
             expect(error.name).toBe("NotFoundException");
             expect(error.message).toBe("Banca avaliadora selecionada não está no banco");
             expect(error.statusCode).toBe(404);

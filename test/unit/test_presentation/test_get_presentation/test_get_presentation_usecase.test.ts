@@ -31,6 +31,7 @@ describe("GetExaminationBoardUsecase", () => {
 
         expect(result[0].id).toBe("8c77b6b9-a249-4318-a982-b07972bd1fb9");
         expect(result[0].date).toBe(1750854600000);
+        expect(result[0].classRoom).toBe("Sala A101");
         expect(result[0].group.codSubj).toBe("TTI202");
         expect(result[0].group.userNameList).toEqual([
             "Luke Skywalker",
@@ -56,6 +57,7 @@ describe("GetExaminationBoardUsecase", () => {
 
         expect(result[0].id).toBe("4bf04c45-818e-496d-a308-71ef827f175d");
         expect(result[0].date).toBe(1719235800000);
+        expect(result[0].classRoom).toBe("Sala A101");
         expect(result[0].group.codSubj).toBe("TTI101");
         expect(result[0].group.userNameList).toEqual([
             "Diana Prince",

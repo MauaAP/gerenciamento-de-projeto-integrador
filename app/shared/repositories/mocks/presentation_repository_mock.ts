@@ -61,17 +61,17 @@ export class PresentationRepoMock implements IPresentationRepository {
     }
 
     async getPresentationByFilter(filter: PresentationFilter): Promise<Presentation[] | null> {
-        const result= this.presentations.filter((presentation) =>
+        const result = this.presentations.filter((presentation) =>
             (!filter.date || presentation.date === filter.date) &&
             (!filter.groupId || presentation.groupId.includes(filter.groupId)) &&
-            (!filter.examinationBoartId || presentation.examinationBoartId === filter.examinationBoartId)
+            (!filter.examinationBoardId || presentation.examinationBoardId === filter.examinationBoardId)
         );
         return result.length > 0 ? result : null;
     }
     // Falar com o Luca aqui tinha pensado que seria legal caso a gente recebesse um array de date que pudesse possuir até duas timestamps e a gente pudesse fazer o filtro para presentation que estão nesse intervalo, caso viesse uma duplicava o timestamp
 
     async deletePresentation(presentationId: string): Promise<Presentation | null> {
-        const index= this.presentations.findIndex((presentation) => presentation.presentationId === presentationId);
+        const index = this.presentations.findIndex((presentation) => presentation.presentationId === presentationId);
 
         if (index === -1) return null;
 
@@ -79,9 +79,9 @@ export class PresentationRepoMock implements IPresentationRepository {
     }
 
     async updatePresentation(presentationId: string, updateOptions: PresentationUpdateOptions): Promise<Presentation | null> {
-        const presentation= this.presentations.find((presentation) => presentation.presentationId === presentationId) || null;
+        const presentation = this.presentations.find((presentation) => presentation.presentationId === presentationId) || null;
 
-        if(presentation === null){
+        if (presentation === null) {
             return null;
         }
 
