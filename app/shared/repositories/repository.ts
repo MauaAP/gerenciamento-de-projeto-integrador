@@ -19,6 +19,9 @@ import { ExaminationBoardRepositoryDynamoDB } from "./database/dynamo/examinatio
 import { PresentationRepoMock } from "./mocks/presentation_repository_mock";
 import { IPresentationRepository } from "../domain/interfaces/IPresentationRepository";
 import { PresentationRepositoryDynamoDB } from "./database/dynamo/presentation_repository_dynamo";
+import { IClassroomRepository } from "../domain/interfaces/IClassroomRepository";
+import { ClassroomRepoMock } from "./mocks/classroom_repository_mock";
+import { ClassroomRepositoryDynamoDB } from "./database/dynamo/classroom_repository_dynamo";
 
 export class UserRepository {
   public userRepo: IUserRepository;
@@ -129,6 +132,20 @@ export class PresentationRepository{
       this.projectRepo= new ProjectRepositoryDynamoDB(this.dynamoDb);
       this.userRepo= new UserRepositoryDynamoDB(this.dynamoDb);
       this.partnerRepo= new PartnerRepositoryDynamoDB(this.dynamoDb);
+    }
+  }
+}
+
+export class ClassroomRepository {
+  public classroomRepo: IClassroomRepository;
+  private dynamoDb?: DynamoDBResources;
+
+  constructor() {
+    if (Env.STAGE === "test") {
+      this.classroomRepo = new ClassroomRepoMock();
+    } else {
+      this.dynamoDb = new DynamoDBResources(dynamoConfig);
+      this.classroomRepo = new ClassroomRepositoryDynamoDB(this.dynamoDb);
     }
   }
 }
