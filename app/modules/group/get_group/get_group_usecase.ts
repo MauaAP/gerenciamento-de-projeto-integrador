@@ -1,4 +1,4 @@
-import { COURSE } from "../../../shared/domain/enums/course";
+import { ICourseRepository } from "../../../shared/domain/interfaces/ICourseRepository";
 import { GroupFilter, IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
 import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
@@ -20,7 +20,7 @@ export interface GroupOficialModel {
         partnerName: string;
         extensionHours?: number;
     }
-    course: COURSE;
+    courseName: string;
 }
 
 export class GetGroupUseCase {
@@ -28,7 +28,8 @@ export class GetGroupUseCase {
         private readonly groupRepository: IGroupRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly partnerRepository: IPartnerRepository
+        private readonly partnerRepository: IPartnerRepository,
+        private readonly courseRepository: ICourseRepository
     ) {}
 
     async execute({id, groupFilter}: GetGroupDTO): Promise<GroupOficialModel[]>{
@@ -44,6 +45,8 @@ export class GetGroupUseCase {
 
         const groupOficialModel = await Promise.all(
             groups.map(async (group) => {
+                //aqui pego o curso
+                const course= await this.courseRepository.getCourseById(group.courseId);
                 
                 // aqui pego o projeto
                 const project= await this.projectRepository.getProjectById(group.projectId);
@@ -74,7 +77,7 @@ export class GetGroupUseCase {
                         partnerName: partner!.name,
                         extensionHours: project!.extensionHours
                     },
-                    course: group.course
+                    courseName: course!.name
                 };
             })
         );

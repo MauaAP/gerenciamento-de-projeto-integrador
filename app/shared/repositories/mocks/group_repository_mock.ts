@@ -73,7 +73,7 @@ export class GroupRepoMock implements IGroupRepository {
             (!filter.codSubj || group.codSubj === filter.codSubj) && 
             (!filter.yearSem || group.yearSem === filter.yearSem) && 
             (!filter.projectId || group.projectId === filter.projectId) && 
-            (!filter.course || group.course === filter.course)
+            (!filter.courseId || group.courseId === filter.courseId)
         );
         return result.length > 0 ? result : null;
     }

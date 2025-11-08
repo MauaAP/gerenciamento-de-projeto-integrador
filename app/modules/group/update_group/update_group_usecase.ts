@@ -4,6 +4,7 @@ import { IUserRepository } from "../../../shared/domain/interfaces/IUserReposito
 import { GroupOficialModel } from "../get_group/get_group_usecase";
 import { BadRequestException, NotFoundException } from "../../../shared/helpers/exceptions";
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { ICourseRepository } from "app/shared/domain/interfaces/ICourseRepository";
 
 interface UpdateGroupDTO {
     id: string,
@@ -15,7 +16,8 @@ export class UpdateGroupUseCase {
             private readonly groupRepository: IGroupRepository,
             private readonly userRepository: IUserRepository,
             private readonly projectRepository: IProjectRepository,
-            private readonly PartnerRepository: IPartnerRepository
+            private readonly partnerRepository: IPartnerRepository,
+            private readonly courseRepository: ICourseRepository
     ) {}
 
     async execute({id, updateOptions}: UpdateGroupDTO): Promise<GroupOficialModel>{
@@ -36,6 +38,14 @@ export class UpdateGroupUseCase {
                 throw new BadRequestException("O projeto selecionado não está no banco");
             }
         }
+
+        if(updateOptions?.courseId) {
+            const course= await this.courseRepository.getCourseById(updateOptions.courseId);
+
+            if (!course){
+                throw new BadRequestException("O curso selecionado não está no banco");
+            }
+        }
         
         const updatedGroup= await this.groupRepository.updateGroup(id, updateOptions)
 
@@ -50,9 +60,11 @@ export class UpdateGroupUseCase {
             userNameList.push(user!.name);
         }
 
+        const course= await this.courseRepository.getCourseById(updatedGroup.courseId)
+
         const project= (await this.projectRepository.getProjectById(updatedGroup.projectId))
 
-        const partner= await this.PartnerRepository.getPartnerById(project!.partnerId)
+        const partner= await this.partnerRepository.getPartnerById(project!.partnerId)
 
         const partnerName= partner!.name 
 
@@ -66,7 +78,7 @@ export class UpdateGroupUseCase {
                 partnerName: partnerName,
                 extensionHours: project!.extensionHours
             },
-            course: updatedGroup.course
+            courseName: course!.name
         }
     }
 }

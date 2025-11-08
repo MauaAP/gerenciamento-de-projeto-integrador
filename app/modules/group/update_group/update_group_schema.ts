@@ -1,4 +1,3 @@
-import { COURSE } from "../../../shared/domain/enums/course"
 import { z } from "zod"
 import { GroupSchema } from "../create_group/create_group_schema"
 export const UpdateGroupRequest = z.object({
@@ -18,10 +17,10 @@ export const UpdateGroupRequest = z.object({
 
     projectId: z.string({ message: "O projectId deve ser dado em string" }).length(36, "O projectId deve conter 36 caracteres").optional(),
 
-    course: z.nativeEnum(COURSE, { errorMap: () => ({ message: "course não está entre os disponíveis" }) }).optional()
+    courseId: z.string({ message: "courseId é obrigatório" }).length(36, "O courseId deve conter 36 caracteres").optional()
     
 }).refine(
-    (data) => (data.codSubj !== undefined || data.userIdList !== undefined || data.yearSem !== undefined || data.projectId !== undefined || data.course !== undefined),
+    (data) => (data.codSubj !== undefined || data.userIdList !== undefined || data.yearSem !== undefined || data.projectId !== undefined || data.courseId !== undefined),
     {
         message: "Você deve passar algum atributo para ser alterado"
     }

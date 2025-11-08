@@ -19,7 +19,7 @@ export class UpdateGroupController{
             );
         }
 
-        const {id, codSubj, userIdList, yearSem, projectId, course}= parseBody(
+        const {id, codSubj, userIdList, yearSem, projectId, courseId}= parseBody(
             UpdateGroupRequest,
             req.body
         );
@@ -31,7 +31,7 @@ export class UpdateGroupController{
                 userIdList,
                 yearSem,
                 projectId,
-                course
+                courseId
             }
         })
 
@@ -47,7 +47,7 @@ export class UpdateGroupController{
                     partnerName: updatedGroup.project.partnerName,
                     extensionHours: updatedGroup.project.extensionHours
                 },
-                course: updatedGroup.course
+                courseName: updatedGroup.courseName
             }
         });
         res.status(200).json(response)

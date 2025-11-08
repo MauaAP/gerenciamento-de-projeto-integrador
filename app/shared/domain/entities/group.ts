@@ -1,5 +1,3 @@
-import { COURSE } from "../enums/course";
-
 export class Group {
     constructor(
         public groupId: string,
@@ -7,7 +5,7 @@ export class Group {
         public userIdList: string[],
         public yearSem: number,
         public projectId: string,
-        public course: COURSE
+        public courseId: string
     ) {}
 
     toJson() : {
@@ -16,7 +14,7 @@ export class Group {
         userIdList: string[],
         yearSem: number,
         projectId: string,
-        course: COURSE
+        courseId: string
     } {
         return {
             groupId: this.groupId,
@@ -24,7 +22,7 @@ export class Group {
             userIdList: this.userIdList,
             yearSem: this.yearSem,
             projectId: this.projectId,
-            course: this.course
+            courseId: this.courseId
         };
     }
     
@@ -34,8 +32,8 @@ export class Group {
         userIdList: string[],
         yearSem: number,
         projectId: string,
-        course: COURSE
+        courseId: string
     }) : Group {
-        return new Group(json.groupId, json.codSubj, json.userIdList, json.yearSem, json.projectId ,json.course)
+        return new Group(json.groupId, json.codSubj, json.userIdList, json.yearSem, json.projectId ,json.courseId)
     }
 }

@@ -32,7 +32,7 @@ export class GetAllGroupsController {
                     partnerName: group.project.partnerName,
                     extensionHours: group.project.extensionHours
                 },
-                course: group.course
+                courseName: group.courseName
             }))
         });
         res.status(200).json(response)

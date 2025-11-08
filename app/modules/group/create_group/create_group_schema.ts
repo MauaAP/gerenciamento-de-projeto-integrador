@@ -1,4 +1,3 @@
-import { COURSE } from "../../../shared/domain/enums/course"
 import { z } from "zod"
 
 export const CreateGroupRequest = z.object({
@@ -11,7 +10,7 @@ export const CreateGroupRequest = z.object({
         ),
     yearSem: z.number({ message: "O yearSem deve ser dadas em numero" }).min(1, { message: "O yearSem deve ser maior que 0" }),
     projectId: z.string({ message: "projectId é obrigatório" }).length(36, "O projectId deve conter 36 caracteres"),
-    course: z.nativeEnum(COURSE, { errorMap: () => ({ message: "course é obrigatório" }) })
+    courseId: z.string({ message: "courseId é obrigatório" }).length(36, "O courseId deve conter 36 caracteres")
 })
 
 export const GroupSchema = z.object({
@@ -24,7 +23,7 @@ export const GroupSchema = z.object({
         partnerName: z.string(),
         extensionHours: z.number().optional()
     }),
-    course: z.string()
+    courseName: z.string()
 })
 
 export const CreateGroupResponse = z.object({

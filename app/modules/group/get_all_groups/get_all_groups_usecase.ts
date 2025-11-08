@@ -3,13 +3,15 @@ import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRe
 import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { GroupOficialModel } from "../get_group/get_group_usecase";
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { ICourseRepository } from "../../../shared/domain/interfaces/ICourseRepository";
 
 export class GetAllGroupsUseCase {
     constructor(
         private readonly groupRepository: IGroupRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly partnerRepository: IPartnerRepository
+        private readonly partnerRepository: IPartnerRepository,
+        private readonly courseRepository: ICourseRepository
     ) {}
 
     async execute(): Promise<GroupOficialModel[]>{
@@ -17,6 +19,8 @@ export class GetAllGroupsUseCase {
 
         const groupOficialModel = await Promise.all(
             groupList.map(async (group) =>{
+                const course= await this.courseRepository.getCourseById(group.courseId);
+
                 const project= await this.projectRepository.getProjectById(group.projectId);
 
                 const partner= await this.partnerRepository.getPartnerById(project!.partnerId)
@@ -39,7 +43,7 @@ export class GetAllGroupsUseCase {
                         partnerName: partner!.name,
                         extensionHours: project!.extensionHours
                     },
-                    course: group.course
+                    courseName: course!.name
                 }
             })
         );

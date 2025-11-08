@@ -19,7 +19,7 @@ export class CreateGroupController {
             );
         }
 
-        const {codSubj, userIdList, yearSem, projectId, course} = parseBody(
+        const {codSubj, userIdList, yearSem, projectId, courseId} = parseBody(
             CreateGroupRequest,
             req.body
         );
@@ -29,7 +29,7 @@ export class CreateGroupController {
             userIdList,
             yearSem,
             projectId,
-            course
+            courseId
         });
 
         const response= CreateGroupResponse.parse({
@@ -44,7 +44,7 @@ export class CreateGroupController {
                     partnerName: createdGroup.project.partnerName,
                     extensionHours: createdGroup.project.extensionHours
                 },
-                course: createdGroup.course
+                courseName: createdGroup.courseName
             }
         });
         res.status(201).json(response)

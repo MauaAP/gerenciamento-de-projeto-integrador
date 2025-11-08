@@ -11,12 +11,12 @@ export const GetGroupRequest = z.object({
 
     yearSem: z.coerce.number({ message: "O yearSem deve ser dadas em numero" }).min(1, { message: "O yearSem deve ser maior que 0" }).optional(),
 
-    projectId: z.string({ message: "projectId é obrigatório" }).length(36, "O projectId deve conter 36 caracteres").optional(),
+    projectId: z.string({ message: "projectId deve ser dado em string" }).length(36, "O projectId deve conter 36 caracteres").optional(),
 
-    course: z.nativeEnum(COURSE, { errorMap: () => ({ message: "course deve ser dado no enum COURSE" }) }).optional()
+    courseId: z.string({ message: "courseId é obrigatório" }).length(36, "O courseId deve conter 36 caracteres").optional()
 
 }).refine((data) => {
-    const filterFields = [data.userId, data.codSubj, data.yearSem, data.projectId, data.course];
+    const filterFields = [data.userId, data.codSubj, data.yearSem, data.projectId, data.courseId];
 
     const hasFilter = filterFields.some(f => f !== undefined);
 
