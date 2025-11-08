@@ -3,9 +3,10 @@ import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { parseBody } from "../../../shared/utils/parse_body";
 import { Request, Response } from "express";
 import { DeleteClassroomRequest, DeleteClassroomResponse } from "./delete_classroom_schema";
-import { DeleteClassroomUsecase } from "./delete_classroom_usecase";
+import { DeleteClassroomUseCase } from "./delete_classroom_usecase";
+
 export class DeleteClassroomController {
-    constructor(private usecase: DeleteClassroomUsecase) {}
+    constructor(private usecase: DeleteClassroomUseCase) {}
 
     async handler(req: Request, res: Response) {
         const userFromToken= req.user as UserFromToken;

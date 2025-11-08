@@ -5,6 +5,8 @@ import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRe
 import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase";
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository";
+import { ICourseRepository } from "../../../shared/domain/interfaces/ICourseRepository";
 
 export class GetAllPresentationsUseCase {
     constructor(
@@ -13,7 +15,9 @@ export class GetAllPresentationsUseCase {
         private readonly examinationBoardRepository: IExaminationBoardRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly partnerRepository: IPartnerRepository
+        private readonly partnerRepository: IPartnerRepository,
+        private readonly classroomRepository: IClassroomRepository,
+        private readonly courseRepository: ICourseRepository
     ) { }
 
     async execute(): Promise<PresentationOficialModel[]> {
@@ -22,7 +26,14 @@ export class GetAllPresentationsUseCase {
         const presentationOficialModel = await Promise.all(
             presentationList.map(async (presentation) => {
 
+                //taking classroom
+                const classRoom= await this.classroomRepository.getClassroomById(presentation.classRoomId);
+                
+                // taking group
                 const group = await this.groupRepository.getGroupById(presentation.groupId);
+
+                //taking course
+                const course = await this.courseRepository.getCourseById(group!.courseId);
 
                 // taking group user names
                 const userNameList: string[] = []
@@ -51,7 +62,7 @@ export class GetAllPresentationsUseCase {
                 return {
                     id: presentation.presentationId,
                     date: presentation.date,
-                    classRoom: presentation.classRoom,
+                    classRoomName: classRoom!.name,
                     group: {
                         codSubj: group!.codSubj,
                         userNameList: userNameList,
@@ -61,7 +72,7 @@ export class GetAllPresentationsUseCase {
                             partnerName: partner!.name,
                             extensionHours: project!.extensionHours
                         },
-                        course: group!.course
+                        courseName: course!.name
                     },
                     examinationBoard: {
                         porfessorNameList: professorNameList

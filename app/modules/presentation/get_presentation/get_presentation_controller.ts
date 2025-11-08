@@ -37,7 +37,7 @@ export class GetPresentationController {
             presentations: presentationList.map((presentation) => ({
                 id: presentation.id,
                 date: presentation.date,
-                classRoom: presentation.classRoom,
+                classRoomName: presentation.classRoomName,
                 group: {
                     codSubj: presentation.group.codSubj,
                     userNameList: presentation.group.userNameList,
@@ -47,7 +47,7 @@ export class GetPresentationController {
                         partnerName: presentation.group.project.partnerName,
                         extensionHours: presentation.group.project.extensionHours
                     },
-                    course: presentation.group.course
+                    courseName: presentation.group.courseName
                 },
                 ExaminationBoard: {
                     porfessorNameList: presentation.examinationBoard.porfessorNameList

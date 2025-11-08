@@ -5,7 +5,7 @@ export const UpdateUserRequest = z.object({
   id: z.string({ message: "Id deve ser dado em string" }).length(36, "O id deve conter 36 caracteres"),
   name: z.string({ message: "Name deve ter pelo menos um caracter" }).optional(),
   email: z.string().email("email inválido").optional(),
-  role: z.nativeEnum(ROLE, { errorMap: () => ({ message: "Sector selecionado não está entre os disponíveis" }) }).optional(),
+  role: z.nativeEnum(ROLE, { errorMap: () => ({ message: "Role selecionada não está entre os disponíveis" }) }).optional(),
   password: z.string().min(6, "A password deve ter pelo menos 6 caracteres").optional()
 }).refine(
   (data) => (data.name !== undefined || data.email !== undefined || data.role !== undefined || data.password !== undefined),

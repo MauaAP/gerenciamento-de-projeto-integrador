@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import { CreateClassroomController } from "./create_classroom_controller";
 import { CreateClassroomUseCase } from "./create_classroom_usecase";
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
-import { ClassroomRepository } from "app/shared/repositories/repository";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
+import { ClassroomRepository } from "../../../shared/repositories/repository";
 
 const router= express.Router();
 

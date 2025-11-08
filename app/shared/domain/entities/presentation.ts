@@ -4,7 +4,7 @@ export class Presentation {
         public date: number, //miliseconds
         public groupId: string,
         public examinationBoardId: string,
-        public classRoom: string
+        public classRoomId: string
     ) { }
 
     toJson(): {
@@ -12,14 +12,14 @@ export class Presentation {
         date: number, //miliseconds
         groupId: string,
         examinationBoardId: string,
-        classRoom: string
+        classRoomId: string
     } {
         return {
             presentationId: this.presentationId,
             date: this.date,
             groupId: this.groupId,
             examinationBoardId: this.examinationBoardId,
-            classRoom: this.classRoom
+            classRoomId: this.classRoomId
         };
     }
 
@@ -28,8 +28,8 @@ export class Presentation {
         date: number; //miliseconds
         groupId: string;
         examinationBoardId: string;
-        classRoom?: string;
+        classRoomId?: string;
     }): Presentation {
-        return new Presentation(json.presentationId, json.date, json.groupId, json.examinationBoardId, json.classRoom || "")
+        return new Presentation(json.presentationId, json.date, json.groupId, json.examinationBoardId, json.classRoomId || "")
     }
 }

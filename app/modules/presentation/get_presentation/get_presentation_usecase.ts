@@ -1,4 +1,5 @@
-import { COURSE } from "../../../shared/domain/enums/course";
+import { ICourseRepository } from "../../../shared/domain/interfaces/ICourseRepository";
+import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository";
 import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository";
 import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository";
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
@@ -19,7 +20,7 @@ interface GetPresentationInputInterface {
 export interface PresentationOficialModel {
     id: string;
     date: number;
-    classRoom: string;
+    classRoomName: string;
     group: {
         codSubj: string;
         userNameList: string[];
@@ -29,7 +30,7 @@ export interface PresentationOficialModel {
             partnerName: string;
             extensionHours?: number;
         }
-        course: COURSE;
+        courseName: string;
     };
     examinationBoard: {
         porfessorNameList: string[];
@@ -43,7 +44,9 @@ export class GetPresentationUseCase {
         private readonly examinationBoardRepository: IExaminationBoardRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly partnerRepository: IPartnerRepository
+        private readonly partnerRepository: IPartnerRepository,
+        private readonly classroomRepository: IClassroomRepository,
+        private readonly courseRepository: ICourseRepository,
     ) { }
 
     async execute({ id, presentationFilter }: GetPresentationInputInterface): Promise<PresentationOficialModel[]> {
@@ -59,8 +62,14 @@ export class GetPresentationUseCase {
         const presentationOficialModel = await Promise.all(
             presentations.map(async (presentation) => {
 
+                //gettting classroom
+                const classRoom =  await this.classroomRepository.getClassroomById(presentation.classRoomId);
+
                 // aqui pego o grupo
                 const group = await this.groupRepository.getGroupById(presentation.groupId);
+
+                //taking course
+                const course = await this.courseRepository.getCourseById(group!.courseId);
 
                 // taking group user names
                 const userNameList: string[] = []
@@ -89,7 +98,7 @@ export class GetPresentationUseCase {
                 return {
                     id: presentation.presentationId,
                     date: presentation.date,
-                    classRoom: presentation.classRoom,
+                    classRoomName: classRoom!.name,
                     group: {
                         codSubj: group!.codSubj,
                         userNameList: userNameList,
@@ -99,7 +108,7 @@ export class GetPresentationUseCase {
                             partnerName: partner!.name,
                             extensionHours: project!.extensionHours
                         },
-                        course: group!.course
+                        courseName: course!.name
                     },
                     examinationBoard: {
                         porfessorNameList: professorNameList

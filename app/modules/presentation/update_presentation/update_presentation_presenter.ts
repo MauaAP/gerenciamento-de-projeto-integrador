@@ -13,7 +13,9 @@ const updatePresentationUseCase= new UpdatePresentationUseCase(
     repository.examinationBoardRepo,
     repository.userRepo,
     repository.projectRepo,
-    repository.partnerRepo
+    repository.partnerRepo,
+    repository.classroomRepo,
+    repository.courseRepo
 );
 
 const updatePresentationController= new UpdatePresentationController(updatePresentationUseCase);

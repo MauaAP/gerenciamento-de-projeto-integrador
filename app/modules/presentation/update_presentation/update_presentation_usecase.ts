@@ -6,6 +6,8 @@ import { IUserRepository } from "../../../shared/domain/interfaces/IUserReposito
 import { NotFoundException } from "../../../shared/helpers/exceptions"
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase"
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository"
+import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository"
+import { ICourseRepository } from "../../../shared/domain/interfaces/ICourseRepository"
 
 interface UpdatePresentationInputInterface {
     id: string,
@@ -13,7 +15,7 @@ interface UpdatePresentationInputInterface {
         date?: number,
         groupId?: string,
         examinationBoardId?: string,
-        classRoom?: string
+        classRoomId?: string
     }
 }
 
@@ -24,8 +26,10 @@ export class UpdatePresentationUseCase {
         private readonly examinationBoardRepository: IExaminationBoardRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly partnerRepository: IPartnerRepository
-    ) { }
+        private readonly partnerRepository: IPartnerRepository,
+        private readonly classRoomRepository: IClassroomRepository,
+        private readonly courseRepository: ICourseRepository
+    ) {}
 
     async execute({ id, updateOptions }: UpdatePresentationInputInterface): Promise<PresentationOficialModel> {
 
@@ -45,12 +49,27 @@ export class UpdatePresentationUseCase {
             }
         }
 
+        if (updateOptions?.classRoomId) {
+            const classRoom = await this.classRoomRepository.getClassroomById(updateOptions.classRoomId);
+
+            if (!classRoom) {
+                throw new NotFoundException("Sala de aula não está no banco");
+            }
+        }
+
         const updatedPresentation = await this.presentationRepository.updatePresentation(id, updateOptions)
 
         if (updatedPresentation == null)
             throw new NotFoundException("Apresentação não está no banco");
 
+        //taking classroom
+        const classRoom = await this.classRoomRepository.getClassroomById(updatedPresentation.classRoomId);
+
+        //taking group
         const group = await this.groupRepository.getGroupById(updatedPresentation.groupId);
+
+        //taking course
+        const course= await this.courseRepository.getCourseById(group!.courseId);
 
         // taking group user names
         const userNameList: string[] = []
@@ -78,7 +97,7 @@ export class UpdatePresentationUseCase {
         return {
             id: updatedPresentation.presentationId,
             date: updatedPresentation.date,
-            classRoom: updatedPresentation.classRoom,
+            classRoomName: classRoom!.name,
             group: {
                 codSubj: group!.codSubj,
                 userNameList: userNameList,
@@ -88,7 +107,7 @@ export class UpdatePresentationUseCase {
                     partnerName: partner!.name,
                     extensionHours: project!.extensionHours
                 },
-                course: group!.course
+                courseName: course!.name
             },
             examinationBoard: {
                 porfessorNameList: professorNameList

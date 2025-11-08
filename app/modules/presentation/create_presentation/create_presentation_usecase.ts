@@ -7,12 +7,14 @@ import { IUserRepository } from "../../../shared/domain/interfaces/IUserReposito
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase"
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository"
 import { NotFoundException } from "../../../shared/helpers/exceptions"
+import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository"
+import { ICourseRepository } from "../../../shared/domain/interfaces/ICourseRepository"
 
 interface CreatePresentationInputInterface {
     date: number,
     groupId: string,
     examinationBoardId: string,
-    classRoom: string
+    classRoomId: string
 }
 
 export class CreatePresentationUseCase {
@@ -22,16 +24,26 @@ export class CreatePresentationUseCase {
         private readonly examinationBoardRepository: IExaminationBoardRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly partnerRepository: IPartnerRepository
+        private readonly partnerRepository: IPartnerRepository,
+        private readonly classroomRepository: IClassroomRepository,
+        private readonly courseRepository: ICourseRepository
     ) { }
 
-    async execute({ date, groupId, examinationBoardId, classRoom }: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
+    async execute({ date, groupId, examinationBoardId, classRoomId }: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
+        //taking classroom
+        const classRoom = await this.classroomRepository.getClassroomById(classRoomId);
+
+        if (!classRoom)
+            throw new NotFoundException("Sala de aula não está no banco");
+
         // taking group
         const existingGroup = await this.groupRepository.getGroupById(groupId);
 
         if (!existingGroup)
             throw new NotFoundException("Grupo não está no banco");
 
+        //taking course
+        const course = await this.courseRepository.getCourseById(existingGroup.courseId);
 
         // taking group user names
         const userNameList: string[] = []
@@ -62,7 +74,7 @@ export class CreatePresentationUseCase {
 
         const presentationId = crypto.randomUUID();
 
-        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoardId, classRoom);
+        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoardId, classRoom.classroomId);
 
         // Passar professorIds e alunoIds para criar relacionamentos com GSI
         const professorIds = existingExaminationBoard.professorIdList;
@@ -78,7 +90,7 @@ export class CreatePresentationUseCase {
         return {
             id: newPresentation.presentationId,
             date: newPresentation.date,
-            classRoom: newPresentation.classRoom,
+            classRoomName: classRoom.name,
             group: {
                 codSubj: existingGroup.codSubj,
                 userNameList: userNameList,
@@ -88,7 +100,7 @@ export class CreatePresentationUseCase {
                     partnerName: partner!.name,
                     extensionHours: project!.extensionHours
                 },
-                course: existingGroup.course
+                courseName: course!.name
             },
             examinationBoard: {
                 porfessorNameList: professorNameList

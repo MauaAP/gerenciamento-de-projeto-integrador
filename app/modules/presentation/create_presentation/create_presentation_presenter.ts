@@ -14,7 +14,9 @@ const createPresentationUseCase= new CreatePresentationUseCase(
     repository.examinationBoardRepo,
     repository.userRepo,
     repository.projectRepo,
-    repository.partnerRepo
+    repository.partnerRepo,
+    repository.classroomRepo,
+    repository.courseRepo
 );
 
 const createPresentationController= new CreatePresentationController(createPresentationUseCase);

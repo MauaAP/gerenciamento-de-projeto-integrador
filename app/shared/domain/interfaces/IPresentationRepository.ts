@@ -9,7 +9,7 @@ export type PresentationUpdateOptions = {
     date?: number,
     groupId?: string,
     examinationBoardId?: string,
-    classRoom?: string
+    classRoomId?: string
 }
 
 

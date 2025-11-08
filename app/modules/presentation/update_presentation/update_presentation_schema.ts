@@ -10,9 +10,9 @@ export const UpdatePresentationRequest = z.object({
 
     examinationBoardId: z.string({ message: "examinationBoardId deve ser dado em string" }).length(36, "O examinationBoard id deve conter 36 caracteres").optional(),
 
-    classRoom: z.string({ message: "A classRoom deve ser uma string" }).optional()
+    classRoomId: z.string({ message: "O classRoomId deve ser dado em string" }).length(36, "O classRoomId deve conter 36 caracteres").optional()
 }).refine(
-    (data) => (data.date !== undefined || data.groupId !== undefined || data.examinationBoardId !== undefined || data.classRoom !== undefined),
+    (data) => (data.date !== undefined || data.groupId !== undefined || data.examinationBoardId !== undefined || data.classRoomId !== undefined),
     {
         message: "Você deve passar algum atributo para ser alterado"
     }

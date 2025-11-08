@@ -20,7 +20,7 @@ export class UpdatePresentationController {
             );
         }
 
-        const { id, date, groupId, examinationBoardId, classRoom } = parseBody(
+        const { id, date, groupId, examinationBoardId, classRoomId } = parseBody(
             UpdatePresentationRequest,
             req.body
         );
@@ -31,7 +31,7 @@ export class UpdatePresentationController {
                 date,
                 groupId,
                 examinationBoardId,
-                classRoom
+                classRoomId
             }
         })
 
@@ -40,7 +40,7 @@ export class UpdatePresentationController {
             presentation: {
                 id: updatedPresentation.id,
                 date: updatedPresentation.date,
-                classRoom: updatedPresentation.classRoom,
+                classRoomName: updatedPresentation.classRoomName,
                 group: {
                     codSubj: updatedPresentation.group.codSubj,
                     userNameList: updatedPresentation.group.userNameList,
@@ -50,7 +50,7 @@ export class UpdatePresentationController {
                         partnerName: updatedPresentation.group.project.partnerName,
                         extensionHours: updatedPresentation.group.project.extensionHours
                     },
-                    course: updatedPresentation.group.course
+                    courseName: updatedPresentation.group.courseName
                 },
                 ExaminationBoard: {
                     porfessorNameList: updatedPresentation.examinationBoard.porfessorNameList

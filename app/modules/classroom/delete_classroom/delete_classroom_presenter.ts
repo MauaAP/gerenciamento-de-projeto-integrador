@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import { authenticateToken } from "app/shared/middleware/jwt_middleware";
-import { ClassroomRepository } from "app/shared/repositories/repository";
+import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
+import { ClassroomRepository } from "../../../shared/repositories/repository";
 import { DeleteClassroomController } from "./delete_classroom_controller";
 import { DeleteClassroomUseCase } from "./delete_classroom_usecase";
 

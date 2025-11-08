@@ -7,13 +7,13 @@ export const CreatePresentationRequest = z.object({
 
     examinationBoardId: z.string({ message: "O examinationBoardId deve ser dado em string" }).length(36, "O examinationBoardId deve conter 36 caracteres"),
 
-    classRoom: z.string({ message: "A classRoom deve ser uma string" }).min(1, "A classRoom é obrigatória"),
+    classRoomId: z.string({ message: "O classRoomId deve ser dado em string" }).length(36, "O classRoomId deve conter 36 caracteres")
 });
 
 export const PresentationSchema = z.object({
     id: z.string(),
     date: z.number(),
-    classRoom: z.string(),
+    classRoomName: z.string(),
     group: z.object({
         codSubj: z.string(),
         userNameList: z.array(z.string()),
@@ -23,7 +23,7 @@ export const PresentationSchema = z.object({
             partnerName: z.string(),
             extensionHours: z.number().optional()
         }),
-        course: z.string()
+        courseName: z.string()
     }),
     examinationBoard: z.object({
         professorNameList: z.array(z.string())
