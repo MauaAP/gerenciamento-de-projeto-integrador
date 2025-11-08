@@ -1,12 +1,11 @@
 import { Group } from "../entities/group";
-import { COURSE } from "../enums/course";
 
 export type GroupFilter = {
     userId?: string;
     codSubj?: string;
     yearSem?: number;
     projectId?: string;
-    course?: COURSE;
+    courseId?: string;
 };
 
 export type GroupUpdateOptions = {
@@ -14,7 +13,7 @@ export type GroupUpdateOptions = {
     userIdList?: string[],
     yearSem?: number,
     projectId?: string,
-    course?: COURSE
+    courseId?: string
 }
 
 export interface IGroupRepository {
