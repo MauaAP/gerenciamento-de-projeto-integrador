@@ -9,6 +9,7 @@ import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRe
 import { NotFoundException } from "../../../shared/helpers/exceptions"
 import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository"
 import { ICourseRepository } from "../../../shared/domain/interfaces/ICourseRepository"
+import { toStatusEnum } from "app/shared/domain/enums/status"
 
 interface CreatePresentationInputInterface {
     date: number,
@@ -74,7 +75,10 @@ export class CreatePresentationUseCase {
 
         const presentationId = crypto.randomUUID();
 
-        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoardId, classRoom.classroomId);
+        // it will always be created with SCHEDULED status
+        const status= toStatusEnum("SCHEDULED");
+
+        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoardId, classRoom.classroomId, status);
 
         // Passar professorIds e alunoIds para criar relacionamentos com GSI
         const professorIds = existingExaminationBoard.professorIdList;
@@ -91,6 +95,7 @@ export class CreatePresentationUseCase {
             id: newPresentation.presentationId,
             date: newPresentation.date,
             classRoomName: classRoom.name,
+            status: newPresentation.status,
             group: {
                 codSubj: existingGroup.codSubj,
                 userNameList: userNameList,

@@ -1,10 +1,13 @@
+import { STATUS } from "../enums/status";
+
 export class Presentation {
     constructor(
         public presentationId: string,
         public date: number, //miliseconds
         public groupId: string,
         public examinationBoardId: string,
-        public classRoomId: string
+        public classRoomId: string,
+        public status: STATUS
     ) { }
 
     toJson(): {
@@ -13,13 +16,15 @@ export class Presentation {
         groupId: string,
         examinationBoardId: string,
         classRoomId: string
+        status: STATUS
     } {
         return {
             presentationId: this.presentationId,
             date: this.date,
             groupId: this.groupId,
             examinationBoardId: this.examinationBoardId,
-            classRoomId: this.classRoomId
+            classRoomId: this.classRoomId,
+            status: this.status
         };
     }
 
@@ -28,8 +33,9 @@ export class Presentation {
         date: number; //miliseconds
         groupId: string;
         examinationBoardId: string;
-        classRoomId?: string;
+        classRoomId: string;
+        status: STATUS;
     }): Presentation {
-        return new Presentation(json.presentationId, json.date, json.groupId, json.examinationBoardId, json.classRoomId || "")
+        return new Presentation(json.presentationId, json.date, json.groupId, json.examinationBoardId, json.classRoomId, json.status|| "")
     }
 }

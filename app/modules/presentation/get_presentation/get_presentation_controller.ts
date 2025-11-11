@@ -38,6 +38,7 @@ export class GetPresentationController {
                 id: presentation.id,
                 date: presentation.date,
                 classRoomName: presentation.classRoomName,
+                status: presentation.status,
                 group: {
                     codSubj: presentation.group.codSubj,
                     userNameList: presentation.group.userNameList,

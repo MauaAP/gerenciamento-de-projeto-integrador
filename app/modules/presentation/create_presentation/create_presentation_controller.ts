@@ -18,7 +18,7 @@ export class CreatePresentationController {
             );
         }
 
-        const { date, groupId, examinationBoardId, classRoomId } = parseBody(
+        const { date, groupId, examinationBoardId, classRoomId} = parseBody(
             CreatePresentationRequest,
             req.body
         );
@@ -36,6 +36,7 @@ export class CreatePresentationController {
                 id: newPresentation.id,
                 date: newPresentation.date,
                 classRoomName: newPresentation.classRoomName,
+                status: newPresentation.status,
                 group: {
                     codSubj: newPresentation.group.codSubj,
                     userNameList: newPresentation.group.userNameList,

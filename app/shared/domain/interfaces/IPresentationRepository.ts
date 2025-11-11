@@ -10,6 +10,7 @@ export type PresentationUpdateOptions = {
     groupId?: string,
     examinationBoardId?: string,
     classRoomId?: string
+    staus?: string
 }
 
 
@@ -21,6 +22,10 @@ export interface IPresentationRepository {
     getPresentationById(presentationId: string): Promise<Presentation | null>;
 
     getPresentationByFilter(filter: PresentationFilter): Promise<Presentation[] | null>;
+
+    getPresentationByStudentId(studentId: string): Promise<Presentation[] | null>;
+
+    getPresentationByExaminatorId(examinatorId: string): Promise<Presentation[] | null>;
 
     deletePresentation(presentationId: string): Promise<Presentation | null>;
 

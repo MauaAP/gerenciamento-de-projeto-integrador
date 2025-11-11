@@ -63,6 +63,7 @@ export class GetAllPresentationsUseCase {
                     id: presentation.presentationId,
                     date: presentation.date,
                     classRoomName: classRoom!.name,
+                    status: presentation.status,
                     group: {
                         codSubj: group!.codSubj,
                         userNameList: userNameList,

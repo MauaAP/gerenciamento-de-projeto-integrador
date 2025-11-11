@@ -14,6 +14,7 @@ export const PresentationSchema = z.object({
     id: z.string(),
     date: z.number(),
     classRoomName: z.string(),
+    status: z.string(),
     group: z.object({
         codSubj: z.string(),
         userNameList: z.array(z.string()),

@@ -21,6 +21,7 @@ export interface PresentationOficialModel {
     id: string;
     date: number;
     classRoomName: string;
+    status: string;
     group: {
         codSubj: string;
         userNameList: string[];
@@ -99,6 +100,7 @@ export class GetPresentationUseCase {
                     id: presentation.presentationId,
                     date: presentation.date,
                     classRoomName: classRoom!.name,
+                    status: presentation.status,
                     group: {
                         codSubj: group!.codSubj,
                         userNameList: userNameList,

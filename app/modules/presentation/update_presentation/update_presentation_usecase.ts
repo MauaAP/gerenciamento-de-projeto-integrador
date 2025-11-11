@@ -16,6 +16,7 @@ interface UpdatePresentationInputInterface {
         groupId?: string,
         examinationBoardId?: string,
         classRoomId?: string
+        status?: string
     }
 }
 
@@ -98,6 +99,7 @@ export class UpdatePresentationUseCase {
             id: updatedPresentation.presentationId,
             date: updatedPresentation.date,
             classRoomName: classRoom!.name,
+            status: updatedPresentation.status,
             group: {
                 codSubj: group!.codSubj,
                 userNameList: userNameList,
