@@ -68,11 +68,12 @@ export class PresentationRepoMock implements IPresentationRepository {
         return this.presentations.find((presentation) => presentation.presentationId === presentationId) || null
     }
 
-    async getPresentationByFilter(filter: PresentationFilter): Promise<Presentation[] | null> {
+    async getPresentationsByFilter(filter: PresentationFilter): Promise<Presentation[] | null> {
         const result = this.presentations.filter((presentation) =>
             (!filter.date || presentation.date === filter.date) &&
             (!filter.groupId || presentation.groupId.includes(filter.groupId)) &&
-            (!filter.examinationBoardId || presentation.examinationBoardId === filter.examinationBoardId)
+            (!filter.examinationBoardId || presentation.examinationBoardId === filter.examinationBoardId) &&
+            (!filter.status || presentation.status === filter.status)
         );
         return result.length > 0 ? result : null;
     }

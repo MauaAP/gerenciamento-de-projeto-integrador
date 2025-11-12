@@ -7,6 +7,16 @@ import { PresentationOficialModel } from "../get_presentation/get_presentation_u
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
 import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository";
 import { ICourseRepository } from "../../../shared/domain/interfaces/ICourseRepository";
+import { NotFoundException } from "app/shared/helpers/exceptions";
+
+interface GetAllPresentationsInputInterface {
+    presentationFilter: {
+        date?: number,
+        groupId?: string,
+        examinationBoardId?: string
+        status?: string
+    }
+}
 
 export class GetAllPresentationsUseCase {
     constructor(
@@ -20,8 +30,14 @@ export class GetAllPresentationsUseCase {
         private readonly courseRepository: ICourseRepository
     ) { }
 
-    async execute(): Promise<PresentationOficialModel[]> {
-        const presentationList = await this.presentationRepository.fetchPresentation()
+    async execute({presentationFilter}: GetAllPresentationsInputInterface): Promise<PresentationOficialModel[]> {
+        const presentationList= (Object.keys(presentationFilter).length > 0)
+            ? await this.presentationRepository.getPresentationsByFilter(presentationFilter)
+            : await this.presentationRepository.fetchPresentation();
+
+        if (presentationList == null)
+            throw new NotFoundException("Nenhuma apresentação encontrada");
+
 
         const presentationOficialModel = await Promise.all(
             presentationList.map(async (presentation) => {

@@ -1,8 +1,9 @@
 import { ForbiddenException } from "../../../shared/helpers/exceptions";
 import { UserFromToken } from "../../../shared/middleware/jwt_middleware";
 import { Request, Response } from "express";
-import { GetAllPresentationsResponse } from "./get_all_presentations_schema";
+import { GetAllPresentationsRequest, GetAllPresentationsResponse } from "./get_all_presentations_schema";
 import { GetAllPresentationsUseCase } from "./get_all_presentations_usecase";
+import { parseBody } from "app/shared/utils/parse_body";
 
 export class GetAllPresentationsController {
     constructor(private readonly usecase: GetAllPresentationsUseCase) { }
@@ -18,7 +19,19 @@ export class GetAllPresentationsController {
             );
         }
 
-        const presentationsList = await this.usecase.execute();
+        const { date, groupId, examinationBoardId, status } = parseBody(
+            GetAllPresentationsRequest,
+            req.query
+        )
+
+        const presentationsList = await this.usecase.execute({
+            presentationFilter: {
+                date,
+                groupId,
+                examinationBoardId,
+                status
+            }
+        });
 
         const response = GetAllPresentationsResponse.parse({
             message: "Lista de Apresentações retornado com sucesso",

@@ -7,14 +7,13 @@ import { IPresentationRepository } from "../../../shared/domain/interfaces/IPres
 import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
 import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { NotFoundException } from "../../../shared/helpers/exceptions";
+import { STATUS } from "../../../shared/domain/enums/status";
 
 interface GetPresentationInputInterface {
     id?: string,
-    presentationFilter?: {
-        date?: number,
-        groupId?: string,
-        examinationBoardId?: string
-    }
+    status?: STATUS
+    isExaminator: boolean,
+    userId: string
 }
 
 export interface PresentationOficialModel {
@@ -50,10 +49,12 @@ export class GetPresentationUseCase {
         private readonly courseRepository: ICourseRepository,
     ) { }
 
-    async execute({ id, presentationFilter }: GetPresentationInputInterface): Promise<PresentationOficialModel[]> {
+    async execute({ id, status, isExaminator, userId }: GetPresentationInputInterface): Promise<PresentationOficialModel[]> {
         const selectedPresentation = id
             ? await this.presentationRepository.getPresentationById(id)
-            : await this.presentationRepository.getPresentationByFilter(presentationFilter!)
+            : isExaminator
+                ? await this.presentationRepository.getPresentationByExaminatorId(userId, status!)
+                : await this.presentationRepository.getPresentationByStudentId(userId, status!);
 
         if (selectedPresentation == null)
             throw new NotFoundException("Nenhuma apresentação encontrada");

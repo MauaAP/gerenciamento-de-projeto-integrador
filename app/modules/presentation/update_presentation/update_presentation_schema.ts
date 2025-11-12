@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { PresentationSchema } from "../create_presentation/create_presentation_schema";
-import { STATUS } from "app/shared/domain/enums/status";
+import { STATUS } from "../../../shared/domain/enums/status";
 
 export const UpdatePresentationRequest = z.object({
     id: z.string({ message: "O id deve ser dado em string" }).length(36, "O id deve conter 36 caracteres"),

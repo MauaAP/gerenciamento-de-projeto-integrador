@@ -17,19 +17,23 @@ export class GetPresentationController {
             throw new ForbiddenException(
                 "Você não tem permissão para acessar este recurso"
             );
+        
+        let isExaminator = false;
 
-        const { id, date, groupId, examinationBoardId } = parseBody(
+        if (["ADMIN", "MODERATOR", "PROFESSOR"].includes(userFromToken.role)) {
+            isExaminator = true;
+        }
+
+        const { id, status } = parseBody(
             GetPresentationRequest,
             req.query
         );
 
         const presentationList = await this.usecase.execute({
             id,
-            presentationFilter: {
-                date,
-                groupId,
-                examinationBoardId
-            }
+            status,
+            isExaminator,
+            userId: userFromToken.id
         });
 
         const response = GetPresentationResponse.parse({

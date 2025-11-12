@@ -1,8 +1,10 @@
 import { Presentation } from "../entities/presentation";
+import { STATUS } from "../enums/status";
 export type PresentationFilter = {
     date?: number,
     groupId?: string,
     examinationBoardId?: string
+    status?: string
 }
 
 export type PresentationUpdateOptions = {
@@ -21,11 +23,11 @@ export interface IPresentationRepository {
 
     getPresentationById(presentationId: string): Promise<Presentation | null>;
 
-    getPresentationByFilter(filter: PresentationFilter): Promise<Presentation[] | null>;
+    getPresentationsByFilter(filter: PresentationFilter): Promise<Presentation[] | null>;
 
-    getPresentationByStudentId(studentId: string): Promise<Presentation[] | null>;
+    getPresentationByStudentId(studentId: string, status: STATUS): Promise<Presentation[] | null>;
 
-    getPresentationByExaminatorId(examinatorId: string): Promise<Presentation[] | null>;
+    getPresentationByExaminatorId(examinatorId: string, status: STATUS): Promise<Presentation[] | null>;
 
     deletePresentation(presentationId: string): Promise<Presentation | null>;
 
