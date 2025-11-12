@@ -2,6 +2,7 @@ import { Presentation } from "../../../../shared/domain/entities/presentation";
 import { IPresentationRepository, PresentationFilter, PresentationUpdateOptions } from "../../../../shared/domain/interfaces/IPresentationRepository";
 import { PRESENTATION_STATUS } from "../../../../shared/domain/enums/presentation_status";
 import { DynamoDBResources } from "./dynamo_datasource";
+import { IExaminationBoardRepository } from "../../../../shared/domain/interfaces/IExaminationBoardRepository";
 
 function getPresentationPK(presentationId: string): string {
   return `APRESENTACAO#${presentationId}`;
@@ -29,9 +30,11 @@ function getProfPK(professorId: string): string {
 
 export class PresentationRepositoryDynamoDB implements IPresentationRepository {
     private db: DynamoDBResources;
+    private examinationBoardRepository?: IExaminationBoardRepository;
 
-    constructor(db: DynamoDBResources) {
+    constructor(db: DynamoDBResources, examinationBoardRepository?: IExaminationBoardRepository) {
         this.db = db;
+        this.examinationBoardRepository = examinationBoardRepository;
     }
     
     async createPresentation(presentation: Presentation, professorIds?: string[], alunoIds?: string[]): Promise<Presentation> {
@@ -247,45 +250,80 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
     }
 
     async getPresentationByExaminatorId(examinatorId: string, status?: PRESENTATION_STATUS): Promise<Presentation[] | null> {
-        const profPK = getProfPK(examinatorId);
-        
-        // Query GSI2 para buscar apresentações do examinador
-        const items = await this.db.queryAll(
-            profPK,
-            "APRESENTACAO#",
-            "GSI2",
-            "GSI2PK"
-        );
+        // 1. Buscar bancas (examination_board) onde o professor está
+        // Se não tiver acesso ao repositório de banca, usar GSI2 como fallback
+        if (!this.examinationBoardRepository) {
+            // Fallback: usar GSI2 diretamente (método anterior)
+            const profPK = getProfPK(examinatorId);
+            const items = await this.db.queryAll(
+                profPK,
+                "APRESENTACAO#",
+                "GSI2",
+                "GSI2PK"
+            );
 
-        if (items.length === 0) {
-            console.log(`[DynamoDB] Busca por ExaminatorId: ${examinatorId} - Nenhuma apresentação encontrada`);
+            if (items.length === 0) {
+                console.log(`[DynamoDB] Busca por ExaminatorId: ${examinatorId} - Nenhuma apresentação encontrada (fallback GSI2)`);
+                return null;
+            }
+
+            let filteredItems = items;
+            if (status) {
+                filteredItems = items.filter(item => item.status === status);
+            }
+
+            const presentations: Presentation[] = [];
+            const presentationIds = new Set<string>();
+            
+            for (const item of filteredItems) {
+                let presentationId: string | undefined;
+                if (item.GSI2SK) {
+                    presentationId = item.GSI2SK.replace("APRESENTACAO#", "");
+                } else if (item.PK) {
+                    presentationId = item.PK.replace("APRESENTACAO#", "");
+                }
+                
+                if (presentationId && !presentationIds.has(presentationId)) {
+                    presentationIds.add(presentationId);
+                    const presentation = await this.getPresentationById(presentationId);
+                    if (presentation) {
+                        presentations.push(presentation);
+                    }
+                }
+            }
+
+            presentations.sort((a, b) => a.date - b.date);
+            console.log(`[DynamoDB] Busca por ExaminatorId: ${examinatorId}${status ? ` com status ${status}` : ''} - ${presentations.length} apresentações encontradas (fallback)`);
+            return presentations.length > 0 ? presentations : null;
+        }
+
+        // Método correto: fazer join através de examination_board
+        // 1. Buscar bancas (examination_board) onde o professor está
+        const examinationBoards = await this.examinationBoardRepository.getExaminationBoardByProfessorId(examinatorId);
+        
+        if (!examinationBoards || examinationBoards.length === 0) {
+            console.log(`[DynamoDB] Busca por ExaminatorId: ${examinatorId} - Nenhuma banca encontrada`);
             return null;
         }
 
-        // Filtrar por status se fornecido
-        let filteredItems = items;
-        if (status) {
-            filteredItems = items.filter(item => item.status === status);
-        }
-
-        // Buscar METADATA de cada apresentação encontrada
+        // 2. Para cada banca, buscar apresentações relacionadas através do relacionamento APRESENTACAO#ID + SK: BANCA#ID
+        // Buscar todas as apresentações e filtrar pelas bancas encontradas
+        const allPresentations = await this.fetchPresentation();
         const presentations: Presentation[] = [];
         const presentationIds = new Set<string>();
-        
-        for (const item of filteredItems) {
-            // Extrair presentationId do GSI2SK ou PK
-            let presentationId: string | undefined;
-            if (item.GSI2SK) {
-                presentationId = item.GSI2SK.replace("APRESENTACAO#", "");
-            } else if (item.PK) {
-                presentationId = item.PK.replace("APRESENTACAO#", "");
-            }
-            
-            if (presentationId && !presentationIds.has(presentationId)) {
-                presentationIds.add(presentationId);
-                const presentation = await this.getPresentationById(presentationId);
-                if (presentation) {
-                    presentations.push(presentation);
+
+        // Criar Set com IDs das bancas para busca eficiente
+        const boardIds = new Set(examinationBoards.map(board => board.examinationBoardId));
+
+        for (const presentation of allPresentations) {
+            // Verificar se a apresentação está relacionada a alguma das bancas do examinador
+            if (boardIds.has(presentation.examinationBoartId)) {
+                if (!presentationIds.has(presentation.presentationId)) {
+                    // Filtrar por status se fornecido
+                    if (!status || presentation.status === status) {
+                        presentationIds.add(presentation.presentationId);
+                        presentations.push(presentation);
+                    }
                 }
             }
         }
@@ -293,7 +331,7 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
         // Ordenar por date (ascendente)
         presentations.sort((a, b) => a.date - b.date);
 
-        console.log(`[DynamoDB] Busca por ExaminatorId: ${examinatorId}${status ? ` com status ${status}` : ''} - ${presentations.length} apresentações encontradas`);
+        console.log(`[DynamoDB] Busca por ExaminatorId: ${examinatorId}${status ? ` com status ${status}` : ''} - ${presentations.length} apresentações encontradas (via examination_board join)`);
         return presentations.length > 0 ? presentations : null;
     }
 

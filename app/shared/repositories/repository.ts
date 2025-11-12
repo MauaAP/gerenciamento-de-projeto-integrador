@@ -127,9 +127,9 @@ export class PresentationRepository{
     }
     else {
       this.dynamoDb= new DynamoDBResources(dynamoConfig);
-      this.presentationRepo= new PresentationRepositoryDynamoDB(this.dynamoDb);
-      this.groupRepo= new GroupRepositoryDynamoDB(this.dynamoDb);
       this.examinationBoardRepo= new ExaminationBoardRepositoryDynamoDB(this.dynamoDb);
+      this.presentationRepo= new PresentationRepositoryDynamoDB(this.dynamoDb, this.examinationBoardRepo);
+      this.groupRepo= new GroupRepositoryDynamoDB(this.dynamoDb);
       this.projectRepo= new ProjectRepositoryDynamoDB(this.dynamoDb);
       this.userRepo= new UserRepositoryDynamoDB(this.dynamoDb);
       this.partnerRepo= new PartnerRepositoryDynamoDB(this.dynamoDb);
