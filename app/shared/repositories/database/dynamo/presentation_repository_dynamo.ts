@@ -1,5 +1,6 @@
 import { Presentation } from "../../../../shared/domain/entities/presentation";
 import { IPresentationRepository, PresentationFilter, PresentationUpdateOptions } from "../../../../shared/domain/interfaces/IPresentationRepository";
+import { PRESENTATION_STATUS } from "../../../../shared/domain/enums/presentation_status";
 import { DynamoDBResources } from "./dynamo_datasource";
 
 function getPresentationPK(presentationId: string): string {
@@ -69,7 +70,9 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
                     SK: `PROF#${professorId}`,
                     professorId: professorId,
                     GSI2PK: profPK,
-                    GSI2SK: `APRESENTACAO#${presentation.presentationId}`
+                    GSI2SK: `APRESENTACAO#${presentation.presentationId}`,
+                    status: presentation.status,
+                    date: presentation.date
                 };
                 await this.db.put(profRelationshipItem, pk, `PROF#${professorId}`);
             }
@@ -84,7 +87,9 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
                     SK: `ALUNO#${alunoId}`,
                     alunoId: alunoId,
                     GSI1PK: alunoPK,
-                    GSI1SK: `APRESENTACAO#${presentation.presentationId}`
+                    GSI1SK: `APRESENTACAO#${presentation.presentationId}`,
+                    status: presentation.status,
+                    date: presentation.date
                 };
                 await this.db.put(alunoRelationshipItem, pk, `ALUNO#${alunoId}`);
             }
@@ -190,6 +195,108 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
         return presentations.length > 0 ? presentations : null;
     }
 
+    async getPresentationByStudentId(studentId: string, status?: PRESENTATION_STATUS): Promise<Presentation[] | null> {
+        const alunoPK = getAlunoPK(studentId);
+        
+        // Query GSI1 para buscar apresentações do aluno
+        const items = await this.db.queryAll(
+            alunoPK,
+            "APRESENTACAO#",
+            "GSI1",
+            "GSI1PK"
+        );
+
+        if (items.length === 0) {
+            console.log(`[DynamoDB] Busca por StudentId: ${studentId} - Nenhuma apresentação encontrada`);
+            return null;
+        }
+
+        // Filtrar por status se fornecido
+        let filteredItems = items;
+        if (status) {
+            filteredItems = items.filter(item => item.status === status);
+        }
+
+        // Buscar METADATA de cada apresentação encontrada
+        const presentations: Presentation[] = [];
+        const presentationIds = new Set<string>();
+        
+        for (const item of filteredItems) {
+            // Extrair presentationId do GSI1SK ou PK
+            let presentationId: string | undefined;
+            if (item.GSI1SK) {
+                presentationId = item.GSI1SK.replace("APRESENTACAO#", "");
+            } else if (item.PK) {
+                presentationId = item.PK.replace("APRESENTACAO#", "");
+            }
+            
+            if (presentationId && !presentationIds.has(presentationId)) {
+                presentationIds.add(presentationId);
+                const presentation = await this.getPresentationById(presentationId);
+                if (presentation) {
+                    presentations.push(presentation);
+                }
+            }
+        }
+
+        // Ordenar por date (ascendente)
+        presentations.sort((a, b) => a.date - b.date);
+
+        console.log(`[DynamoDB] Busca por StudentId: ${studentId}${status ? ` com status ${status}` : ''} - ${presentations.length} apresentações encontradas`);
+        return presentations.length > 0 ? presentations : null;
+    }
+
+    async getPresentationByExaminatorId(examinatorId: string, status?: PRESENTATION_STATUS): Promise<Presentation[] | null> {
+        const profPK = getProfPK(examinatorId);
+        
+        // Query GSI2 para buscar apresentações do examinador
+        const items = await this.db.queryAll(
+            profPK,
+            "APRESENTACAO#",
+            "GSI2",
+            "GSI2PK"
+        );
+
+        if (items.length === 0) {
+            console.log(`[DynamoDB] Busca por ExaminatorId: ${examinatorId} - Nenhuma apresentação encontrada`);
+            return null;
+        }
+
+        // Filtrar por status se fornecido
+        let filteredItems = items;
+        if (status) {
+            filteredItems = items.filter(item => item.status === status);
+        }
+
+        // Buscar METADATA de cada apresentação encontrada
+        const presentations: Presentation[] = [];
+        const presentationIds = new Set<string>();
+        
+        for (const item of filteredItems) {
+            // Extrair presentationId do GSI2SK ou PK
+            let presentationId: string | undefined;
+            if (item.GSI2SK) {
+                presentationId = item.GSI2SK.replace("APRESENTACAO#", "");
+            } else if (item.PK) {
+                presentationId = item.PK.replace("APRESENTACAO#", "");
+            }
+            
+            if (presentationId && !presentationIds.has(presentationId)) {
+                presentationIds.add(presentationId);
+                const presentation = await this.getPresentationById(presentationId);
+                if (presentation) {
+                    presentations.push(presentation);
+                }
+            }
+        }
+
+        // Ordenar por date (ascendente)
+        presentations.sort((a, b) => a.date - b.date);
+
+        console.log(`[DynamoDB] Busca por ExaminatorId: ${examinatorId}${status ? ` com status ${status}` : ''} - ${presentations.length} apresentações encontradas`);
+        return presentations.length > 0 ? presentations : null;
+    }
+
     async deletePresentation(presentationId: string): Promise<Presentation | null> {
         const presentation = await this.getPresentationById(presentationId);
 
@@ -260,6 +367,22 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
             updateDict.examinationBoartId = updateOptions.examinationBoartId;
         }
         if (updateOptions.sala) updateDict.sala = updateOptions.sala;
+        if (updateOptions.status) {
+            updateDict.status = updateOptions.status;
+            
+            // Atualizar status em todos os relacionamentos (GSI1 e GSI2)
+            const allItems = await this.db.queryAll(pk);
+            for (const item of allItems) {
+                if (item.SK?.startsWith("ALUNO#") || item.SK?.startsWith("PROF#")) {
+                    const updateRelDict: any = { status: updateOptions.status };
+                    // Manter date atualizado também
+                    if (item.date) {
+                        updateRelDict.date = item.date;
+                    }
+                    await this.db.update(pk, item.SK, updateRelDict);
+                }
+            }
+        }
 
         const updated = await this.db.update(pk, sk, updateDict);
         console.log(`[DynamoDB] Apresentação atualizada: ${pk}`);

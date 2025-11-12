@@ -18,7 +18,7 @@ export class CreatePresentationController {
             );
         }
 
-        const {date, groupId, examinationBoartId, sala} = parseBody(
+        const {date, groupId, examinationBoartId, sala, status} = parseBody(
             CreatePresentationRequest,
             req.body
         );
@@ -27,7 +27,8 @@ export class CreatePresentationController {
             date,
             groupId,
             examinationBoartId,
-            sala
+            sala,
+            status
         });
 
         const response= CreatePresentationResponse.parse({

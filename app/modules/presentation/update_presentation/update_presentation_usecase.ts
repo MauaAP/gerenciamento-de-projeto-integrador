@@ -7,13 +7,16 @@ import { NotFoundException } from "../../../shared/helpers/exceptions"
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase"
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository"
 
+import { PRESENTATION_STATUS } from "../../../shared/domain/enums/presentation_status";
+
 interface UpdatePresentationInputInterface {
     id: string,
     updateOptions: {
         date?: number,
         groupId?: string,
         examinationBoartId? : string,
-        sala?: string
+        sala?: string,
+        status?: PRESENTATION_STATUS
     }
 }
 

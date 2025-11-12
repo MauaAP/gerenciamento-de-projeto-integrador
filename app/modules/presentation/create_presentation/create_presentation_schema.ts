@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PRESENTATION_STATUS } from "../../../shared/domain/enums/presentation_status";
 
 export const CreatePresentationRequest= z.object({
     date: z.number({message: "A data deve ser data em numero"}),
@@ -8,6 +9,17 @@ export const CreatePresentationRequest= z.object({
     examinationBoartId: z.string({message: "O examinationBoartId deve ser dado em string"}).length(36, "O examinationBoartId deve conter 36 caracteres"),
     
     sala: z.string({message: "A sala deve ser uma string"}).min(1, "A sala é obrigatória"),
+    
+    status: z.enum(["SCHEDULED", "REVIEWING", "COMPLETED"], {
+        errorMap: () => ({ message: "Status deve ser SCHEDULED, REVIEWING ou COMPLETED" })
+    }).transform((val) => {
+        const statusMap: Record<string, PRESENTATION_STATUS> = {
+            "SCHEDULED": PRESENTATION_STATUS.SCHEDULED,
+            "REVIEWING": PRESENTATION_STATUS.REVIEWING,
+            "COMPLETED": PRESENTATION_STATUS.COMPLETED
+        };
+        return statusMap[val];
+    }).optional().default(PRESENTATION_STATUS.SCHEDULED)
 });
 
 export const PresentationSchema= z.object({

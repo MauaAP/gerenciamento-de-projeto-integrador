@@ -6,14 +6,19 @@ import { IPresentationRepository } from "../../../shared/domain/interfaces/IPres
 import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
 import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { NotFoundException } from "../../../shared/helpers/exceptions";
+import { PRESENTATION_STATUS } from "../../../shared/domain/enums/presentation_status";
+import { Presentation } from "../../../shared/domain/entities/presentation";
 
 interface GetPresentationInputInterface {
     id?: string,
     presentationFilter?: {
         date?: number,
         groupId?: string,
-        examinationBoartId?: string
-    }
+        examinationBoartId?: string,
+        status?: PRESENTATION_STATUS
+    },
+    userId?: string,
+    userRole?: string
 }
 
 export interface PresentationOficialModel {
@@ -45,10 +50,28 @@ export class GetPresentationUseCase {
         private readonly partnerRepository: IPartnerRepository
     ) {}
 
-    async execute({id, presentationFilter}: GetPresentationInputInterface): Promise<PresentationOficialModel[]>{
-        const selectedPresentation = id
-        ? await this.presentationRepository.getPresentationById(id)
-        : await this.presentationRepository.getPresentationByFilter(presentationFilter!)
+    async execute({id, presentationFilter, userId, userRole}: GetPresentationInputInterface): Promise<PresentationOficialModel[]>{
+        let selectedPresentation: Presentation[] | Presentation | null = null;
+
+        // Se status foi passado e userId/userRole estão disponíveis, usar métodos específicos por role
+        if (presentationFilter?.status && userId && userRole) {
+            if (userRole === "STUDENT") {
+                selectedPresentation = await this.presentationRepository.getPresentationByStudentId(userId, presentationFilter.status);
+            } else if (userRole === "MODERATOR" || userRole === "ADMIN") {
+                selectedPresentation = await this.presentationRepository.getPresentationByExaminatorId(userId, presentationFilter.status);
+            } else {
+                // Para PROFESSOR, também usar getPresentationByExaminatorId
+                selectedPresentation = await this.presentationRepository.getPresentationByExaminatorId(userId, presentationFilter.status);
+            }
+        } else if (id) {
+            // Buscar por ID específico
+            selectedPresentation = await this.presentationRepository.getPresentationById(id);
+        } else if (presentationFilter) {
+            // Usar filtros normais
+            selectedPresentation = await this.presentationRepository.getPresentationByFilter(presentationFilter);
+        } else {
+            throw new NotFoundException("Nenhuma apresentação encontrada");
+        }
 
         if (selectedPresentation == null)
             throw new NotFoundException("Nenhuma apresentação encontrada");

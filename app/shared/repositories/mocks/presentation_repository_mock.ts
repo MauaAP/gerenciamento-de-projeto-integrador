@@ -1,5 +1,6 @@
 import { Presentation } from "../../../shared/domain/entities/presentation";
 import { IPresentationRepository, PresentationFilter, PresentationUpdateOptions } from "../../../shared/domain/interfaces/IPresentationRepository";
+import { PRESENTATION_STATUS } from "../../../shared/domain/enums/presentation_status";
 
 export class PresentationRepoMock implements IPresentationRepository {
     private presentations: Presentation[] = [
@@ -47,7 +48,7 @@ export class PresentationRepoMock implements IPresentationRepository {
         )
     ]
 
-    async createPresentation(presentation: Presentation): Promise<Presentation> {
+    async createPresentation(presentation: Presentation, professorIds?: string[], alunoIds?: string[]): Promise<Presentation> {
         this.presentations.push(presentation);
         return presentation;
     }
@@ -64,8 +65,29 @@ export class PresentationRepoMock implements IPresentationRepository {
         const result= this.presentations.filter((presentation) =>
             (!filter.date || presentation.date === filter.date) &&
             (!filter.groupId || presentation.groupId.includes(filter.groupId)) &&
-            (!filter.examinationBoartId || presentation.examinationBoartId === filter.examinationBoartId)
+            (!filter.examinationBoartId || presentation.examinationBoartId === filter.examinationBoartId) &&
+            (!filter.status || presentation.status === filter.status)
         );
+        return result.length > 0 ? result : null;
+    }
+
+    async getPresentationByStudentId(studentId: string, status?: PRESENTATION_STATUS): Promise<Presentation[] | null> {
+        // Mock: retornar todas as apresentações (em produção, usaria GSI1)
+        let result = this.presentations;
+        if (status) {
+            result = result.filter(p => p.status === status);
+        }
+        result.sort((a, b) => a.date - b.date);
+        return result.length > 0 ? result : null;
+    }
+
+    async getPresentationByExaminatorId(examinatorId: string, status?: PRESENTATION_STATUS): Promise<Presentation[] | null> {
+        // Mock: retornar todas as apresentações (em produção, usaria GSI2)
+        let result = this.presentations;
+        if (status) {
+            result = result.filter(p => p.status === status);
+        }
+        result.sort((a, b) => a.date - b.date);
         return result.length > 0 ? result : null;
     }
     // Falar com o Luca aqui tinha pensado que seria legal caso a gente recebesse um array de date que pudesse possuir até duas timestamps e a gente pudesse fazer o filtro para presentation que estão nesse intervalo, caso viesse uma duplicava o timestamp

@@ -9,12 +9,14 @@ import { IUserRepository } from "../../../shared/domain/interfaces/IUserReposito
 import { BadRequestException, NotFoundException } from "../../../shared/helpers/exceptions"
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase"
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository"
+import { PRESENTATION_STATUS } from "../../../shared/domain/enums/presentation_status"
 
 interface CreatePresentationInputInterface {
     date: number,
     groupId: string,
     examinationBoartId: string,
-    sala: string
+    sala: string,
+    status?: PRESENTATION_STATUS
 }
 
 export class CreatePresentationUseCase {
@@ -27,7 +29,7 @@ export class CreatePresentationUseCase {
         private readonly partnerRepository: IPartnerRepository
     ) {}
 
-    async execute({date, groupId, examinationBoartId, sala}: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
+    async execute({date, groupId, examinationBoartId, sala, status}: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
         // taking group
         const existingGroup = await this.groupRepository.getGroupById(groupId);
 
@@ -64,7 +66,8 @@ export class CreatePresentationUseCase {
 
         const presentationId = crypto.randomUUID();
 
-        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoartId, sala);
+        const presentationStatus = status || PRESENTATION_STATUS.SCHEDULED;
+        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoartId, sala, presentationStatus);
 
         // Passar professorIds e alunoIds para criar relacionamentos com GSI
         const professorIds = existingExaminationBoard.professorIdList;
