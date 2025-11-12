@@ -19,6 +19,10 @@ import { ExaminationBoardRepositoryDynamoDB } from "./database/dynamo/examinatio
 import { PresentationRepoMock } from "./mocks/presentation_repository_mock";
 import { IPresentationRepository } from "../domain/interfaces/IPresentationRepository";
 import { PresentationRepositoryDynamoDB } from "./database/dynamo/presentation_repository_dynamo";
+import { IClassroomRepository } from "../domain/interfaces/IClassroomRepository";
+import { ClassroomRepositoryDynamoDB } from "./database/dynamo/classroom_repository_dynamo";
+import { ICourseRepository } from "../domain/interfaces/ICourseRepository";
+import { CourseRepositoryDynamoDB } from "./database/dynamo/course_repository_dynamo";
 
 export class UserRepository {
   public userRepo: IUserRepository;
@@ -129,6 +133,36 @@ export class PresentationRepository{
       this.projectRepo= new ProjectRepositoryDynamoDB(this.dynamoDb);
       this.userRepo= new UserRepositoryDynamoDB(this.dynamoDb);
       this.partnerRepo= new PartnerRepositoryDynamoDB(this.dynamoDb);
+    }
+  }
+}
+
+export class ClassroomRepository {
+  public classroomRepo: IClassroomRepository;
+  private dynamoDb?: DynamoDBResources;
+
+  constructor() {
+    if (Env.STAGE === "test") {
+      // Mock será criado se necessário
+      throw new Error("ClassroomRepository mock not implemented yet");
+    } else {
+      this.dynamoDb = new DynamoDBResources(dynamoConfig);
+      this.classroomRepo = new ClassroomRepositoryDynamoDB(this.dynamoDb);
+    }
+  }
+}
+
+export class CourseRepository {
+  public courseRepo: ICourseRepository;
+  private dynamoDb?: DynamoDBResources;
+
+  constructor() {
+    if (Env.STAGE === "test") {
+      // Mock será criado se necessário
+      throw new Error("CourseRepository mock not implemented yet");
+    } else {
+      this.dynamoDb = new DynamoDBResources(dynamoConfig);
+      this.courseRepo = new CourseRepositoryDynamoDB(this.dynamoDb);
     }
   }
 }
