@@ -1,6 +1,5 @@
 import { Classroom } from "../../../shared/domain/entities/classroom";
 import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository";
-import { BadRequestException } from "../../../shared/helpers/exceptions";
 
 export interface CreateClassroomDTO {
     name: string,
