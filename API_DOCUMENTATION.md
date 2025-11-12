@@ -897,6 +897,109 @@ O token é obtido através do endpoint `/api/login`.
 
 ---
 
+## 🏫 Sala (Classroom)
+
+### POST /api/classroom
+
+**Autenticação:** Sim (ADMIN ou MODERATOR)
+
+**Body:**
+```json
+{
+  "name": "string (obrigatório, mínimo 1 caractere)",
+  "capacity": "number (obrigatório, mínimo 1)",
+  "location": "string (opcional)"
+}
+```
+
+**Resposta:** 201 Created
+```json
+{
+  "message": "string",
+  "classroom": {
+    "id": "string",
+    "name": "string",
+    "capacity": "number",
+    "location": "string (opcional)"
+  }
+}
+```
+
+---
+
+### GET /api/classrooms
+
+**Autenticação:** Sim
+
+**Query Params:** Nenhum
+
+**Resposta:** 200 OK
+```json
+{
+  "message": "string",
+  "classrooms": [
+    {
+      "id": "string",
+      "name": "string",
+      "capacity": "number",
+      "location": "string (opcional)"
+    }
+  ]
+}
+```
+
+---
+
+## 📚 Curso (Course)
+
+### POST /api/course
+
+**Autenticação:** Sim (ADMIN ou MODERATOR)
+
+**Body:**
+```json
+{
+  "name": "ADMINISTRAÇÃO | ANÁLISE E DESENVOLVIMENTO DE SISTEMAS | ARQUITETURA E URBANISMO | CIÊNCIAS DA COMPUTAÇÃO | DESIGN | ECONOMIA | ENGENHARIA CIVIL | ENGENHARIA DE ALIMENTOS | ENGENHARIA DE COMPUTAÇÃO | ENGENHARIA DE CONTROLE E AUTOMAÇÃO | ENGENHARIA DE PRODUÇÃO | ENGENHARIA ELÉTRICA | ENGENHARIA MECÂNICA | ENGENHARIA QUÍMICA | INTELIGÊNCIA ARTIFICIAL E CIÊNCIA DE DADOS | RELAÇÕES INTERNACIONAIS | SISTEMAS DE INFORMAÇÃO",
+  "code": "string (opcional)"
+}
+```
+
+**Resposta:** 201 Created
+```json
+{
+  "message": "string",
+  "course": {
+    "id": "string",
+    "name": "string",
+    "code": "string (opcional)"
+  }
+}
+```
+
+---
+
+### GET /api/courses
+
+**Autenticação:** Sim
+
+**Query Params:** Nenhum
+
+**Resposta:** 200 OK
+```json
+{
+  "message": "string",
+  "courses": [
+    {
+      "id": "string",
+      "name": "string",
+      "code": "string (opcional)"
+    }
+  ]
+}
+```
+
+---
+
 ## 📝 Enums
 
 ### ROLE
@@ -959,6 +1062,8 @@ O token é obtido através do endpoint `/api/login`.
 - POST /api/examination-board
 - PUT /api/examination-board
 - DELETE /api/examination-board
+- POST /api/classroom
+- POST /api/course
 
 ---
 
