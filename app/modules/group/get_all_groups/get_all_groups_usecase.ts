@@ -3,6 +3,7 @@ import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRe
 import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { GroupOficialModel } from "../get_group/get_group_usecase";
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { NotFoundException } from "../../../shared/helpers/exceptions";
 
 export class GetAllGroupsUseCase {
     constructor(
@@ -19,14 +20,24 @@ export class GetAllGroupsUseCase {
             groupList.map(async (group) =>{
                 const project= await this.projectRepository.getProjectById(group.projectId);
 
-                const partner= await this.partnerRepository.getPartnerById(project!.partnerId)
+                if (!project) {
+                    throw new NotFoundException(`Projeto com ID ${group.projectId} não encontrado`);
+                }
+
+                const partner= await this.partnerRepository.getPartnerById(project.partnerId)
+
+                if (!partner) {
+                    throw new NotFoundException(`Parceiro com ID ${project.partnerId} não encontrado`);
+                }
 
                 const userNameList: string[]= []
 
                 for (const userId of group.userIdList){
                     const user= await this.userRepository.getUserById(userId);
 
-                    userNameList.push(user!.name)
+                    if (user) {
+                        userNameList.push(user.name);
+                    }
                 }
 
                 return {
@@ -35,9 +46,9 @@ export class GetAllGroupsUseCase {
                     userNameList: userNameList,
                     yearSem: group.yearSem,
                     project: {
-                        title: project!.title,
-                        partnerName: partner!.name,
-                        extensionHours: project!.extensionHours
+                        title: project.title,
+                        partnerName: partner.name,
+                        extensionHours: project.extensionHours
                     },
                     course: group.course
                 }
