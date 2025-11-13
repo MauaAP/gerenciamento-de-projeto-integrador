@@ -9,7 +9,7 @@ export const GetPresentationRequest = z.object({
 
     groupId: z.string({message: "groupId deve ser dado em string"}).length(36, "O group id deve conter 36 caracteres").optional(),
 
-    examinationBoartId: z.string({message: "examinationBoardId deve ser dado em string"}).length(36, "O examinationBoart id deve conter 36 caracteres").optional(),
+    examinationBoardId: z.string({message: "examinationBoardId deve ser dado em string"}).length(36, "O examinationBoard id deve conter 36 caracteres").optional(),
 
     status: z.enum(["SCHEDULED", "REVIEWING", "COMPLETED"], {
         errorMap: () => ({ message: "Status deve ser SCHEDULED, REVIEWING ou COMPLETED" })
@@ -22,7 +22,7 @@ export const GetPresentationRequest = z.object({
         return statusMap[val];
     }).optional()
 }).refine((data) => {
-    const filterFields = [data.date, data.groupId, data.examinationBoartId];
+    const filterFields = [data.date, data.groupId, data.examinationBoardId];
     const hasOtherFilters = filterFields.some(f => f !== undefined);
     const hasId = data.id !== undefined;
     const hasStatus = data.status !== undefined;
@@ -41,7 +41,7 @@ export const GetPresentationRequest = z.object({
     return hasOtherFilters; // filtros normais
 },
     {
-        message: "Você deve informar: (1) id, OU (2) filtros (date/groupId/examinationBoartId), OU (3) status (será usado com seu user_id do token)"
+        message: "Você deve informar: (1) id, OU (2) filtros (date/groupId/examinationBoardId), OU (3) status (será usado com seu user_id do token)"
     }
 )
 
