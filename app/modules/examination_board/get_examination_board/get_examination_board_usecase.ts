@@ -41,7 +41,9 @@ export class GetExaminationBoardUseCase {
                     // if (!existingProfessor)
                     //     throw new BadRequestException("Algum professor selecionado não está no banco");
         
-                    professorNameList.push(existingProfessor!.name);
+                    if (existingProfessor) {
+                        professorNameList.push(existingProfessor.name);
+                    }
                 }
 
                 return {
