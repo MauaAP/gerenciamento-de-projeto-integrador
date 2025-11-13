@@ -5,8 +5,9 @@ export class Presentation {
         public presentationId: string,
         public date: number, //miliseconds
         public groupId: string,
-        public examinationBoartId: string,
+        public examinationBoardId: string,
         public sala: string,
+        public classroomId: string,
         public status: PRESENTATION_STATUS = PRESENTATION_STATUS.SCHEDULED
     ){}
 
@@ -14,16 +15,18 @@ export class Presentation {
         presentationId: string,
         date: number, //miliseconds
         groupId: string,
-        examinationBoartId: string,
+        examinationBoardId: string,
         sala: string,
+        classroomId: string,
         status: PRESENTATION_STATUS
     } {
         return {
             presentationId: this.presentationId,
             date: this.date,
             groupId: this.groupId,
-            examinationBoartId: this.examinationBoartId,
+            examinationBoardId: this.examinationBoardId,
             sala: this.sala,
+            classroomId: this.classroomId,
             status: this.status
         };
     }
@@ -32,8 +35,9 @@ export class Presentation {
         presentationId: string;
         date: number; //miliseconds
         groupId: string;
-        examinationBoartId: string;
+        examinationBoardId: string;
         sala?: string;
+        classroomId?: string;
         status?: PRESENTATION_STATUS | string;
     }): Presentation {
         // Se status não existir ou for inválido, usar SCHEDULED como default
@@ -49,8 +53,9 @@ export class Presentation {
             json.presentationId, 
             json.date, 
             json.groupId, 
-            json.examinationBoartId, 
+            json.examinationBoardId, 
             json.sala || "",
+            json.classroomId || "",
             status
         )
     }
