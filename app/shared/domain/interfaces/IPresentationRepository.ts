@@ -4,15 +4,16 @@ import { PRESENTATION_STATUS } from "../enums/presentation_status";
 export type PresentationFilter = {
     date?: number,
     groupId?: string,
-    examinationBoartId?: string,
+    examinationBoardId?: string,
     status?: PRESENTATION_STATUS
 }
 
 export type PresentationUpdateOptions = {
     date?: number,
     groupId?: string,
-    examinationBoartId? : string,
+    examinationBoardId? : string,
     sala?: string,
+    classroomId?: string,
     status?: PRESENTATION_STATUS
 }
 
