@@ -5,6 +5,7 @@ import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRe
 import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase";
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { NotFoundException } from "../../../shared/helpers/exceptions";
 
 export class GetAllPresentationsUseCase {
     constructor(
@@ -24,27 +25,47 @@ export class GetAllPresentationsUseCase {
                 
                 const group= await this.groupRepository.getGroupById(presentation.groupId);
 
+                if (!group) {
+                    throw new NotFoundException(`Grupo com ID ${presentation.groupId} não encontrado`);
+                }
+
                 // taking group user names
                 const userNameList: string[] = []
-                for (const userId of group!.userIdList) {
+                for (const userId of group.userIdList) {
                     const user= await this.userRepository.getUserById(userId);
 
-                    userNameList.push(user!.name)
+                    if (user) {
+                        userNameList.push(user.name);
+                    }
                 }
 
                 // taking group project title
-                const project= await this.projectRepository.getProjectById(group!.projectId);
+                const project= await this.projectRepository.getProjectById(group.projectId);
 
-               const partner= await this.partnerRepository.getPartnerById(project!.partnerId)
+                if (!project) {
+                    throw new NotFoundException(`Projeto com ID ${group.projectId} não encontrado`);
+                }
 
-                const examinationBoard= await this.examinationBoardRepository.getExaminationBoardById(presentation.examinationBoartId);
+               const partner= await this.partnerRepository.getPartnerById(project.partnerId)
+
+                if (!partner) {
+                    throw new NotFoundException(`Parceiro com ID ${project.partnerId} não encontrado`);
+                }
+
+                const examinationBoard= await this.examinationBoardRepository.getExaminationBoardById(presentation.examinationBoardId);
+
+                if (!examinationBoard) {
+                    throw new NotFoundException(`Banca avaliadora com ID ${presentation.examinationBoardId} não encontrada`);
+                }
 
                 // taking examinationBoard user names
                 const professorNameList: string[] = []
-                for (const professorId of examinationBoard!.professorIdList) {
+                for (const professorId of examinationBoard.professorIdList) {
                     const existingProfessor = await this.userRepository.getUserById(professorId);
 
-                    professorNameList.push(existingProfessor!.name);
+                    if (existingProfessor) {
+                        professorNameList.push(existingProfessor.name);
+                    }
                 }
 
                 // here return the schema
@@ -52,15 +73,15 @@ export class GetAllPresentationsUseCase {
                     id: presentation.presentationId,
                     date: presentation.date,
                     group: {
-                        codSubj: group!.codSubj,
+                        codSubj: group.codSubj,
                         userNameList: userNameList,
-                        yearSem: group!.yearSem,
+                        yearSem: group.yearSem,
                         project: {
-                            title: project!.title,
-                            partnerName: partner!.name,
-                            extensionHours: project!.extensionHours
+                            title: project.title,
+                            partnerName: partner.name,
+                            extensionHours: project.extensionHours
                         },
-                        course: group!.course
+                        course: group.course
                     },
                     examinationBoard: {
                         porfessorNameList: professorNameList
