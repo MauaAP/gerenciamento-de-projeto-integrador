@@ -31,7 +31,11 @@ export class CreateGroupUseCase {
 
         const partner= await this.PartnerRepository.getPartnerById(existingProject.partnerId)
 
-        const partnerName= partner!.name
+        if (!partner) {
+            throw new BadRequestException("Parceiro não está no banco");
+        }
+
+        const partnerName= partner.name
 
         const userNameList: string[] = []
 
