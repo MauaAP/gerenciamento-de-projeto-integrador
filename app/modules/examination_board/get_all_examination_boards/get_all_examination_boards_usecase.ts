@@ -18,7 +18,9 @@ export class GetAllExaminationBoardsUseCase{
                 for (const professorId of examinationBoard.professorIdList){
                     const existingProfessor= await this.userRepository.getUserById(professorId);
         
-                    professorNameList.push(existingProfessor!.name);
+                    if (existingProfessor) {
+                        professorNameList.push(existingProfessor.name);
+                    }
                 }
 
                 return {
