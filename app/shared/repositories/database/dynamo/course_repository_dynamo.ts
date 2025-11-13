@@ -63,5 +63,21 @@ export class CourseRepositoryDynamoDB implements ICourseRepository {
     console.log(`[DynamoDB] Busca por ID: ${courseId} - Não encontrado`);
     return null;
   }
+
+  async deleteCourse(courseId: string): Promise<Course | null> {
+    const course = await this.getCourseById(courseId);
+
+    if (!course) {
+      return null;
+    }
+
+    const pk = getCoursePK(courseId);
+    const sk = getCourseSK();
+
+    await this.db.delete(pk, sk);
+    console.log(`[DynamoDB] Curso deletado: ${pk}`);
+
+    return course;
+  }
 }
 
