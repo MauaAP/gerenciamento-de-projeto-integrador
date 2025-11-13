@@ -18,7 +18,7 @@ export class CreatePresentationController {
             );
         }
 
-        const {date, groupId, examinationBoartId, sala, status} = parseBody(
+        const {date, groupId, examinationBoardId, sala, classroomId, status} = parseBody(
             CreatePresentationRequest,
             req.body
         );
@@ -26,8 +26,9 @@ export class CreatePresentationController {
         const newPresentation= await this.usecase.execute({
             date,
             groupId,
-            examinationBoartId,
+            examinationBoardId,
             sala,
+            classroomId,
             status
         });
 
