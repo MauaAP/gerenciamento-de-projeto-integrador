@@ -12,6 +12,12 @@ export class UpdatePresentationController{
     async handler(req: Request, res: Response) {
         const userFromToken= req.user as UserFromToken;
 
+        if (!userFromToken) {
+            throw new ForbiddenException(
+                "Token de autenticação inválido ou ausente"
+            );
+        }
+
         const allowedRoles= ["ADMIN", "MODERATOR"];
         
         if(!allowedRoles.includes(userFromToken.role)) {
@@ -20,7 +26,7 @@ export class UpdatePresentationController{
             );
         }
 
-        const {id, date, groupId, examinationBoartId, sala, status}= parseBody(
+        const {id, date, groupId, examinationBoardId, sala, status}= parseBody(
             UpdatePresentationRequest,
             req.body
         );
@@ -30,8 +36,9 @@ export class UpdatePresentationController{
             updateOptions: {
                 date,
                 groupId,
-                examinationBoartId,
+                examinationBoardId,
                 sala,
+                classroomId,
                 status
             }
         })
