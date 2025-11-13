@@ -63,5 +63,21 @@ export class ClassroomRepositoryDynamoDB implements IClassroomRepository {
     console.log(`[DynamoDB] Busca por ID: ${classroomId} - Não encontrado`);
     return null;
   }
+
+  async deleteClassroom(classroomId: string): Promise<Classroom | null> {
+    const classroom = await this.getClassroomById(classroomId);
+
+    if (!classroom) {
+      return null;
+    }
+
+    const pk = getClassroomPK(classroomId);
+    const sk = getClassroomSK();
+
+    await this.db.delete(pk, sk);
+    console.log(`[DynamoDB] Sala deletada: ${pk}`);
+
+    return classroom;
+  }
 }
 
