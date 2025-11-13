@@ -3,10 +3,12 @@ import { CreatePresentationUseCase } from "./create_presentation_usecase";
 import { CreatePresentationController } from "./create_presentation_controller";
 import { authenticateToken } from "../../../shared/middleware/jwt_middleware";
 import { PresentationRepository } from "../../../shared/repositories/repository";
+import { ClassroomRepository } from "../../../shared/repositories/repository";
 
 const router= express.Router();
 
 const repository= new PresentationRepository();
+const classroomRepository = new ClassroomRepository();
 
 const createPresentationUseCase= new CreatePresentationUseCase(
     repository.presentationRepo,
@@ -14,7 +16,8 @@ const createPresentationUseCase= new CreatePresentationUseCase(
     repository.examinationBoardRepo,
     repository.userRepo,
     repository.projectRepo,
-    repository.partnerRepo
+    repository.partnerRepo,
+    classroomRepository.classroomRepo
 );
 
 const createPresentationController= new CreatePresentationController(createPresentationUseCase);
