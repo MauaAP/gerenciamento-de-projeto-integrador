@@ -59,7 +59,8 @@ export class UserRepositoryDynamoDB implements IUserRepository {
   }
 
   async getUserById(userId: string): Promise<User | null> {
-    const prefixes = ["ALUNO", "PROF", "ADMIN"];
+    // Tentar todos os prefixos possíveis
+    const prefixes = ["ALUNO", "PROF", "ADMIN", "COOD"];
     for (const prefix of prefixes) {
       const pk = `${prefix}#${userId}`;
       const sk = getUserSK();
@@ -69,6 +70,16 @@ export class UserRepositoryDynamoDB implements IUserRepository {
         return User.fromJson(item);
       }
     }
+    
+    // Fallback: buscar por scan se não encontrou com prefixos (para usuários antigos)
+    // Isso pode acontecer se o usuário foi criado antes da padronização de prefixos
+    const allUsers = await this.fetchUsers();
+    const foundUser = allUsers.find(user => user.userId === userId);
+    if (foundUser) {
+      console.log(`[DynamoDB] Busca por ID: ${userId} - Encontrado via scan (usuário antigo)`);
+      return foundUser;
+    }
+    
     console.log(`[DynamoDB] Busca por ID: ${userId} - Não encontrado`);
     return null;
   }

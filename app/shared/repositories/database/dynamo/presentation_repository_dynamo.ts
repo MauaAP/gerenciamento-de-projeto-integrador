@@ -59,12 +59,22 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
         // 3. Criar relacionamento: APRESENTACAO#ID + SK: BANCA#ID
         const bancaRelationshipItem = {
             PK: pk,
-            SK: `BANCA#${presentation.examinationBoartId}`,
-            examinationBoardId: presentation.examinationBoartId
+            SK: `BANCA#${presentation.examinationBoardId}`,
+            examinationBoardId: presentation.examinationBoardId
         };
-        await this.db.put(bancaRelationshipItem, pk, `BANCA#${presentation.examinationBoartId}`);
+        await this.db.put(bancaRelationshipItem, pk, `BANCA#${presentation.examinationBoardId}`);
 
-        // 4. Criar relacionamentos com professores: APRESENTACAO#ID + SK: PROF#ID (com GSI2)
+        // 4. Criar relacionamento: APRESENTACAO#ID + SK: CLASSROOM#ID
+        if (presentation.classroomId) {
+            const classroomRelationshipItem = {
+                PK: pk,
+                SK: `CLASSROOM#${presentation.classroomId}`,
+                classroomId: presentation.classroomId
+            };
+            await this.db.put(classroomRelationshipItem, pk, `CLASSROOM#${presentation.classroomId}`);
+        }
+
+        // 5. Criar relacionamentos com professores: APRESENTACAO#ID + SK: PROF#ID (com GSI2)
         if (professorIds && professorIds.length > 0) {
             for (const professorId of professorIds) {
                 const profPK = getProfPK(professorId);
@@ -81,7 +91,7 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
             }
         }
 
-        // 5. Criar relacionamentos com alunos: APRESENTACAO#ID + SK: ALUNO#ID (com GSI1)
+        // 6. Criar relacionamentos com alunos: APRESENTACAO#ID + SK: ALUNO#ID (com GSI1)
         if (alunoIds && alunoIds.length > 0) {
             for (const alunoId of alunoIds) {
                 const alunoPK = getAlunoPK(alunoId);
@@ -152,9 +162,9 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
         }
 
         // Filtro por examinationBoardId - Query APRESENTACAO#ID onde SK = BANCA#ID
-        if (filter.examinationBoartId) {
+        if (filter.examinationBoardId) {
             const allPresentations = await this.fetchPresentation();
-            const filtered = allPresentations.filter(p => p.examinationBoartId === filter.examinationBoartId);
+            const filtered = allPresentations.filter(p => p.examinationBoardId === filter.examinationBoardId);
             
             for (const pres of filtered) {
                 if (!presentationIds.has(pres.presentationId)) {
@@ -190,7 +200,7 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
         }
 
         // Se nenhum filtro foi aplicado, retornar todas as apresentações
-        if (!filter.groupId && !filter.examinationBoartId && !filter.date) {
+        if (!filter.groupId && !filter.examinationBoardId && !filter.date) {
             return await this.fetchPresentation();
         }
 
@@ -317,7 +327,7 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
 
         for (const presentation of allPresentations) {
             // Verificar se a apresentação está relacionada a alguma das bancas do examinador
-            if (boardIds.has(presentation.examinationBoartId)) {
+            if (boardIds.has(presentation.examinationBoardId)) {
                 if (!presentationIds.has(presentation.presentationId)) {
                     // Filtrar por status se fornecido
                     if (!status || presentation.status === status) {
@@ -389,22 +399,39 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
             
             updateDict.groupId = updateOptions.groupId;
         }
-        if (updateOptions.examinationBoartId) {
+        if (updateOptions.examinationBoardId) {
             // Atualizar relacionamento BANCA
             // Deletar relacionamento antigo
-            await this.db.delete(pk, `BANCA#${currentPresentation.examinationBoartId}`);
+            await this.db.delete(pk, `BANCA#${currentPresentation.examinationBoardId}`);
             
             // Criar novo relacionamento
             const bancaRelationshipItem = {
                 PK: pk,
-                SK: `BANCA#${updateOptions.examinationBoartId}`,
-                examinationBoardId: updateOptions.examinationBoartId
+                SK: `BANCA#${updateOptions.examinationBoardId}`,
+                examinationBoardId: updateOptions.examinationBoardId
             };
-            await this.db.put(bancaRelationshipItem, pk, `BANCA#${updateOptions.examinationBoartId}`);
+            await this.db.put(bancaRelationshipItem, pk, `BANCA#${updateOptions.examinationBoardId}`);
             
-            updateDict.examinationBoartId = updateOptions.examinationBoartId;
+            updateDict.examinationBoardId = updateOptions.examinationBoardId;
         }
         if (updateOptions.sala) updateDict.sala = updateOptions.sala;
+        if (updateOptions.classroomId) {
+            // Atualizar relacionamento CLASSROOM
+            // Deletar relacionamento antigo se existir
+            if (currentPresentation.classroomId) {
+                await this.db.delete(pk, `CLASSROOM#${currentPresentation.classroomId}`);
+            }
+            
+            // Criar novo relacionamento
+            const classroomRelationshipItem = {
+                PK: pk,
+                SK: `CLASSROOM#${updateOptions.classroomId}`,
+                classroomId: updateOptions.classroomId
+            };
+            await this.db.put(classroomRelationshipItem, pk, `CLASSROOM#${updateOptions.classroomId}`);
+            
+            updateDict.classroomId = updateOptions.classroomId;
+        }
         if (updateOptions.status) {
             updateDict.status = updateOptions.status;
             

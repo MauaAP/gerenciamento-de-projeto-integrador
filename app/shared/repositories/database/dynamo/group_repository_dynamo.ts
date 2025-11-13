@@ -18,6 +18,10 @@ function getProjectPK(projectId: string): string {
   return `PROJECT#${projectId}`;
 }
 
+function getCoursePKFromEnum(courseEnum: string): string {
+  return `COURSE#${courseEnum}`;
+}
+
 export class GroupRepositoryDynamoDB implements IGroupRepository {
   private db: DynamoDBResources;
 
@@ -72,6 +76,23 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
       groupId: group.groupId
     };
     await this.db.put(projectReverseLookupItem, projectPK, `GROUP#${group.groupId}`);
+
+    // Criar relacionamento: GROUP#ID + SK: COURSE#ENUM_VALUE
+    const coursePK = getCoursePKFromEnum(group.course);
+    const courseRelationshipItem = {
+      PK: pk,
+      SK: `COURSE#${group.course}`,
+      course: group.course
+    };
+    await this.db.put(courseRelationshipItem, pk, `COURSE#${group.course}`);
+
+    // Criar reverse lookup: COURSE#ENUM_VALUE + SK: GROUP#ID
+    const courseReverseLookupItem = {
+      PK: coursePK,
+      SK: `GROUP#${group.groupId}`,
+      groupId: group.groupId
+    };
+    await this.db.put(courseReverseLookupItem, coursePK, `GROUP#${group.groupId}`);
 
     console.log(`[DynamoDB] Grupo criado: ${pk}`);
     
@@ -241,6 +262,13 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
     const projectPK = getProjectPK(group.projectId);
     await this.db.delete(projectPK, `GROUP#${groupId}`);
 
+    // Deletar relacionamento: GROUP#ID + SK: COURSE#ENUM_VALUE
+    await this.db.delete(pk, `COURSE#${group.course}`);
+
+    // Deletar reverse lookup: COURSE#ENUM_VALUE + SK: GROUP#ID
+    const coursePK = getCoursePKFromEnum(group.course);
+    await this.db.delete(coursePK, `GROUP#${groupId}`);
+
     console.log(`[DynamoDB] Grupo deletado: ${pk}`);
 
     return group;
@@ -314,7 +342,31 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
       
       updateDict.projectId = updateOptions.projectId;
     }
-    if (updateOptions.course) updateDict.course = updateOptions.course;
+    if (updateOptions.course) {
+      // Se course mudou, atualizar relacionamentos
+      // Deletar relacionamento antigo
+      await this.db.delete(pk, `COURSE#${currentGroup.course}`);
+      const oldCoursePK = getCoursePKFromEnum(currentGroup.course);
+      await this.db.delete(oldCoursePK, `GROUP#${groupId}`);
+      
+      // Criar novo relacionamento
+      const courseRelationshipItem = {
+        PK: pk,
+        SK: `COURSE#${updateOptions.course}`,
+        course: updateOptions.course
+      };
+      await this.db.put(courseRelationshipItem, pk, `COURSE#${updateOptions.course}`);
+      
+      const newCoursePK = getCoursePKFromEnum(updateOptions.course);
+      const courseReverseLookupItem = {
+        PK: newCoursePK,
+        SK: `GROUP#${groupId}`,
+        groupId: groupId
+      };
+      await this.db.put(courseReverseLookupItem, newCoursePK, `GROUP#${groupId}`);
+      
+      updateDict.course = updateOptions.course;
+    }
 
     const updatedGroup = await this.db.update(pk, sk, updateDict);
 

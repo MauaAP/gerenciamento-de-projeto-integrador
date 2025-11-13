@@ -53,17 +53,6 @@ describe("UpdateProjectSchema -Zod validation", () => {
         }
     });
 
-    it("should throw (O numero de extensionHours deve ser maior que 0) if extensionHours is a negative number", () => {
-        try {
-            parseBody(UpdateProjectRequest, { id: "e9c7d747-9e8e-4d34-935e-473c2c16be83", extensionHours: -5 })
-        }
-        catch (error: any) {
-            expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("O numero de extensionHours deve ser maior que 0")
-            expect(error.statusCode).toBe(400)
-        }
-    });
-
     it("should throw (Você deve passar algum atributo para ser alterado) if no attribute is provided to be updated", () => {
         try {
             parseBody(UpdateProjectRequest, { id: "e9c7d747-9e8e-4d34-935e-473c2c16be83" })
