@@ -32,10 +32,14 @@ export class GetProjectUseCase {
             projects.map(async (project) => {
                 const partner = await this.partnerRepository.getPartnerById(project.partnerId);
 
+                if (!partner) {
+                    throw new NotFoundException(`Parceiro com ID ${project.partnerId} não encontrado`);
+                }
+
                 return {
                     projectId: project.projectId,
                     title: project.title,
-                    partnerName: partner!.name,
+                    partnerName: partner.name,
                     extensionHours: project.extensionHours
                 };
             })
