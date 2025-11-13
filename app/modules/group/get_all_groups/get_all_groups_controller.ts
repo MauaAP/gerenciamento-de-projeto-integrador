@@ -22,7 +22,7 @@ export class GetAllGroupsController {
 
         const response= GetAllGroupsResponse.parse({
             message: "Lista de Grupos retornado com sucesso",
-            group: groupsList.map((group) => ({
+            groups: groupsList.map((group) => ({
                 id: group.id,
                 codSubj: group.codSubj,
                 userNameList: group.userNameList,
