@@ -5,7 +5,7 @@ export const UpdateProjectRequest = z.object({
     id: z.string({ message: "O id deve ser dado em string" }).length(36, "O id deve conter 36 caracteres"),
     title: z.string().min(6, "O title deve conter pelo menos 6 caracteres").optional(),
     partnerId: z.string({ message: "O partnerId deve ser dado em string" }).length(36, "O partnerId deve conter 36 caracteres").optional(),
-    extensionHours: z.number({ message: "As extensionHours devem ser dadas em numero de horas (number)" }).min(1, { message: "O numero de extensionHours deve ser maior que 0" }).optional()
+    extensionHours: z.number({ message: "As extensionHours devem ser dadas em numero de horas (number)" }).min(0, { message: "O numero de extensionHours deve ser maior ou igual a 0" }).optional()
 }).refine(
     (data) => (data.title !== undefined || data.partnerId !== undefined || data.extensionHours !== undefined),
     {
