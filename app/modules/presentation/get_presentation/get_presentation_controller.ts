@@ -18,7 +18,7 @@ export class GetPresentationController {
                 "Você não tem permissão para acessar este recurso"
             );
 
-        const { id, date, groupId, examinationBoartId, status } = parseBody(
+        const { id, date, groupId, examinationBoardId, status } = parseBody(
             GetPresentationRequest,
             req.query
         );
@@ -28,7 +28,7 @@ export class GetPresentationController {
             presentationFilter: {
                 date,
                 groupId,
-                examinationBoartId,
+                examinationBoardId,
                 status
             },
             userId: userFromToken.userId,
