@@ -48,8 +48,16 @@ export class GetGroupUseCase {
                 // aqui pego o projeto
                 const project= await this.projectRepository.getProjectById(group.projectId);
 
+                if (!project) {
+                    throw new NotFoundException(`Projeto com ID ${group.projectId} não encontrado`);
+                }
+
                 // aqui pego o parceiro
-                const partner= await this.partnerRepository.getPartnerById(project!.partnerId);
+                const partner= await this.partnerRepository.getPartnerById(project.partnerId);
+
+                if (!partner) {
+                    throw new NotFoundException(`Parceiro com ID ${project.partnerId} não encontrado`);
+                }
 
                 // aqui seleciono o nome dos usuarios e atribuo a uma nova lista
                 const userNameList: string[] = []
@@ -70,9 +78,9 @@ export class GetGroupUseCase {
                     userNameList: userNameList,
                     yearSem: group.yearSem,
                     project: {
-                        title: project!.title,
-                        partnerName: partner!.name,
-                        extensionHours: project!.extensionHours
+                        title: project.title,
+                        partnerName: partner.name,
+                        extensionHours: project.extensionHours
                     },
                     course: group.course
                 };
