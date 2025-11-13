@@ -10,12 +10,14 @@ import { BadRequestException, NotFoundException } from "../../../shared/helpers/
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase"
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository"
 import { PRESENTATION_STATUS } from "../../../shared/domain/enums/presentation_status"
+import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository"
 
 interface CreatePresentationInputInterface {
     date: number,
     groupId: string,
-    examinationBoartId: string,
+    examinationBoardId: string,
     sala: string,
+    classroomId: string,
     status?: PRESENTATION_STATUS
 }
 
@@ -26,54 +28,64 @@ export class CreatePresentationUseCase {
         private readonly examinationBoardRepository: IExaminationBoardRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly partnerRepository: IPartnerRepository
+        private readonly partnerRepository: IPartnerRepository,
+        private readonly classroomRepository: IClassroomRepository
     ) {}
 
-    async execute({date, groupId, examinationBoartId, sala, status}: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
-        // taking group
+     async execute({date, groupId, examinationBoardId, sala, classroomId, status}: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
         const existingGroup = await this.groupRepository.getGroupById(groupId);
 
         if (!existingGroup)
             throw new NotFoundException("Grupo não está no banco");
 
+        // Validar classroomId
+        const existingClassroom = await this.classroomRepository.getClassroomById(classroomId);
+        if (!existingClassroom)
+            throw new NotFoundException("Sala não está no banco");
 
-        // taking group user names
         const userNameList: string[] = []
         for (const userId of existingGroup.userIdList) {
             const existingUser = await this.userRepository.getUserById(userId);
 
-            userNameList.push(existingUser!.name);
+            if (existingUser) {
+                userNameList.push(existingUser.name);
+            }
         }
 
-        //taking group projectTitle
         const project= await this.projectRepository.getProjectById(existingGroup.projectId);
 
-        const partner= await this.partnerRepository.getPartnerById(project!.partnerId)
+        if (!project) {
+            throw new NotFoundException(`Projeto com ID ${existingGroup.projectId} não encontrado`);
+        }
 
-        // taking examination board
-        const existingExaminationBoard = await this.examinationBoardRepository.getExaminationBoardById(examinationBoartId);
+        const partner= await this.partnerRepository.getPartnerById(project.partnerId)
+
+        if (!partner) {
+            throw new NotFoundException(`Parceiro com ID ${project.partnerId} não encontrado`);
+        }
+
+        const existingExaminationBoard = await this.examinationBoardRepository.getExaminationBoardById(examinationBoardId);
 
         if (!existingExaminationBoard)
             throw new NotFoundException("Banca avaliadora selecionada não está no banco");
 
-        // taking examinationBoard user names
         const professorNameList: string[] = []
         for (const professorId of existingExaminationBoard.professorIdList) {
             const existingProfessor = await this.userRepository.getUserById(professorId);
 
-            professorNameList.push(existingProfessor!.name);
+            if (existingProfessor) {
+                professorNameList.push(existingProfessor.name);
+            }
         }
 
         const presentationId = crypto.randomUUID();
 
         const presentationStatus = status || PRESENTATION_STATUS.SCHEDULED;
-        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoartId, sala, presentationStatus);
+        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoardId, sala, classroomId, presentationStatus);
 
-        // Passar professorIds e alunoIds para criar relacionamentos com GSI
         const professorIds = existingExaminationBoard.professorIdList;
         const alunoIds = existingGroup.userIdList;
         
-        // Type assertion para passar parâmetros opcionais
         await (this.presentationRepository.createPresentation as any)(
             newPresentation, 
             professorIds, 
@@ -88,9 +100,9 @@ export class CreatePresentationUseCase {
                 userNameList: userNameList,
                 yearSem: existingGroup.yearSem,
                 project: {
-                    title: project!.title,
-                    partnerName: partner!.name,
-                    extensionHours: project!.extensionHours
+                    title: project.title,
+                    partnerName: partner.name,
+                    extensionHours: project.extensionHours
                 },
                 course: existingGroup.course
             },
