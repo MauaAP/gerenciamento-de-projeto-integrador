@@ -47,14 +47,24 @@ export class UpdateGroupUseCase {
         for (const userId of updatedGroup.userIdList){
             const user= await this.userRepository.getUserById(userId);
 
-            userNameList.push(user!.name);
+            if (user) {
+                userNameList.push(user.name);
+            }
         }
 
-        const project= (await this.projectRepository.getProjectById(updatedGroup.projectId))
+        const project= await this.projectRepository.getProjectById(updatedGroup.projectId)
 
-        const partner= await this.PartnerRepository.getPartnerById(project!.partnerId)
+        if (!project) {
+            throw new NotFoundException(`Projeto com ID ${updatedGroup.projectId} não encontrado`);
+        }
 
-        const partnerName= partner!.name 
+        const partner= await this.PartnerRepository.getPartnerById(project.partnerId)
+
+        if (!partner) {
+            throw new NotFoundException(`Parceiro com ID ${project.partnerId} não encontrado`);
+        }
+
+        const partnerName= partner.name 
 
         return {
             id: updatedGroup.groupId,
@@ -62,9 +72,9 @@ export class UpdateGroupUseCase {
             userNameList: userNameList,
             yearSem: updatedGroup.yearSem,
             project: {
-                title: project!.title,
+                title: project.title,
                 partnerName: partnerName,
-                extensionHours: project!.extensionHours
+                extensionHours: project.extensionHours
             },
             course: updatedGroup.course
         }
