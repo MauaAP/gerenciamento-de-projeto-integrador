@@ -22,7 +22,7 @@ export class GetAllProjectsController {
 
         const response= GetAllProjectsResponse.parse({
             message: "Lista de Projetos retornado com sucesso",
-            projectList: projectList.map((project) => ({
+            projects: projectList.map((project) => ({
                 id: project.projectId,
                 title: project.title,
                 partnerName: project.partnerName,
