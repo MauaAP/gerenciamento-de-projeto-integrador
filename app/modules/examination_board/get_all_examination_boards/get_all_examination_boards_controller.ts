@@ -22,7 +22,7 @@ export class GetAllExaminationBoardsController {
 
         const response= GetAllExaminationBoardsResponse.parse({
             message: "Lista de Bancas Avaliadoras retornado com sucesso",
-            examinationBoard: examinationBoardsList.map((examinationBoard) => ({
+            examinationBoards: examinationBoardsList.map((examinationBoard) => ({
                 id: examinationBoard.id,
                 professorNameList: examinationBoard.professorNameList
             }))
