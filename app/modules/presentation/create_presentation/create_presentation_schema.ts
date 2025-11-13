@@ -6,9 +6,11 @@ export const CreatePresentationRequest= z.object({
     
     groupId: z.string({message: "O groupId deve ser dado em string"}).length(36, "O groupId deve conter 36 caracteres"),
 
-    examinationBoartId: z.string({message: "O examinationBoartId deve ser dado em string"}).length(36, "O examinationBoartId deve conter 36 caracteres"),
+    examinationBoardId: z.string({message: "O examinationBoardId deve ser dado em string"}).length(36, "O examinationBoardId deve conter 36 caracteres"),
     
     sala: z.string({message: "A sala deve ser uma string"}).min(1, "A sala é obrigatória"),
+    
+    classroomId: z.string({message: "O classroomId deve ser dado em string"}).length(36, "O classroomId deve conter 36 caracteres"),
     
     status: z.enum(["SCHEDULED", "REVIEWING", "COMPLETED"], {
         errorMap: () => ({ message: "Status deve ser SCHEDULED, REVIEWING ou COMPLETED" })
