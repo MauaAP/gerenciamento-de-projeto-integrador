@@ -33,8 +33,10 @@ import GetExaminationBoardPresenter from "../modules/examination_board/get_exami
 import UpdateExaminationBoardPresenter from "../modules/examination_board/update_examination_board/update_examination_board_presenter";
 import CreateClassroomPresenter from "../modules/classroom/create_classroom/create_classroom_presenter";
 import GetAllClassroomsPresenter from "../modules/classroom/get_all_classrooms/get_all_classrooms_presenter";
+import DeleteClassroomPresenter from "../modules/classroom/delete_classroom/delete_classroom_presenter";
 import CreateCoursePresenter from "../modules/course/create_course/create_course_presenter";
 import GetAllCoursesPresenter from "../modules/course/get_all_courses/get_all_courses_presenter";
+import DeleteCoursePresenter from "../modules/course/delete_course/delete_course_presenter";
 
 export const routes = (app: Express) => {
   app
@@ -91,8 +93,10 @@ export const routes = (app: Express) => {
   // Classroom
   app.use("/api", CreateClassroomPresenter);
   app.use("/api", GetAllClassroomsPresenter);
+  app.use("/api", DeleteClassroomPresenter);
 
   // Course
   app.use("/api", CreateCoursePresenter);
   app.use("/api", GetAllCoursesPresenter);
+  app.use("/api", DeleteCoursePresenter);
 };
