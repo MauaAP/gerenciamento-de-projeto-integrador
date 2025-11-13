@@ -6,16 +6,17 @@ import { IUserRepository } from "../../../shared/domain/interfaces/IUserReposito
 import { NotFoundException } from "../../../shared/helpers/exceptions"
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase"
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository"
-
-import { PRESENTATION_STATUS } from "../../../shared/domain/enums/presentation_status";
+import { PRESENTATION_STATUS } from "../../../shared/domain/enums/presentation_status"
+import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository"
 
 interface UpdatePresentationInputInterface {
     id: string,
     updateOptions: {
         date?: number,
         groupId?: string,
-        examinationBoartId? : string,
+        examinationBoardId? : string,
         sala?: string,
+        classroomId?: string,
         status?: PRESENTATION_STATUS
     }
 }
@@ -27,7 +28,8 @@ export class UpdatePresentationUseCase {
         private readonly examinationBoardRepository: IExaminationBoardRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly partnerRepository: IPartnerRepository
+        private readonly partnerRepository: IPartnerRepository,
+        private readonly classroomRepository: IClassroomRepository
     ) {}
 
     async execute({id, updateOptions}: UpdatePresentationInputInterface): Promise<PresentationOficialModel>{
@@ -40,11 +42,18 @@ export class UpdatePresentationUseCase {
             }
         }
 
-        if(updateOptions?.examinationBoartId){
-            const examinationBoard= await this.examinationBoardRepository.getExaminationBoardById(updateOptions.examinationBoartId);
+        if(updateOptions?.examinationBoardId){
+            const examinationBoard= await this.examinationBoardRepository.getExaminationBoardById(updateOptions.examinationBoardId);
 
             if (!examinationBoard){
                 throw new NotFoundException("Banca avaliadora não está no banco");
+            }
+        }
+
+        if(updateOptions?.classroomId){
+            const classroom = await this.classroomRepository.getClassroomById(updateOptions.classroomId);
+            if (!classroom){
+                throw new NotFoundException("Sala não está no banco");
             }
         }
 
@@ -55,42 +64,62 @@ export class UpdatePresentationUseCase {
 
         const group= await this.groupRepository.getGroupById(updatedPresentation.groupId);
 
+        if (!group) {
+            throw new NotFoundException(`Grupo com ID ${updatedPresentation.groupId} não encontrado`);
+        }
+
         // taking group user names
         const userNameList: string[] = []
-        for (const userId of group!.userIdList) {
+        for (const userId of group.userIdList) {
             const existingUser = await this.userRepository.getUserById(userId);
 
-            userNameList.push(existingUser!.name);
+            if (existingUser) {
+                userNameList.push(existingUser.name);
+            }
         }
 
         //taking group projectTitle
-        const project= await this.projectRepository.getProjectById(group!.projectId);
+        const project= await this.projectRepository.getProjectById(group.projectId);
 
-        const partner= await this.partnerRepository.getPartnerById(project!.partnerId)
+        if (!project) {
+            throw new NotFoundException(`Projeto com ID ${group.projectId} não encontrado`);
+        }
+
+        const partner= await this.partnerRepository.getPartnerById(project.partnerId)
+
+        if (!partner) {
+            throw new NotFoundException(`Parceiro com ID ${project.partnerId} não encontrado`);
+        }
 
         // taking examination board
-        const examinationBoard = await this.examinationBoardRepository.getExaminationBoardById(updatedPresentation.examinationBoartId);
+        const examinationBoard = await this.examinationBoardRepository.getExaminationBoardById(updatedPresentation.examinationBoardId);
+
+        if (!examinationBoard) {
+            throw new NotFoundException(`Banca avaliadora com ID ${updatedPresentation.examinationBoardId} não encontrada`);
+        }
 
         const professorNameList: string[] = []
-        for (const professorId of examinationBoard!.professorIdList) {
+        for (const professorId of examinationBoard.professorIdList) {
             const existingProfessor = await this.userRepository.getUserById(professorId);
 
-            professorNameList.push(existingProfessor!.name);
+            if (existingProfessor) {
+                professorNameList.push(existingProfessor.name);
+            }
         }
 
         return {
             id: updatedPresentation.presentationId,
             date: updatedPresentation.date,
             group: {
-                codSubj: group!.codSubj,
+                codSubj: group.codSubj,
                 userNameList: userNameList,
-                yearSem: group!.yearSem,
+                yearSem: group.yearSem,
                 project: {
-                    title: project!.title,
-                    partnerName: partner!.name,
-                    extensionHours: project!.extensionHours
+                    title: project.title,
+                    partnerName: partner.name,
+                    extensionHours: project.extensionHours
                 },
-                course: group!.course
+                course: group.course
             },
             examinationBoard: {
                 porfessorNameList: professorNameList
