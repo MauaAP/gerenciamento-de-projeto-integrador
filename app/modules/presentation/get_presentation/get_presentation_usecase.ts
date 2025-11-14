@@ -111,6 +111,11 @@ export class GetPresentationUseCase {
                     throw new NotFoundException(`Parceiro com ID ${project.partnerId} não encontrado`);
                 }
 
+                // Validar que examinationBoardId existe antes de buscar
+                if (!presentation.examinationBoardId) {
+                    throw new NotFoundException("Apresentação não possui banca avaliadora associada");
+                }
+
                 const examinationBoard = await this.examinationBoardRepository.getExaminationBoardById(presentation.examinationBoardId);
 
                 if (!examinationBoard) {
