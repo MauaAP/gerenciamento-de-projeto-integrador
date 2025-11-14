@@ -7,12 +7,7 @@ export const DeleteCourseRequest = z.object({
 export type DeleteCourseRequest = z.infer<typeof DeleteCourseRequest>;
 
 export const DeleteCourseResponse = z.object({
-    message: z.string(),
-    course: z.object({
-        id: z.string(),
-        name: z.string(),
-        code: z.string().optional()
-    })
+    message: z.string()
 })
 
 export type DeleteCourseResponse = z.infer<typeof DeleteCourseResponse>;
