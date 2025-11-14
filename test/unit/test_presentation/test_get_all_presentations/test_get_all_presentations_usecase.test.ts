@@ -48,7 +48,7 @@ describe("GetAllPresentationsUseCase", () => {
         expect(result[0].group.project.title).toBe("Bot de investimentos com a Mastercard")
         expect(result[0].group.project.partnerName).toBe("Mastercard")
         expect(result[0].group.project.extensionHours).toBe(undefined)
-        expect(result[0].examinationBoard.porfessorNameList).toEqual([
+        expect(result[0].examinationBoard.professorNameList).toEqual([
             "Roberto Carlos",
             "Bruce Wayne"
         ])

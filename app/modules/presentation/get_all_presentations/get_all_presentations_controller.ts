@@ -36,8 +36,8 @@ export class GetAllPresentationsController {
                     },
                     course: presentation.group.course
                 },
-                ExaminationBoard: {
-                    porfessorNameList: presentation.examinationBoard.porfessorNameList
+                examinationBoard: {
+                    professorNameList: presentation.examinationBoard.professorNameList
                 },
                 classroomName: presentation.classroomName
             }))

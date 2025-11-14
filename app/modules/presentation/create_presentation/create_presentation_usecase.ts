@@ -106,7 +106,7 @@ export class CreatePresentationUseCase {
                 course: existingGroup.course
             },
             examinationBoard: {
-                porfessorNameList: professorNameList
+                professorNameList: professorNameList
             },
             classroomName: existingClassroom.name
         }

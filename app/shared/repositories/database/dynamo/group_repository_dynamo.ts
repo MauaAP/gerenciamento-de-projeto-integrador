@@ -202,8 +202,23 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
       }
     }
 
-    // Filtros por codSubj, yearSem ou course - Scan com FilterExpression
-    if (filter.codSubj || filter.yearSem || filter.course) {
+    // Filtro por courseId - Query COURSE#ID + SK begins_with GROUP# (eficiente)
+    if (filter.courseId) {
+      const coursePK = getCoursePK(filter.courseId);
+      const items = await this.db.queryAll(coursePK, "GROUP#");
+      
+      const groupIds = items.map(item => item.groupId || item.SK?.replace("GROUP#", "")).filter(Boolean);
+      
+      for (const groupId of groupIds) {
+        const group = await this.getGroupById(groupId);
+        if (group && !groups.find(g => g.groupId === group.groupId)) {
+          groups.push(group);
+        }
+      }
+    }
+
+    // Filtros por codSubj ou yearSem - Scan com FilterExpression
+    if (filter.codSubj || filter.yearSem) {
       const filterConditions: string[] = [];
       const expressionAttributeNames: Record<string, string> = { "#pk": "PK", "#sk": "SK" };
       const expressionAttributeValues: Record<string, any> = { 
@@ -223,12 +238,6 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
         expressionAttributeValues[":yearSem"] = filter.yearSem;
       }
 
-      if (filter.course) {
-        filterConditions.push("#course = :course");
-        expressionAttributeNames["#course"] = "course";
-        expressionAttributeValues[":course"] = filter.course;
-      }
-
       const filterExpression = `begins_with(#pk, :groupPrefix) AND #sk = :metadata AND ${filterConditions.join(" AND ")}`;
       
       const items = await this.db.scanAll({
@@ -246,7 +255,7 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
     }
 
     // Se nenhum filtro foi aplicado, retornar todos os grupos
-    if (!filter.userId && !filter.projectId && !filter.codSubj && !filter.yearSem && !filter.course) {
+    if (!filter.userId && !filter.projectId && !filter.courseId && !filter.codSubj && !filter.yearSem) {
       return await this.fetchGroup();
     }
 

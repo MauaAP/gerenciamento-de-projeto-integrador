@@ -19,7 +19,7 @@ export class GetGroupController {
             );
         }
 
-        const {id, userId, codSubj, yearSem, projectId, course} = parseBody(
+        const {id, userId, codSubj, yearSem, projectId, courseId} = parseBody(
             GetGroupRequest,
             req.query
         );
@@ -31,7 +31,7 @@ export class GetGroupController {
                 codSubj,
                 yearSem,
                 projectId,
-                course
+                courseId
             }
         })
 

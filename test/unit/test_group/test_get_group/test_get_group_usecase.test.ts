@@ -41,7 +41,7 @@ describe("GetGroupUsecase", () => {
             codSubj: "TTI202",
             yearSem: 202501,
             projectId: "4d2419c0-4955-4412-900f-e1d49b87f92b",
-            course: COURSE.CIC
+            courseId: "00000000-0000-0000-0000-000000000001"
         } })
 
         expect(result[0].id).toBe("14e97d3c-d309-43d4-bfa0-7724e1e54fb2")
@@ -92,7 +92,7 @@ describe("GetGroupUsecase", () => {
     it("should get the projects of a user by the couse filter in repository mock and return them, with user names and project title", async () => {
         const result= await useCase.execute({ groupFilter: {
             userId: "f7c9d1e1-9d23-4f6e-94e1-8f45b50f2389",
-            course: COURSE.CIC
+            courseId: "00000000-0000-0000-0000-000000000001"
         }})
 
         expect(result.length).toBe(2)
@@ -134,7 +134,7 @@ describe("GetGroupUsecase", () => {
                 codSubj: "TTI202",
                 yearSem: 202501,
                 projectId: "4d2419c0-4955-4412-900f-e1d49b87f92b",
-                course: COURSE.SIN //that's the problem
+                courseId: "00000000-0000-0000-0000-000000000002" //that's the problem
             }})
         }
         catch (error: any) {
@@ -151,7 +151,7 @@ describe("GetGroupUsecase", () => {
                 codSubj: "TTI202",
                 yearSem: 202501,
                 projectId: "4d2419c0-4955-4412-900f-e1d49b87f92b",
-                course: COURSE.CIC
+                courseId: "00000000-0000-0000-0000-000000000001"
             }})
         }
         catch (error: any) {

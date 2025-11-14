@@ -37,7 +37,7 @@ export interface PresentationOficialModel {
         course: COURSE;
     };
     examinationBoard: {
-        porfessorNameList: string[];
+        professorNameList: string[];
     };
     classroomName?: string;
 }
@@ -151,7 +151,7 @@ export class GetPresentationUseCase {
                         course: group.course
                     },
                     examinationBoard: {
-                        porfessorNameList: professorNameList
+                        professorNameList: professorNameList
                     },
                     classroomName: presentation.classroomId ? (await this.classroomRepository.getClassroomById(presentation.classroomId))?.name : undefined
                 }

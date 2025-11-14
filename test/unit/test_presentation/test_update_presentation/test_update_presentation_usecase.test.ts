@@ -52,7 +52,7 @@ describe("UpdatePresentationUseCase", () => {
         expect(result.group.project.title).toBe("Show do milhão poliedro")
         expect(result.group.project.partnerName).toBe("Poliedro")
         expect(result.group.project.extensionHours).toBe(216000)
-        expect(result.examinationBoard.porfessorNameList).toEqual([
+        expect(result.examinationBoard.professorNameList).toEqual([
             "Tony Stark",
             "Steve Rogers"
         ])

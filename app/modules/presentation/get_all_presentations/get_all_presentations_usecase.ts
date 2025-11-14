@@ -91,7 +91,7 @@ export class GetAllPresentationsUseCase {
                         course: group.course
                     },
                     examinationBoard: {
-                        porfessorNameList: professorNameList
+                        professorNameList: professorNameList
                     },
                     classroomName: presentation.classroomId ? (await this.classroomRepository.getClassroomById(presentation.classroomId))?.name : undefined
                 }

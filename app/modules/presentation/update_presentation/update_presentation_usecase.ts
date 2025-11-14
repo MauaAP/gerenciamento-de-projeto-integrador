@@ -131,7 +131,7 @@ export class UpdatePresentationUseCase {
                 course: group.course
             },
             examinationBoard: {
-                porfessorNameList: professorNameList
+                professorNameList: professorNameList
             },
             classroomName: classroomName
         }

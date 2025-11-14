@@ -199,8 +199,33 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
             }
         }
 
+        // Filtro por status - Scan com FilterExpression
+        if (filter.status) {
+            const items = await this.db.scanAll({
+                FilterExpression: "begins_with(#pk, :presentationPrefix) AND #sk = :metadata AND #status = :status",
+                ExpressionAttributeNames: { 
+                    "#pk": "PK",
+                    "#sk": "SK",
+                    "#status": "status"
+                },
+                ExpressionAttributeValues: { 
+                    ":presentationPrefix": "APRESENTACAO#",
+                    ":metadata": "METADATA",
+                    ":status": filter.status
+                },
+            });
+            
+            const filtered = items.map(Presentation.fromJson);
+            for (const pres of filtered) {
+                if (!presentationIds.has(pres.presentationId)) {
+                    presentations.push(pres);
+                    presentationIds.add(pres.presentationId);
+                }
+            }
+        }
+
         // Se nenhum filtro foi aplicado, retornar todas as apresentações
-        if (!filter.groupId && !filter.examinationBoardId && !filter.date) {
+        if (!filter.groupId && !filter.examinationBoardId && !filter.date && !filter.status) {
             return await this.fetchPresentation();
         }
 

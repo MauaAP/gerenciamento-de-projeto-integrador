@@ -57,7 +57,7 @@ describe("CreatePresentationUseCase", () => {
         expect(result.group.project.partnerName).toEqual("Mastercard");
         expect(result.group.project.extensionHours).toBeUndefined();
         expect(result.group.course).toEqual("CIÊNCIAS DA COMPUTAÇÃO");
-        expect(result.examinationBoard.porfessorNameList).toEqual([
+        expect(result.examinationBoard.professorNameList).toEqual([
             "Roberto Carlos",
             "Ana Maria Braga",
             "Bruce Wayne"
