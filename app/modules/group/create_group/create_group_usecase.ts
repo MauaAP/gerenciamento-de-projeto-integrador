@@ -4,7 +4,8 @@ import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupReposi
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
 import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository";
 import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository";
-import { BadRequestException } from "../../../shared/helpers/exceptions";
+import { ICourseRepository } from "../../../shared/domain/interfaces/ICourseRepository";
+import { BadRequestException, NotFoundException } from "../../../shared/helpers/exceptions";
 import { GroupOficialModel } from "../get_group/get_group_usecase";
 
 interface CreateGroupDTO {
@@ -12,7 +13,8 @@ interface CreateGroupDTO {
     userIdList: string[]
     yearSem: number,
     projectId: string,
-    course: COURSE
+    course: COURSE,
+    courseId?: string
 }
 
 export class CreateGroupUseCase {
@@ -20,10 +22,23 @@ export class CreateGroupUseCase {
         private readonly groupRepository: IGroupRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly PartnerRepository: IPartnerRepository
+        private readonly PartnerRepository: IPartnerRepository,
+        private readonly courseRepository: ICourseRepository
     ) {}
 
-    async execute({ codSubj, userIdList, yearSem, projectId, course }: CreateGroupDTO): Promise<GroupOficialModel> {
+    async execute({ codSubj, userIdList, yearSem, projectId, course, courseId }: CreateGroupDTO): Promise<GroupOficialModel> {
+        // Validar courseId se fornecido
+        if (courseId) {
+            const existingCourse = await this.courseRepository.getCourseById(courseId);
+            if (!existingCourse) {
+                throw new NotFoundException("Curso com o ID fornecido não está no banco");
+            }
+            // Validar que o course enum corresponde ao courseId fornecido
+            if (existingCourse.name !== course) {
+                throw new BadRequestException("O courseId fornecido não corresponde ao course enum");
+            }
+        }
+
         const existingProject = await this.projectRepository.getProjectById(projectId)
 
         if (!existingProject)
