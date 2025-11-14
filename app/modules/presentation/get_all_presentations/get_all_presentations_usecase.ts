@@ -90,7 +90,8 @@ export class GetAllPresentationsUseCase {
                     },
                     examinationBoard: {
                         porfessorNameList: professorNameList
-                    }
+                    },
+                    classroomName: presentation.sala || undefined
                 }
             })
         );
