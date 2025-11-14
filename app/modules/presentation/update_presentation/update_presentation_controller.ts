@@ -26,7 +26,7 @@ export class UpdatePresentationController{
             );
         }
 
-        const {id, date, groupId, examinationBoardId, sala, status}= parseBody(
+        const {id, date, groupId, examinationBoardId, classroomId, status}= parseBody(
             UpdatePresentationRequest,
             req.body
         );
@@ -37,7 +37,6 @@ export class UpdatePresentationController{
                 date,
                 groupId,
                 examinationBoardId,
-                sala,
                 classroomId,
                 status
             }
