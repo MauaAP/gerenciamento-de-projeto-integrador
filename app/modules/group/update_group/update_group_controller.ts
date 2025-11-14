@@ -19,7 +19,7 @@ export class UpdateGroupController{
             );
         }
 
-        const {id, codSubj, userIdList, yearSem, projectId, course}= parseBody(
+        const {id, codSubj, userIdList, yearSem, projectId, course, courseId}= parseBody(
             UpdateGroupRequest,
             req.body
         );
@@ -31,7 +31,8 @@ export class UpdateGroupController{
                 userIdList,
                 yearSem,
                 projectId,
-                course
+                course,
+                courseId
             }
         })
 
