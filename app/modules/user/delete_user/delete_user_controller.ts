@@ -28,7 +28,7 @@ export class DeleteUserController {
             req.body
         );
 
-        const deletedUser = await this.usecase.execute({
+        await this.usecase.execute({
             id,
             isAdmin
         })
