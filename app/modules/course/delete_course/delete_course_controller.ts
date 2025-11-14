@@ -24,15 +24,10 @@ export class DeleteCourseController {
             req.body
         );
 
-        const course = await this.usecase.execute(id);
+        await this.usecase.execute(id);
 
         const response = DeleteCourseResponse.parse({
-            message: "Curso deletado com sucesso",
-            course: {
-                id: course.courseId,
-                name: course.name,
-                ...(course.code && { code: course.code })
-            }
+            message: "Curso deletado com sucesso"
         });
         
         res.status(200).json(response)
