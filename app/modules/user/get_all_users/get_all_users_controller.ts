@@ -21,13 +21,25 @@ export class GetAllUsersController {
 
         const userList= await this.usecase.execute();
 
+        // Validar que userList é um array válido
+        if (!Array.isArray(userList)) {
+            throw new Error("Lista de usuários inválida");
+        }
+
         const response = GetAllUsersResponse.parse({
             message: "Lista de Usuários retornado com sucesso",
-            userList: userList.map((user: User) => ({
-            id: user.userId,
-            name: user.name,
-            email: user.email,
-            })),
+            userList: userList.map((user: User) => {
+                // Validar cada usuário antes de mapear
+                if (!user || !user.userId || !user.name || !user.email) {
+                    console.warn("[GetAllUsersController] Usuário inválido encontrado:", user);
+                    return null;
+                }
+                return {
+                    id: user.userId,
+                    name: user.name,
+                    email: user.email,
+                };
+            }).filter(user => user !== null), // Remover usuários inválidos
         });
         res.status(200).json(response)
     }
