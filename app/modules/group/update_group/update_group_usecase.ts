@@ -4,6 +4,7 @@ import { IUserRepository } from "../../../shared/domain/interfaces/IUserReposito
 import { GroupOficialModel } from "../get_group/get_group_usecase";
 import { BadRequestException, NotFoundException } from "../../../shared/helpers/exceptions";
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
+import { ICourseRepository } from "../../../shared/domain/interfaces/ICourseRepository";
 
 interface UpdateGroupDTO {
     id: string,
@@ -15,7 +16,8 @@ export class UpdateGroupUseCase {
             private readonly groupRepository: IGroupRepository,
             private readonly userRepository: IUserRepository,
             private readonly projectRepository: IProjectRepository,
-            private readonly PartnerRepository: IPartnerRepository
+            private readonly PartnerRepository: IPartnerRepository,
+            private readonly courseRepository: ICourseRepository
     ) {}
 
     async execute({id, updateOptions}: UpdateGroupDTO): Promise<GroupOficialModel>{
@@ -34,6 +36,18 @@ export class UpdateGroupUseCase {
 
             if (!project){
                 throw new BadRequestException("O projeto selecionado não está no banco");
+            }
+        }
+
+        // Validar courseId se fornecido
+        if (updateOptions?.courseId) {
+            const existingCourse = await this.courseRepository.getCourseById(updateOptions.courseId);
+            if (!existingCourse) {
+                throw new NotFoundException("Curso com o ID fornecido não está no banco");
+            }
+            // Se course também foi fornecido, validar correspondência
+            if (updateOptions.course && existingCourse.name !== updateOptions.course) {
+                throw new BadRequestException("O courseId fornecido não corresponde ao course enum");
             }
         }
         
