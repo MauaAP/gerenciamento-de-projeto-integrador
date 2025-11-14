@@ -39,7 +39,7 @@ export class UpdateGroupUseCase {
             }
         }
 
-        // Validar courseId se fornecido
+        // Validar courseId se fornecido, ou buscar se course mudou mas courseId não foi fornecido
         if (updateOptions?.courseId) {
             const existingCourse = await this.courseRepository.getCourseById(updateOptions.courseId);
             if (!existingCourse) {
@@ -48,6 +48,12 @@ export class UpdateGroupUseCase {
             // Se course também foi fornecido, validar correspondência
             if (updateOptions.course && existingCourse.name !== updateOptions.course) {
                 throw new BadRequestException("O courseId fornecido não corresponde ao course enum");
+            }
+        } else if (updateOptions?.course) {
+            // Se course mudou mas courseId não foi fornecido, buscar pelo enum
+            const courseByName = await this.courseRepository.getCourseByName(updateOptions.course);
+            if (courseByName) {
+                updateOptions.courseId = courseByName.courseId;
             }
         }
         
