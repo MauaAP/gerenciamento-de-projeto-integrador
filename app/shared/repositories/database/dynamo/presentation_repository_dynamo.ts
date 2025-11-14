@@ -414,7 +414,6 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
             
             updateDict.examinationBoardId = updateOptions.examinationBoardId;
         }
-        if (updateOptions.sala) updateDict.sala = updateOptions.sala;
         if (updateOptions.classroomId) {
             // Atualizar relacionamento CLASSROOM
             // Deletar relacionamento antigo se existir
@@ -431,6 +430,9 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
             await this.db.put(classroomRelationshipItem, pk, `CLASSROOM#${updateOptions.classroomId}`);
             
             updateDict.classroomId = updateOptions.classroomId;
+        }
+        if (updateOptions.sala) {
+            updateDict.sala = updateOptions.sala;
         }
         if (updateOptions.status) {
             updateDict.status = updateOptions.status;
