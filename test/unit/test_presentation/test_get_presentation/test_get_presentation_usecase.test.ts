@@ -5,6 +5,7 @@ import { PartnerRepoMock } from "app/shared/repositories/mocks/partner_repositor
 import { PresentationRepoMock } from "app/shared/repositories/mocks/presentation_repository_mock";
 import { ProjectRepoMock } from "app/shared/repositories/mocks/project_repository_mock";
 import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock";
+import { ClassroomRepoMock } from "app/shared/repositories/mocks/classroom_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest"
 
 describe("GetExaminationBoardUsecase", () => {
@@ -14,6 +15,7 @@ describe("GetExaminationBoardUsecase", () => {
     let userRepo: UserRepoMock;
     let projectRepo: ProjectRepoMock;
     let partnerRepo: PartnerRepoMock;
+    let classroomRepo: ClassroomRepoMock;
     let useCase: GetPresentationUseCase;
     
     beforeEach(() => {
@@ -23,7 +25,8 @@ describe("GetExaminationBoardUsecase", () => {
         userRepo = new UserRepoMock();
         projectRepo = new ProjectRepoMock();
         partnerRepo = new PartnerRepoMock();
-        useCase = new GetPresentationUseCase(presentationRepo, groupRepo, examinationBoardRepo, userRepo, projectRepo, partnerRepo);
+        classroomRepo = new ClassroomRepoMock();
+        useCase = new GetPresentationUseCase(presentationRepo, groupRepo, examinationBoardRepo, userRepo, projectRepo, partnerRepo, classroomRepo);
     });
 
     it("should get the presentation by id and return it, with group, examination board, user names and project title", async () => {

@@ -35,6 +35,20 @@ export class CourseRepoMock implements ICourseRepository {
         return this.courses.find((course) => course.courseId === courseId) || null;
     }
 
+    async getCourseByName(name: COURSE | string): Promise<Course | null> {
+        // Se name for enum COURSE, comparar diretamente
+        // Se name for string, comparar com o valor do enum
+        return this.courses.find((course) => {
+            if (typeof name === 'string') {
+                // Se name é string, pode ser o valor do enum ou o nome completo
+                return course.name === name || course.name.toString() === name;
+            } else {
+                // Se name é enum COURSE, comparar diretamente
+                return course.name === name;
+            }
+        }) || null;
+    }
+
     async deleteCourse(courseId: string): Promise<Course | null> {
         const index = this.courses.findIndex((course) => course.courseId === courseId);
         if (index === -1) {

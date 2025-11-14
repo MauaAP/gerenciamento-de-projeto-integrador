@@ -49,15 +49,12 @@ export class UpdatePresentationUseCase {
             }
         }
 
-        // Criar objeto de atualização que inclui sala se necessário
         const repositoryUpdateOptions: PresentationUpdateOptions = { ...updateOptions };
         if(updateOptions?.classroomId){
             const classroom = await this.classroomRepository.getClassroomById(updateOptions.classroomId);
             if (!classroom){
                 throw new NotFoundException("Sala não está no banco");
             }
-            // Atualizar também o campo sala com o nome do classroom
-            repositoryUpdateOptions.sala = classroom.name;
         }
 
         const updatedPresentation= await this.presentationRepository.updatePresentation(id, repositoryUpdateOptions)
@@ -116,9 +113,6 @@ export class UpdatePresentationUseCase {
             const classroom = await this.classroomRepository.getClassroomById(updatedPresentation.classroomId);
             if (classroom) {
                 classroomName = classroom.name;
-            } else {
-                // Fallback para o campo sala se classroom não for encontrado
-                classroomName = updatedPresentation.sala || undefined;
             }
         }
 

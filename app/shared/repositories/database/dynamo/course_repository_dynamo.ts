@@ -1,6 +1,7 @@
 import type { DynamoDBResources } from "./dynamo_datasource";
 import { Course } from "../../../../shared/domain/entities/course";
 import { ICourseRepository } from "../../../../shared/domain/interfaces/ICourseRepository";
+import { COURSE } from "../../../../shared/domain/enums/course";
 
 function getCoursePK(courseId: string): string {
   return `COURSE#${courseId}`;
@@ -61,6 +62,34 @@ export class CourseRepositoryDynamoDB implements ICourseRepository {
     }
 
     console.log(`[DynamoDB] Busca por ID: ${courseId} - Não encontrado`);
+    return null;
+  }
+
+  async getCourseByName(name: COURSE | string): Promise<Course | null> {
+    // O enum COURSE já tem valores string, então podemos usar diretamente
+    // Se name for enum COURSE, o valor já é uma string como "CIÊNCIAS DA COMPUTAÇÃO"
+    const nameString = name;
+    
+    const items = await this.db.scanAll({
+      FilterExpression: "begins_with(#pk, :coursePrefix) AND #sk = :metadata AND #name = :nameValue",
+      ExpressionAttributeNames: { 
+        "#pk": "PK",
+        "#sk": "SK",
+        "#name": "name"
+      },
+      ExpressionAttributeValues: { 
+        ":coursePrefix": "COURSE#",
+        ":metadata": "METADATA",
+        ":nameValue": nameString
+      },
+    });
+    
+    if (items.length > 0) {
+      console.log(`[DynamoDB] Busca por nome: ${nameString} - Encontrado`);
+      return Course.fromJson(items[0]);
+    }
+
+    console.log(`[DynamoDB] Busca por nome: ${nameString} - Não encontrado`);
     return null;
   }
 

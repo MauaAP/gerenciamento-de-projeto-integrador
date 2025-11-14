@@ -431,9 +431,6 @@ export class PresentationRepositoryDynamoDB implements IPresentationRepository {
             
             updateDict.classroomId = updateOptions.classroomId;
         }
-        if (updateOptions.sala) {
-            updateDict.sala = updateOptions.sala;
-        }
         if (updateOptions.status) {
             updateDict.status = updateOptions.status;
             

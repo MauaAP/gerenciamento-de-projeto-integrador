@@ -8,6 +8,7 @@ import { IUserRepository } from "../../../shared/domain/interfaces/IUserReposito
 import { NotFoundException } from "../../../shared/helpers/exceptions";
 import { PRESENTATION_STATUS } from "../../../shared/domain/enums/presentation_status";
 import { Presentation } from "../../../shared/domain/entities/presentation";
+import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository";
 
 interface GetPresentationInputInterface {
     id?: string,
@@ -48,7 +49,8 @@ export class GetPresentationUseCase {
         private readonly examinationBoardRepository: IExaminationBoardRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly partnerRepository: IPartnerRepository
+        private readonly partnerRepository: IPartnerRepository,
+        private readonly classroomRepository: IClassroomRepository
     ) {}
 
     async execute({id, presentationFilter, userId, userRole}: GetPresentationInputInterface): Promise<PresentationOficialModel[]>{
@@ -151,7 +153,7 @@ export class GetPresentationUseCase {
                     examinationBoard: {
                         porfessorNameList: professorNameList
                     },
-                    classroomName: presentation.sala || undefined
+                    classroomName: presentation.classroomId ? (await this.classroomRepository.getClassroomById(presentation.classroomId))?.name : undefined
                 }
             })
         );

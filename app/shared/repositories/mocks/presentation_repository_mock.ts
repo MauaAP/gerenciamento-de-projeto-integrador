@@ -9,7 +9,6 @@ export class PresentationRepoMock implements IPresentationRepository {
             1750854600000,
             "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
             "3896e005-bc5c-4839-a43b-463ae9c3583c",
-            "Sala A101",
             "00000000-0000-0000-0000-000000000001"
         ),
         new Presentation(
@@ -17,7 +16,6 @@ export class PresentationRepoMock implements IPresentationRepository {
             1719239400000,
             "25f08e4d-e41a-4c5f-9c3b-8835e2f65c43",
             "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
-            "Sala B202",
             "00000000-0000-0000-0000-000000000002"
         ),
         new Presentation(
@@ -25,7 +23,6 @@ export class PresentationRepoMock implements IPresentationRepository {
             1764507000000,
             "36g19f5e-f52b-4d6e-a4d4-9946f3g76d54",
             "a28ed23d-3660-4ed4-b384-b1c12920c8d4",
-            "Sala C303",
             "00000000-0000-0000-0000-000000000003"
         ),
         new Presentation(
@@ -33,7 +30,6 @@ export class PresentationRepoMock implements IPresentationRepository {
             1719235800000,
             "d547bcc1-911f-4a7f-b8f6-455b7cbd2184",
             "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
-            "Sala A101",
             "00000000-0000-0000-0000-000000000001"
         ),
         new Presentation(
@@ -41,7 +37,6 @@ export class PresentationRepoMock implements IPresentationRepository {
             1719235800000,
             "3ed81785-bf6c-4e83-9543-d4c7e8c9d27b",
             "3896e005-bc5c-4839-a43b-463ae9c3583c",
-            "Sala D404",
             "00000000-0000-0000-0000-000000000004"
         ),
         new Presentation(
@@ -49,7 +44,6 @@ export class PresentationRepoMock implements IPresentationRepository {
             1687266600000,
             "5b9d4100-13f5-4bd9-92b3-0a420bb3d3e3",
             "3896e005-bc5c-4839-a43b-463ae9c3583c",
-            "Sala E505",
             "00000000-0000-0000-0000-000000000005"
         )
     ]

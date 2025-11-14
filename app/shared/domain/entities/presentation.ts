@@ -6,7 +6,6 @@ export class Presentation {
         public date: number, //miliseconds
         public groupId: string,
         public examinationBoardId: string,
-        public sala: string,
         public classroomId: string,
         public status: PRESENTATION_STATUS = PRESENTATION_STATUS.SCHEDULED
     ){}
@@ -16,7 +15,6 @@ export class Presentation {
         date: number, //miliseconds
         groupId: string,
         examinationBoardId: string,
-        sala: string,
         classroomId: string,
         status: PRESENTATION_STATUS
     } {
@@ -25,7 +23,6 @@ export class Presentation {
             date: this.date,
             groupId: this.groupId,
             examinationBoardId: this.examinationBoardId,
-            sala: this.sala,
             classroomId: this.classroomId,
             status: this.status
         };
@@ -36,7 +33,6 @@ export class Presentation {
         date: number; //miliseconds
         groupId: string;
         examinationBoardId: string;
-        sala?: string;
         classroomId?: string;
         status?: PRESENTATION_STATUS | string;
     }): Presentation {
@@ -54,7 +50,6 @@ export class Presentation {
             json.date, 
             json.groupId, 
             json.examinationBoardId, 
-            json.sala || "",
             json.classroomId || "",
             status
         )
