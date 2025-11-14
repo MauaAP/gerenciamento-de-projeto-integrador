@@ -60,7 +60,8 @@ export class UpdatePresentationController{
                 },
                 ExaminationBoard: {
                     porfessorNameList: updatedPresentation.examinationBoard.porfessorNameList
-                }
+                },
+                classroomName: updatedPresentation.classroomName
             }
         });
         res.status(200).json(response)
