@@ -10,8 +10,6 @@ export const UpdatePresentationRequest = z.object({
     groupId: z.string({message: "groupId deve ser dado em string"}).length(36, "O group id deve conter 36 caracteres").optional(),
 
     examinationBoardId: z.string({message: "examinationBoardId deve ser dado em string"}).length(36, "O examinationBoard id deve conter 36 caracteres").optional(),
-    
-    sala: z.string({message: "A sala deve ser uma string"}).optional(),
 
     classroomId: z.string({message: "O classroomId deve ser dado em string"}).length(36, "O classroomId deve conter 36 caracteres").optional(),
 
@@ -26,7 +24,7 @@ export const UpdatePresentationRequest = z.object({
         return statusMap[val];
     }).optional()
 }).refine(
-    (data) => (data.date !== undefined || data.groupId !== undefined || data.examinationBoardId !== undefined || data.sala !== undefined || data.classroomId !== undefined || data.status !== undefined),
+    (data) => (data.date !== undefined || data.groupId !== undefined || data.examinationBoardId !== undefined || data.classroomId !== undefined || data.status !== undefined),
     {
         message: "Você deve passar algum atributo para ser alterado"
     }
