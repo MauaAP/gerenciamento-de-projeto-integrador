@@ -1,0 +1,53 @@
+import { ForbiddenException } from "../../../shared/helpers/exceptions";
+import { UserFromToken } from "../../../shared/middleware/jwt_middleware"
+import { parseBody } from "../../../shared/utils/parse_body";
+import { Request, Response } from "express"
+import { CreateGroupRequest, CreateGroupResponse } from "./create_group_schema";
+import { CreateGroupUseCase } from "./create_group_usecase";
+
+export class CreateGroupController {
+    constructor(private readonly usecase: CreateGroupUseCase) {}
+
+    async handler(req: Request, res: Response) {
+        const userFromToken= req.user as UserFromToken;
+
+        const allowedRoles= ["ADMIN", "MODERATOR"]
+        
+        if (!allowedRoles.includes(userFromToken.role)){
+            throw new ForbiddenException(
+                "Você não tem permissão para acessar este recurso"
+            );
+        }
+
+        const {codSubj, userIdList, yearSem, projectId, course, courseId} = parseBody(
+            CreateGroupRequest,
+            req.body
+        );
+
+        const createdGroup= await this.usecase.execute({
+            codSubj,
+            userIdList,
+            yearSem,
+            projectId,
+            course,
+            courseId
+        });
+
+        const response= CreateGroupResponse.parse({
+            message: "Grupo criado com sucesso",
+            group: {
+                id: createdGroup.id,
+                codSubj: createdGroup.codSubj,
+                userNameList: createdGroup.userNameList,
+                yearSem: createdGroup.yearSem,
+                project: {
+                    title: createdGroup.project.title,
+                    partnerName: createdGroup.project.partnerName,
+                    extensionHours: createdGroup.project.extensionHours
+                },
+                course: createdGroup.course
+            }
+        });
+        res.status(201).json(response)
+    }
+}

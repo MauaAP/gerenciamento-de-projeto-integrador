@@ -4,6 +4,7 @@ export class JWToken {
 
   static encode(
     userId: string | object,
+    role: string,
     expDays: number = 1,
     expHours: number = 0,
     expMinutes: number = 0,
@@ -19,6 +20,7 @@ export class JWToken {
 
     const payload: any = {
       user_id: userId,
+      role: role,
       exp: exp,
     };
     return jwt.sign(payload, jwtSecret, { algorithm: "HS256" });
@@ -43,7 +45,9 @@ export class JWToken {
     jwtSecret: string = process.env.JWT_SECRET as string,
     expDays: number = 1
   ): string {
-    const userId = JWToken.decode(refreshToken, jwtSecret);
-    return JWToken.encode(userId as string, expDays, 0, 0, jwtSecret);
+    const decoded = jwt.verify(refreshToken, jwtSecret, { algorithms: ["HS256"] }) as any;
+    const userId = decoded.user_id;
+    const role = decoded.role;
+    return JWToken.encode(userId as string, role as string, expDays, 0, 0, jwtSecret);
   }
 }

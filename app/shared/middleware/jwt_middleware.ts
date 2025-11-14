@@ -29,7 +29,7 @@ export function authenticateToken(
 
   if (!token) {
     console.log("Token not provided");
-    return new UnauthorizedException("Token not provided");
+    return next(new UnauthorizedException("Token not provided"));
   }
 
   try {
@@ -40,7 +40,7 @@ export function authenticateToken(
 
     if (!decoded) {
       console.log("Token verification failed");
-      return new UnauthorizedException("Invalid token");
+      return next(new UnauthorizedException("Invalid token"));
     }
 
     console.log("User from token:", decoded);
@@ -50,13 +50,13 @@ export function authenticateToken(
     console.log("Error decoding token:", error);
 
     if (error.name === "JsonWebTokenError") {
-      return new UnauthorizedException("Invalid token");
+      return next(new UnauthorizedException("Invalid token"));
     } else if (error.name === "TokenExpiredError") {
-      return new UnauthorizedException("Invalid token: expired");
+      return next(new UnauthorizedException("Invalid token: expired"));
     } else if (error.name === "NotBeforeError") {
-      return new UnauthorizedException("Invalid token: not active yet");
+      return next(new UnauthorizedException("Invalid token: not active yet"));
     }
 
-    return new InternalServerErrorException("Internal Server Error");
+    return next(new InternalServerErrorException("Internal Server Error"));
   }
 }

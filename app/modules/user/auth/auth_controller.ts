@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { AuthUseCase } from "./auth_usecase";
 import { AuthRequest, AuthResponse } from "./auth_schema";
-import { parseBody } from "app/shared/utils/parse_body";
+import { parseBody } from "../../../shared/utils/parse_body";
 
 export class AuthController {
   constructor(private readonly usecase: AuthUseCase) {}

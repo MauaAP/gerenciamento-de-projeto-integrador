@@ -9,18 +9,18 @@ export interface AuthDTO {
 }
 
 export class AuthUseCase {
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(private readonly userRepository: IUserRepository) { }
 
   async execute({ email, password }: AuthDTO) {
     const user = await this.userRepository.getUserByEmail(email);
     if (!user) {
-      throw new BadRequestException("Usuário ou senha inválidos");
+      throw new BadRequestException("Usuário ou password inválidos");
     }
     const valid = await Encrypt.verifyPassword(password, user.password);
     if (!valid) {
-      throw new ForbiddenException("Usuário ou senha inválidos");
+      throw new ForbiddenException("Usuário ou password inválidos");
     }
-    const token = JWToken.encode(user.userId);
+    const token = JWToken.encode(user.userId, user.role);
     return {
       message: "Login realizado com sucesso",
       token,
