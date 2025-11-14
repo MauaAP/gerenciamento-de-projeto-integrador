@@ -14,7 +14,8 @@ export type GroupUpdateOptions = {
     userIdList?: string[],
     yearSem?: number,
     projectId?: string,
-    course?: COURSE
+    course?: COURSE,
+    courseId?: string
 }
 
 export interface IGroupRepository {
