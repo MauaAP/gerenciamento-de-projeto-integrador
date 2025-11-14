@@ -11,7 +11,8 @@ export const CreateGroupRequest = z.object({
         ),
     yearSem: z.number({ message: "O yearSem deve ser dadas em numero" }).min(1, { message: "O yearSem deve ser maior que 0" }),
     projectId: z.string({ message: "projectId é obrigatório" }).length(36, "O projectId deve conter 36 caracteres"),
-    course: z.nativeEnum(COURSE, { errorMap: () => ({ message: "course é obrigatório" }) })
+    course: z.nativeEnum(COURSE, { errorMap: () => ({ message: "course é obrigatório" }) }),
+    courseId: z.string({ message: "O courseId deve ser dado em string" }).length(36, "O courseId deve conter 36 caracteres").optional()
 })
 
 export const GroupSchema = z.object({
