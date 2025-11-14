@@ -15,7 +15,6 @@ interface UpdatePresentationInputInterface {
         date?: number,
         groupId?: string,
         examinationBoardId? : string,
-        sala?: string,
         classroomId?: string,
         status?: PRESENTATION_STATUS
     }
@@ -55,6 +54,8 @@ export class UpdatePresentationUseCase {
             if (!classroom){
                 throw new NotFoundException("Sala não está no banco");
             }
+            // Atualizar também o campo sala com o nome do classroom
+            updateOptions.sala = classroom.name;
         }
 
         const updatedPresentation= await this.presentationRepository.updatePresentation(id, updateOptions)
@@ -107,6 +108,18 @@ export class UpdatePresentationUseCase {
             }
         }
 
+        // Buscar classroom para obter o nome atualizado
+        let classroomName: string | undefined = undefined;
+        if (updatedPresentation.classroomId) {
+            const classroom = await this.classroomRepository.getClassroomById(updatedPresentation.classroomId);
+            if (classroom) {
+                classroomName = classroom.name;
+            } else {
+                // Fallback para o campo sala se classroom não for encontrado
+                classroomName = updatedPresentation.sala || undefined;
+            }
+        }
+
         return {
             id: updatedPresentation.presentationId,
             date: updatedPresentation.date,
@@ -123,7 +136,8 @@ export class UpdatePresentationUseCase {
             },
             examinationBoard: {
                 porfessorNameList: professorNameList
-            }
+            },
+            classroomName: classroomName
         }
 
     }
