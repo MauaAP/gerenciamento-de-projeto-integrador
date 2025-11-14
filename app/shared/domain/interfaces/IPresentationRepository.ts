@@ -12,8 +12,8 @@ export type PresentationUpdateOptions = {
     date?: number,
     groupId?: string,
     examinationBoardId? : string,
-    sala?: string,
     classroomId?: string,
+    sala?: string, // Campo interno - atualizado automaticamente quando classroomId muda
     status?: PRESENTATION_STATUS
 }
 
