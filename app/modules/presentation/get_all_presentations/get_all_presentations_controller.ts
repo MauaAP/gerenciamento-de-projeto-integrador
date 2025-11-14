@@ -38,7 +38,8 @@ export class GetAllPresentationsController {
                 },
                 ExaminationBoard: {
                     porfessorNameList: presentation.examinationBoard.porfessorNameList
-                }
+                },
+                classroomName: presentation.classroomName
             }))
         });
         res.status(200).json(response)
