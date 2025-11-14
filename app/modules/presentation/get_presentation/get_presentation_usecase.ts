@@ -38,6 +38,7 @@ export interface PresentationOficialModel {
     examinationBoard: {
         porfessorNameList: string[];
     };
+    classroomName?: string;
 }
 
 export class GetPresentationUseCase {
