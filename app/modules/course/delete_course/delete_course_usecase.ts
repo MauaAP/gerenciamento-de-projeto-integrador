@@ -5,14 +5,12 @@ import { NotFoundException } from "../../../shared/helpers/exceptions";
 export class DeleteCourseUseCase {
     constructor(private readonly courseRepository: ICourseRepository) {}
 
-    async execute(courseId: string): Promise<Course> {
+    async execute(courseId: string): Promise<void> {
         const course = await this.courseRepository.deleteCourse(courseId);
 
         if (!course) {
             throw new NotFoundException("Curso não está no banco");
         }
-
-        return course;
     }
 }
 
