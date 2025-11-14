@@ -16,7 +16,6 @@ interface CreatePresentationInputInterface {
     date: number,
     groupId: string,
     examinationBoardId: string,
-    sala: string,
     classroomId: string,
     status?: PRESENTATION_STATUS
 }
@@ -32,7 +31,7 @@ export class CreatePresentationUseCase {
         private readonly classroomRepository: IClassroomRepository
     ) {}
 
-     async execute({date, groupId, examinationBoardId, sala, classroomId, status}: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
+     async execute({date, groupId, examinationBoardId, classroomId, status}: CreatePresentationInputInterface): Promise<PresentationOficialModel> {
         const existingGroup = await this.groupRepository.getGroupById(groupId);
 
         if (!existingGroup)
@@ -81,6 +80,8 @@ export class CreatePresentationUseCase {
         const presentationId = crypto.randomUUID();
 
         const presentationStatus = status || PRESENTATION_STATUS.SCHEDULED;
+        // Usar nome da sala do classroom como "sala" para manter compatibilidade com a entidade
+        const sala = existingClassroom.name;
         const newPresentation = new Presentation(presentationId, date, groupId, examinationBoardId, sala, classroomId, presentationStatus);
 
         const professorIds = existingExaminationBoard.professorIdList;
@@ -108,7 +109,8 @@ export class CreatePresentationUseCase {
             },
             examinationBoard: {
                 porfessorNameList: professorNameList
-            }
+            },
+            classroomName: existingClassroom.name
         }
     }
 }
