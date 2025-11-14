@@ -107,22 +107,62 @@ export class UserRepositoryDynamoDB implements IUserRepository {
     if (!current) {
       return null;
     }
-    const pk = getUserPK(current);
+    
+    const currentPk = getUserPK(current);
     const sk = getUserSK();
     const updateDict: Partial<User> = {};
     if (updateOptions.name) updateDict.name = updateOptions.name;
     if (updateOptions.email) updateDict.email = updateOptions.email;
     if (updateOptions.password) updateDict.password = updateOptions.password;
+    if (updateOptions.role) updateDict.role = updateOptions.role;
 
-    const updated = await this.db.update(pk, sk, updateDict);
-    console.log(`[DynamoDB] Usuário atualizado: ${pk}`);
-    return User.fromJson(updated);
+    // Se a role mudou, o PK pode mudar (ALUNO# vs PROF# vs ADMIN#)
+    // Precisamos mover o item para a nova PK se necessário
+    const newRole = updateOptions.role || current.role;
+    const newPk = getUserPKById(userId, newRole);
+    
+    if (currentPk !== newPk) {
+      // Role mudou, precisamos mover o item
+      // 1. Buscar item atual completo
+      const currentItem = await this.db.get(currentPk, sk);
+      if (!currentItem) {
+        return null;
+      }
+      
+      // 2. Criar novo item com nova PK e dados atualizados
+      const updatedUser = new User(
+        current.userId,
+        updateOptions.name || current.name,
+        updateOptions.email || current.email,
+        newRole,
+        updateOptions.password || current.password
+      );
+      
+      const newItem = {
+        PK: newPk,
+        SK: sk,
+        ...updatedUser.toJson()
+      };
+      
+      // 3. Criar novo item e deletar antigo
+      await this.db.put(newItem, newPk, sk);
+      await this.db.delete(currentPk, sk);
+      
+      console.log(`[DynamoDB] Usuário atualizado e movido: ${currentPk} -> ${newPk}`);
+      return updatedUser;
+    } else {
+      // Role não mudou, apenas atualizar
+      const updated = await this.db.update(currentPk, sk, updateDict);
+      console.log(`[DynamoDB] Usuário atualizado: ${currentPk}`);
+      return User.fromJson(updated);
+    }
   }
 
-  async deleteUserById(userId: string): Promise<User> {
+  async deleteUserById(userId: string): Promise<User | null> {
     const user = await this.getUserById(userId);
     if (!user) {
-      throw new Error("User not found");
+      console.log(`[DynamoDB] Tentativa de deletar usuário não encontrado: ${userId}`);
+      return null;
     }
     const pk = getUserPK(user);
     const sk = getUserSK();
