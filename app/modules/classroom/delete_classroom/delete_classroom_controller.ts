@@ -24,16 +24,10 @@ export class DeleteClassroomController {
             req.body
         );
 
-        const classroom = await this.usecase.execute(id);
+        await this.usecase.execute(id);
 
         const response = DeleteClassroomResponse.parse({
-            message: "Sala deletada com sucesso",
-            classroom: {
-                id: classroom.classroomId,
-                name: classroom.name,
-                capacity: classroom.capacity,
-                ...(classroom.location && { location: classroom.location })
-            }
+            message: "Sala deletada com sucesso"
         });
         
         res.status(200).json(response)
