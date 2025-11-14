@@ -72,6 +72,7 @@ export class GroupRepository{
   public userRepo: IUserRepository;
   public projectRepo: IProjectRepository;
   public partnerRepo: IPartnerRepository;
+  public courseRepo: ICourseRepository;
   private dynamoDb?: DynamoDBResources;
 
   constructor() {
@@ -80,12 +81,15 @@ export class GroupRepository{
       this.userRepo= new UserRepoMock;
       this.projectRepo= new ProjectRepoMock;
       this.partnerRepo= new PartnerRepoMock;
+      // Mock será criado se necessário
+      throw new Error("CourseRepository mock not implemented yet");
     } else{
       this.dynamoDb = new DynamoDBResources(dynamoConfig);
       this.groupRepo = new GroupRepositoryDynamoDB(this.dynamoDb)
       this.userRepo = new UserRepositoryDynamoDB(this.dynamoDb)
       this.projectRepo = new ProjectRepositoryDynamoDB(this.dynamoDb)
       this.partnerRepo = new PartnerRepositoryDynamoDB(this.dynamoDb)
+      this.courseRepo = new CourseRepositoryDynamoDB(this.dynamoDb)
     }
   }
 }
