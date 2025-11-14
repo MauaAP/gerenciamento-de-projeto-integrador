@@ -150,7 +150,8 @@ export class GetPresentationUseCase {
                     },
                     examinationBoard: {
                         porfessorNameList: professorNameList
-                    }
+                    },
+                    classroomName: presentation.sala || undefined
                 }
             })
         );
