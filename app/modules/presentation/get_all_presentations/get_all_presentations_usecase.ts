@@ -6,6 +6,7 @@ import { IUserRepository } from "../../../shared/domain/interfaces/IUserReposito
 import { PresentationOficialModel } from "../get_presentation/get_presentation_usecase";
 import { IPartnerRepository } from "../../../shared/domain/interfaces/IPartnerRepository";
 import { NotFoundException } from "../../../shared/helpers/exceptions";
+import { IClassroomRepository } from "../../../shared/domain/interfaces/IClassroomRepository";
 
 export class GetAllPresentationsUseCase {
     constructor(
@@ -14,7 +15,8 @@ export class GetAllPresentationsUseCase {
         private readonly examinationBoardRepository: IExaminationBoardRepository,
         private readonly userRepository: IUserRepository,
         private readonly projectRepository: IProjectRepository,
-        private readonly partnerRepository: IPartnerRepository
+        private readonly partnerRepository: IPartnerRepository,
+        private readonly classroomRepository: IClassroomRepository
     ) {}
 
     async execute(): Promise<PresentationOficialModel[]>{
@@ -91,7 +93,7 @@ export class GetAllPresentationsUseCase {
                     examinationBoard: {
                         porfessorNameList: professorNameList
                     },
-                    classroomName: presentation.sala || undefined
+                    classroomName: presentation.classroomId ? (await this.classroomRepository.getClassroomById(presentation.classroomId))?.name : undefined
                 }
             })
         );
