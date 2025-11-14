@@ -5,6 +5,7 @@ import { PartnerRepoMock } from "app/shared/repositories/mocks/partner_repositor
 import { PresentationRepoMock } from "app/shared/repositories/mocks/presentation_repository_mock";
 import { ProjectRepoMock } from "app/shared/repositories/mocks/project_repository_mock";
 import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock";
+import { ClassroomRepoMock } from "app/shared/repositories/mocks/classroom_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest";
 
 describe("CreatePresentationUseCase", () => {
@@ -14,6 +15,7 @@ describe("CreatePresentationUseCase", () => {
     let userRepo: UserRepoMock;
     let projectRepo: ProjectRepoMock;
     let partnerRepo: PartnerRepoMock;
+    let classroomRepo: ClassroomRepoMock;
     let useCase: CreatePresentationUseCase;
 
     beforeEach(() => {
@@ -23,14 +25,16 @@ describe("CreatePresentationUseCase", () => {
         userRepo = new UserRepoMock();
         projectRepo = new ProjectRepoMock();
         partnerRepo = new PartnerRepoMock();
-        useCase = new CreatePresentationUseCase(presentationRepo, groupRepo, examinationBoardRepo, userRepo, projectRepo, partnerRepo);
+        classroomRepo = new ClassroomRepoMock();
+        useCase = new CreatePresentationUseCase(presentationRepo, groupRepo, examinationBoardRepo, userRepo, projectRepo, partnerRepo, classroomRepo);
     });
 
     it("should create a new presentation and return it with group, examination board, user names, project title and partner name", async () => {
         const request = {
             date: 1770000000000,
             groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-            examinationBoartId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b"
+            examinationBoardId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
+            classroomId: "00000000-0000-0000-0000-000000000001"
         };
 
         const result = await useCase.execute(request);
@@ -66,7 +70,8 @@ describe("CreatePresentationUseCase", () => {
             const request = {
                 date: 1770000000000,
                 groupId: "non-existent-group-id",
-                examinationBoartId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b"
+                examinationBoardId: "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
+                classroomId: "00000000-0000-0000-0000-000000000001"
             };
             await useCase.execute(request)
         }
@@ -82,7 +87,8 @@ describe("CreatePresentationUseCase", () => {
             const request = {
                 date: 1770000000000,
                 groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-                examinationBoartId: "non-existent-examination-board-id"
+                examinationBoardId: "non-existent-examination-board-id",
+                classroomId: "00000000-0000-0000-0000-000000000001"
             };
             await useCase.execute(request)
         }

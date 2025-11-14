@@ -5,6 +5,7 @@ import { PartnerRepoMock } from "app/shared/repositories/mocks/partner_repositor
 import { PresentationRepoMock } from "app/shared/repositories/mocks/presentation_repository_mock";
 import { ProjectRepoMock } from "app/shared/repositories/mocks/project_repository_mock";
 import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock";
+import { ClassroomRepoMock } from "app/shared/repositories/mocks/classroom_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest"
 
 describe("UpdatePresentationUseCase", () => {
@@ -14,6 +15,7 @@ describe("UpdatePresentationUseCase", () => {
     let userRepo: UserRepoMock;
     let projectRepo: ProjectRepoMock;
     let partnerRepo: PartnerRepoMock;
+    let classroomRepo: ClassroomRepoMock;
     let useCase: UpdatePresentationUseCase;
 
     beforeEach(() => {
@@ -23,7 +25,8 @@ describe("UpdatePresentationUseCase", () => {
         userRepo = new UserRepoMock();
         projectRepo = new ProjectRepoMock();
         partnerRepo = new PartnerRepoMock();
-        useCase = new UpdatePresentationUseCase(presentationRepo, groupRepo, examinationBoardRepo, userRepo, projectRepo, partnerRepo);
+        classroomRepo = new ClassroomRepoMock();
+        useCase = new UpdatePresentationUseCase(presentationRepo, groupRepo, examinationBoardRepo, userRepo, projectRepo, partnerRepo, classroomRepo);
     });
 
     it("should update the presentation in repository mock and return it, with group, examination board, user names and project title", async () => {
@@ -31,7 +34,7 @@ describe("UpdatePresentationUseCase", () => {
             id: "8c77b6b9-a249-4318-a982-b07972bd1fb9", 
             updateOptions: { 
                 date: 1750854600000, 
-                groupId: "25f08e4d-e41a-4c5f-9c3b-8835e2f65c43", examinationBoartId: "d28a5fcb-22e8-4955-b6cd-b48986e41176" 
+                groupId: "25f08e4d-e41a-4c5f-9c3b-8835e2f65c43", examinationBoardId: "d28a5fcb-22e8-4955-b6cd-b48986e41176" 
             } 
         })
 
@@ -79,7 +82,7 @@ describe("UpdatePresentationUseCase", () => {
 
     it("should throw NotFoundException if examination board doesn't exist", async () => {
         try {
-            await useCase.execute({ id: "8c77b6b9-a249-4318-a982-b07972bd1fb9", updateOptions: { examinationBoartId: "00000000-0000-0000-0000-000000000000" } });
+            await useCase.execute({ id: "8c77b6b9-a249-4318-a982-b07972bd1fb9", updateOptions: { examinationBoardId: "00000000-0000-0000-0000-000000000000" } });
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("NotFoundException");

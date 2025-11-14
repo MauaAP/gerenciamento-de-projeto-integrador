@@ -8,7 +8,7 @@ export interface DeleteUserDTO {
 export class DeleteUserUseCase{
     constructor(private readonly userRepository: IUserRepository) {}
 
-    async execute({id, isAdmin} : DeleteUserDTO): Promise<void> {
+    async execute({id, isAdmin} : DeleteUserDTO): Promise<User> {
         const existingUser = await this.userRepository.getUserById(id);
         if (!existingUser) {
             throw new NotFoundException("Usuário não está no banco")
@@ -18,6 +18,10 @@ export class DeleteUserUseCase{
             "Você não tem permissão para remover um admin"
             );
         }
-        await this.userRepository.deleteUserById(id)
+        const deletedUser = await this.userRepository.deleteUserById(id);
+        if (!deletedUser) {
+            throw new NotFoundException("Usuário não está no banco")
+        }
+        return deletedUser;
     }
 }

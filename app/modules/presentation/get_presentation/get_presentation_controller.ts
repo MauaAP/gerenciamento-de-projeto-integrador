@@ -31,7 +31,7 @@ export class GetPresentationController {
                 examinationBoardId,
                 status
             },
-            userId: userFromToken.userId,
+            userId: userFromToken.id,
             userRole: userFromToken.role
         });
 
