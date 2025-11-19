@@ -79,6 +79,8 @@ export class GetAllPresentationsUseCase {
                 return {
                     id: presentation.presentationId,
                     date: presentation.date,
+                    classroomName: presentation.classroomId ? (await this.classroomRepository.getClassroomById(presentation.classroomId))?.name : undefined,
+                    status: presentation.status,
                     group: {
                         codSubj: group.codSubj,
                         userNameList: userNameList,
@@ -92,8 +94,7 @@ export class GetAllPresentationsUseCase {
                     },
                     examinationBoard: {
                         professorNameList: professorNameList
-                    },
-                    classroomName: presentation.classroomId ? (await this.classroomRepository.getClassroomById(presentation.classroomId))?.name : undefined
+                    }
                 }
             })
         );

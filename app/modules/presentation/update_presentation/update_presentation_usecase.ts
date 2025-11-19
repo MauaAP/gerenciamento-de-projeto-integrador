@@ -119,6 +119,8 @@ export class UpdatePresentationUseCase {
         return {
             id: updatedPresentation.presentationId,
             date: updatedPresentation.date,
+            classroomName: classroomName,
+            status: updatedPresentation.status,
             group: {
                 codSubj: group.codSubj,
                 userNameList: userNameList,
@@ -132,8 +134,7 @@ export class UpdatePresentationUseCase {
             },
             examinationBoard: {
                 professorNameList: professorNameList
-            },
-            classroomName: classroomName
+            }
         }
 
     }

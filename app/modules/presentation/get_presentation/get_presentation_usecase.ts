@@ -25,6 +25,8 @@ interface GetPresentationInputInterface {
 export interface PresentationOficialModel {
     id: string;
     date: number;
+    classroomName?: string;
+    status: string;
     group: {
         codSubj: string;
         userNameList: string[];
@@ -39,7 +41,6 @@ export interface PresentationOficialModel {
     examinationBoard: {
         professorNameList: string[];
     };
-    classroomName?: string;
 }
 
 export class GetPresentationUseCase {
@@ -139,6 +140,8 @@ export class GetPresentationUseCase {
                 return {
                     id: presentation.presentationId,
                     date: presentation.date,
+                    classroomName: presentation.classroomId ? (await this.classroomRepository.getClassroomById(presentation.classroomId))?.name : undefined,
+                    status: presentation.status,
                     group: {
                         codSubj: group.codSubj,
                         userNameList: userNameList,
@@ -152,8 +155,7 @@ export class GetPresentationUseCase {
                     },
                     examinationBoard: {
                         professorNameList: professorNameList
-                    },
-                    classroomName: presentation.classroomId ? (await this.classroomRepository.getClassroomById(presentation.classroomId))?.name : undefined
+                    }
                 }
             })
         );
