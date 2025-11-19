@@ -24,6 +24,7 @@ import { ClassroomRepositoryDynamoDB } from "./database/dynamo/classroom_reposit
 import { ICourseRepository } from "../domain/interfaces/ICourseRepository";
 import { CourseRepositoryDynamoDB } from "./database/dynamo/course_repository_dynamo";
 import { CourseRepoMock } from "./mocks/course_repository_mock";
+import { ClassroomRepoMock } from "./mocks/classroom_repository_mock";
 
 export class UserRepository {
   public userRepo: IUserRepository;
@@ -118,6 +119,8 @@ export class PresentationRepository{
   public projectRepo: IProjectRepository;
   public userRepo: IUserRepository;
   public partnerRepo: IPartnerRepository;
+  public classroomRepo: IClassroomRepository;
+  public courseRepo: ICourseRepository;
   private dynamoDb?: DynamoDBResources;
 
   constructor() {
@@ -128,6 +131,8 @@ export class PresentationRepository{
       this.projectRepo= new ProjectRepoMock;
       this.userRepo= new UserRepoMock;
       this.partnerRepo= new PartnerRepoMock;
+      this.classroomRepo= new ClassroomRepoMock;
+      this.courseRepo= new CourseRepoMock;
     }
     else {
       this.dynamoDb= new DynamoDBResources(dynamoConfig);
@@ -137,6 +142,8 @@ export class PresentationRepository{
       this.projectRepo= new ProjectRepositoryDynamoDB(this.dynamoDb);
       this.userRepo= new UserRepositoryDynamoDB(this.dynamoDb);
       this.partnerRepo= new PartnerRepositoryDynamoDB(this.dynamoDb);
+      this.classroomRepo= new ClassroomRepositoryDynamoDB(this.dynamoDb);
+      this.courseRepo= new CourseRepositoryDynamoDB(this.dynamoDb);
     }
   }
 }
