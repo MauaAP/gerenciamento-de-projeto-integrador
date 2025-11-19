@@ -17,6 +17,9 @@ export interface IUserRepository {
   getUserById(userId: string): Promise<User | null>;
 
   getUserByEmail(email: string): Promise<User | null>;
+  
+  //metodo que eu adicionei a baixo
+  getUserByProfessorName(name: string): Promise<User | null>;
 
   deleteUserById(userId: string): Promise<User | null>;
 

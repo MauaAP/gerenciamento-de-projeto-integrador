@@ -2,7 +2,7 @@ import { ExaminationBoard } from "../../../shared/domain/entities/examination_bo
 import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository";
 
 export class ExaminationBoardRepoMock implements IExaminationBoardRepository {
-    private examinationBoards: ExaminationBoard [] = [
+    private examinationBoards: ExaminationBoard[] = [
         new ExaminationBoard(
             "d7e6218a-001b-4fd6-9d97-ddf985f6ab5b",
             ["a1c6d2e2-9b5a-45d0-98ef-cd25d582a2d3", "c3d2e4f4-8b1a-47c2-88ff-d3e6d683b5e5", "d4e3f5g5-7h8i-49j0-99gg-h1i2j3k4l5m6"]
@@ -39,13 +39,17 @@ export class ExaminationBoardRepoMock implements IExaminationBoardRepository {
     }
 
     async getExaminationBoardByProfessorId(professorId: string): Promise<ExaminationBoard[] | null> {
-        const result= this.examinationBoards.filter((examinationBoard) => examinationBoard.professorIdList.includes(professorId));
+        const result = this.examinationBoards.filter((examinationBoard) => examinationBoard.professorIdList.includes(professorId));
 
         return result.length > 0 ? result : null
     }
 
+    async getExaminationBoardByProfessorsId(professorIdList: string[]): Promise<ExaminationBoard | null> {
+        throw new Error("getExaminationBoardByProfessorsId not implemented in mock");
+    }
+
     async deleteExaminationBoard(examinationBoardId: string): Promise<ExaminationBoard | null> {
-        const index= this.examinationBoards.findIndex((examinationBoard) => examinationBoard.examinationBoardId === examinationBoardId);
+        const index = this.examinationBoards.findIndex((examinationBoard) => examinationBoard.examinationBoardId === examinationBoardId);
 
         if (index === -1) return null;
 
@@ -53,13 +57,13 @@ export class ExaminationBoardRepoMock implements IExaminationBoardRepository {
     }
 
     async updateExaminationBoard(examinationBoardId: string, professorIdList: string[]): Promise<ExaminationBoard | null> {
-        const examinationBoard= this.examinationBoards.find((examinationBoard) => examinationBoard.examinationBoardId === examinationBoardId) || null;
+        const examinationBoard = this.examinationBoards.find((examinationBoard) => examinationBoard.examinationBoardId === examinationBoardId) || null;
 
-        if(examinationBoard === null) {
+        if (examinationBoard === null) {
             return null;
         }
 
-       examinationBoard.professorIdList= professorIdList
+        examinationBoard.professorIdList = professorIdList
 
         return examinationBoard
     }

@@ -43,6 +43,10 @@ export class ClassroomRepoMock implements IClassroomRepository {
         return this.classrooms.find((classroom) => classroom.classroomId === classroomId) || null;
     }
 
+    async getClassroomByName(name: string): Promise<Classroom | null> {
+        throw new Error("getClassroomByName not implemented in mock");
+    }
+
     async deleteClassroom(classroomId: string): Promise<Classroom | null> {
         const index = this.classrooms.findIndex((classroom) => classroom.classroomId === classroomId);
         if (index === -1) {

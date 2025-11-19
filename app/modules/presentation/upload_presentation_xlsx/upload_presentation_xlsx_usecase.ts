@@ -119,12 +119,26 @@ export class UploadPresentationXlsxUseCase {
         classroomName: string,
         userIdList: string[],
         professorIdList: string[]
-    ) {
+    ) { 
         const codSubj= "TTI201"; // esta padrao porque nao temos no excel (nao estou mudando la em baixo)
-        const courseName= "CIENCIAS DA COMPUTAÇÃO"; // esta padrao porque nao temos no excel (nao estou mudando la em baixo)
+        const courseName= "CIÊNCIAS DA COMPUTAÇÃO"; // esta padrao porque nao temos no excel (nao estou mudando la em baixo)
         
-        const formattedDate = dateStr.includes("/") ? dateStr.split("/").reverse().join("-") : dateStr;
-        const formattedHour = hourStr.includes("h") ? hourStr.split("h").join(":") : hourStr;
+        let formattedDate = dateStr;
+        if (dateStr.includes("/")) {
+            const parts = dateStr.split("/");
+            console.log(parts);
+            const month = parts[0].padStart(2, "0");  
+            const day = parts[1].padStart(2, "0");  
+            let year = parts[2];
+            
+            if (year.length === 2) {
+                year = "20" + year;
+            }
+            
+            formattedDate = `${year}-${month}-${day}`;
+        }
+
+        let formattedHour = hourStr.replace("h", ":");
         
         
         // criando parceiro
@@ -136,7 +150,7 @@ export class UploadPresentationXlsxUseCase {
             const newPartner= await this.partnerRepository.createPartner(new Partner(
                 crypto.randomUUID(),
                 fullProject.split(" - ")[0], 
-                toEnum("EDUCATION"))
+                toEnum("EDUCACIONAL"))
             );
             
             partnerId= newPartner.partnerId;
@@ -213,7 +227,9 @@ export class UploadPresentationXlsxUseCase {
             classroomId= newClassroom.classroomId;
         }
         
-        const timestamp= new Date(`${formattedDate}T${formattedHour}:00`).getTime();
+        const dateString = `${formattedDate}T${formattedHour}:00`;
+        
+        const timestamp= new Date(dateString).getTime();
         
         await this.presentationRepository.createPresentation(
             new Presentation(
@@ -229,131 +245,3 @@ export class UploadPresentationXlsxUseCase {
         )
     }
 }
-
-
-//         const selectedGroup= row["Tu-Gp"];
-
-//         if (analyzingCodGroupName !== selectedGroup) {
-//             // eu fiz desse jeto pois se o grupo selecionado nao for mais o mesmo significa que o grupo anterior acabou e precisa salvar as informacoes no banco
-
-//             // // criando parceiro
-//             // const partner= await this.partnerRepository.getPartnerByname(analyzingProjectName.split(" - ")[0]);
-
-//             // let partnerId: string= partner ? partner.partnerId : "";
-
-//             // if (!partner) {
-//             //     const newPartner= await this.partnerRepository.createPartner(new Partner(
-//             //         crypto.randomUUID(),
-//             //         analyzingProjectName.split(" - ")[0], 
-//             //         toEnum("EDUCATION"))
-//             //     );
-
-//             //     partnerId= newPartner.partnerId;
-//             // }
-
-//             // criando projeto
-//             const project= await this.projectRepository.getProjectByTitle(analyzingProjectName.split(" - ")[1]);
-
-//             let projectId: string= project ? project.projectId : "";
-
-//             if (!project) {
-//                 const newProject= await this.projectRepository.createProject( new Project(
-//                     crypto.randomUUID(),
-//                     analyzingProjectName.split(" - ")[1],
-//                     partnerId, undefined) //passei a extensionHours como undefined pois nao se tem na tabela
-//                 );
-
-//                 projectId= newProject.projectId;
-//             }
-
-//             // criando grupo
-//             const yearSem= parseInt(analyzingDate.split("-")[0] + (parseInt(analyzingDate.split("-")[1]) <=6 ? "01" : "02"));
-
-//             const course= await this.courseRepository.getCourseByName(analyzingCourse);
-
-//             let courseId: string= course ? course.courseId : "";
-
-//             if (!course) {
-//                 const newCourse= await this.courseRepository.createCourse( new Course(
-//                     crypto.randomUUID(),
-//                     toEnumCourse(analyzingCourse)
-//                 ),
-//                 );
-
-//                 courseId= newCourse.courseId;
-//             }
-
-//             const group= await this.groupRepository.createGroup(new Group(
-//                 crypto.randomUUID(),
-//                 analyzingCodSubject,
-//                 analyzingUserIdList,
-//                 yearSem,
-//                 projectId,
-//                 toEnumCourse(analyzingCourse),
-//                 courseId
-//             ))
-
-
-//             // criando banca
-//             const examinationBoard= await this.examinationBoardRepository.getExaminationBoardByProfessorsId(analyzingProfessorIdList);
-
-//             let examinationBoardId: string= examinationBoard ? examinationBoard.examinationBoardId : "";
-
-//             if (!examinationBoard) {
-//                 const newExaminationBoard= await this.examinationBoardRepository.createExaminationBoard( new ExaminationBoard(
-//                     crypto.randomUUID(),
-//                     analyzingProfessorIdList)
-//                 );
-
-//                 examinationBoardId= newExaminationBoard.examinationBoardId;
-//             }
-
-
-//             // criando apresentação
-//             const classroom= await this.classroomRepository.getClassroomByName(analyzingClassroom);
-
-//             let classroomId= classroom ? classroom.classroomId : "";
-
-//             if (!classroom) {
-//                 const newClassroom= await this.classroomRepository.createClassroom( new Classroom(
-//                     crypto.randomUUID(),
-//                     analyzingClassroom,
-//                     10) //passei a capacity como 10 pq nao tem na tabela e também nao é relevante
-//                 );
-
-//                 classroomId= newClassroom.classroomId;
-//             }
-
-//             const timestamp= new Date(`${analyzingDate}T${analyzingHour}:00`).getTime();
-
-//             await this.presentationRepository.createPresentation(
-//                 new Presentation(
-//                     crypto.randomUUID(),
-//                     timestamp,
-//                     group.groupId,
-//                     examinationBoardId,
-//                     classroomId,
-//                     PRESENTATION_STATUS.SCHEDULED
-//                 ),
-//                 analyzingProfessorIdList,
-//                 analyzingUserIdList
-//             )
-
-//             analyzingCodGroupName= selectedGroup;
-//             analyzingUserIdList= [];
-//             analyzingUserIdList.push(existingUser.userId);
-//             analyzingProjectName= row.Tema;
-//             analyzingDate= row.Data.split("/").reverse().join("-");
-//             analyzingHour= row.Hora.split("h").join(":");
-//             analyzingClassroom= row.Sala;
-//         }
-//         else {
-//             analyzingUserIdList.push(existingUser.userId);
-            
-//             if (professorId.length > 0)
-//                 analyzingProfessorIdList.push(professorId);
-
-//             index++;
-//         }
-//     }
-// }

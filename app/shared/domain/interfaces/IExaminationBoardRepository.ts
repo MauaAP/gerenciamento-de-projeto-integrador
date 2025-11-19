@@ -9,6 +9,9 @@ export interface IExaminationBoardRepository {
 
     getExaminationBoardByProfessorId(professorId: string): Promise<ExaminationBoard[] | null>
 
+    // metodo que eu adicionei a baixo
+    getExaminationBoardByProfessorsId(professorIdList: string[]): Promise<ExaminationBoard | null>
+
     deleteExaminationBoard(examinationBoardId: string): Promise<ExaminationBoard | null>
 
     updateExaminationBoard(examinationBoardId: string, professorIdList: string[]): Promise<ExaminationBoard | null>

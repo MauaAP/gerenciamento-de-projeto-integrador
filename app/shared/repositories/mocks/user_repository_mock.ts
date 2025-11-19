@@ -129,23 +129,27 @@ export class UserRepoMock implements IUserRepository {
     return this.users.find((user) => user.email === email) || null;
   }
 
+  async getUserByProfessorName(name: string): Promise<User | null> {
+    throw new Error("getUserByProfessorName not implemented in mock");
+  }
+
   async deleteUserById(userId: string): Promise<User | null> {
-    const index= this.users.findIndex((user) => user.userId === userId);
-    if (index === -1){
+    const index = this.users.findIndex((user) => user.userId === userId);
+    if (index === -1) {
       return null
     }
     return this.users.splice(index, 1)[0];
   }
 
   async updateUser(userId: string, updateOptions: UserUpdateOptions): Promise<User | null> {
-      const user= this.users.find((user) => user.userId === userId) || null;
+    const user = this.users.find((user) => user.userId === userId) || null;
 
-      if(user === null){
-        return null;
-      }
+    if (user === null) {
+      return null;
+    }
 
-      Object.assign(user, updateOptions);
+    Object.assign(user, updateOptions);
 
-      return user;
+    return user;
   }
 }
