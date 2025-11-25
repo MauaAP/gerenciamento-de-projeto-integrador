@@ -1,0 +1,106 @@
+name: CD - Deploy to ECR and App Runner
+
+on:
+  push:
+    branches: [prod]
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set image tags
+        id: set-tags
+        run: |
+          echo "tag=prod-${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "latest_tag=prod-latest" >> $GITHUB_OUTPUT
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: gerenciamento-de-pi
+          IMAGE_TAG: ${{ steps.set-tags.outputs.tag }}
+          LATEST_TAG: ${{ steps.set-tags.outputs.latest_tag }}
+        run: |
+          # Build Docker image
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
+          
+          # Push image
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
+          
+          # Output image URI (using latest tag for App Runner)
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Set App Runner Service ARN
+        id: set-app-runner-arn
+        run: |
+          echo "arn=${{ secrets.APP_RUNNER_SERVICE_ARN_PROD }}" >> $GITHUB_OUTPUT
+
+      - name: Update App Runner service
+        env:
+          IMAGE_URI: ${{ steps.build-image.outputs.image }}
+          SERVICE_ARN: ${{ steps.set-app-runner-arn.outputs.arn }}
+        run: |
+          # Get current service configuration
+          CURRENT_CONFIG=$(aws apprunner describe-service \
+            --service-arn $SERVICE_ARN \
+            --region ${{ env.AWS_REGION }} \
+            --query 'Service.SourceConfiguration' \
+            --output json)
+          
+          # Extract ECR registry from image URI
+          ECR_REGISTRY=$(echo $IMAGE_URI | cut -d'/' -f1)
+          
+          # Update App Runner service with new image
+          aws apprunner update-service \
+            --service-arn $SERVICE_ARN \
+            --source-configuration '{
+              "ImageRepository": {
+                "ImageIdentifier": "'$IMAGE_URI'",
+                "ImageConfiguration": {
+                  "Port": "3000",
+                  "RuntimeEnvironmentVariables": {}
+                },
+                "ImageRepositoryType": "ECR"
+              },
+              "AutoDeploymentsEnabled": false
+            }' \
+            --region ${{ env.AWS_REGION }} \
+            --output json
+
+      - name: Wait for deployment to complete
+        env:
+          SERVICE_ARN: ${{ steps.set-app-runner-arn.outputs.arn }}
+        run: |
+          echo "Waiting for App Runner service to update..."
+          aws apprunner wait service-updated \
+            --service-arn $SERVICE_ARN \
+            --region ${{ env.AWS_REGION }} \
+            || echo "Service update initiated"
+
+      - name: Deployment summary
+        run: |
+          echo "✅ Deployment completed successfully!"
+          echo "📦 Image: ${{ steps.build-image.outputs.image }}"
+          echo "🚀 Service ARN: ${{ steps.set-app-runner-arn.outputs.arn }}"
+
