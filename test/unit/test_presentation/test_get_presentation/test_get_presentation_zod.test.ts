@@ -115,7 +115,7 @@ describe("GetPresentationUseCase - Zod validation", () => {
         }
     });
 
-    it("should throw BadRequestException if examinationBoartId is not a string", () => {
+    it("should throw BadRequestException if examinationBoardId is not a string", () => {
         try {
             parseBody(GetPresentationRequest, {
                 date: 1750854600000,
@@ -130,7 +130,7 @@ describe("GetPresentationUseCase - Zod validation", () => {
         }
     });
 
-    it("should throw BadRequestException if examinationBoartId is not 36 characters", () => {
+    it("should throw BadRequestException if examinationBoardId is not 36 characters", () => {
         try {
             parseBody(GetPresentationRequest, {
                 date: 1750854600000,
@@ -140,7 +140,7 @@ describe("GetPresentationUseCase - Zod validation", () => {
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("O examinationBoart id deve conter 36 caracteres")
+            expect(error.message).toBe("O examinationBoard id deve conter 36 caracteres")
             expect(error.statusCode).toBe(400)
         }
     });
