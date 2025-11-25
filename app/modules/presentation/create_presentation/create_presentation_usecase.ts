@@ -80,9 +80,7 @@ export class CreatePresentationUseCase {
         const presentationId = crypto.randomUUID();
 
         const presentationStatus = status || PRESENTATION_STATUS.SCHEDULED;
-        // Usar nome da sala do classroom como "sala" para manter compatibilidade com a entidade
-        const sala = existingClassroom.name;
-        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoardId, sala, classroomId, presentationStatus);
+        const newPresentation = new Presentation(presentationId, date, groupId, examinationBoardId, classroomId, presentationStatus);
 
         const professorIds = existingExaminationBoard.professorIdList;
         const alunoIds = existingGroup.userIdList;
@@ -108,7 +106,7 @@ export class CreatePresentationUseCase {
                 course: existingGroup.course
             },
             examinationBoard: {
-                porfessorNameList: professorNameList
+                professorNameList: professorNameList
             },
             classroomName: existingClassroom.name
         }

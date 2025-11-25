@@ -23,6 +23,7 @@ import { IClassroomRepository } from "../domain/interfaces/IClassroomRepository"
 import { ClassroomRepositoryDynamoDB } from "./database/dynamo/classroom_repository_dynamo";
 import { ICourseRepository } from "../domain/interfaces/ICourseRepository";
 import { CourseRepositoryDynamoDB } from "./database/dynamo/course_repository_dynamo";
+import { CourseRepoMock } from "./mocks/course_repository_mock";
 
 export class UserRepository {
   public userRepo: IUserRepository;
@@ -81,15 +82,14 @@ export class GroupRepository{
       this.userRepo= new UserRepoMock;
       this.projectRepo= new ProjectRepoMock;
       this.partnerRepo= new PartnerRepoMock;
-      // Mock será criado se necessário
-      throw new Error("CourseRepository mock not implemented yet");
+      this.courseRepo = new CourseRepoMock;
     } else{
       this.dynamoDb = new DynamoDBResources(dynamoConfig);
-      this.groupRepo = new GroupRepositoryDynamoDB(this.dynamoDb)
+      this.courseRepo = new CourseRepositoryDynamoDB(this.dynamoDb)
+      this.groupRepo = new GroupRepositoryDynamoDB(this.dynamoDb, this.courseRepo)
       this.userRepo = new UserRepositoryDynamoDB(this.dynamoDb)
       this.projectRepo = new ProjectRepositoryDynamoDB(this.dynamoDb)
       this.partnerRepo = new PartnerRepositoryDynamoDB(this.dynamoDb)
-      this.courseRepo = new CourseRepositoryDynamoDB(this.dynamoDb)
     }
   }
 }

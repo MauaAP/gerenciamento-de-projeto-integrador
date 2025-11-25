@@ -1,6 +1,6 @@
 import { IExaminationBoardRepository } from "../../../shared/domain/interfaces/IExaminationBoardRepository"
 import { IGroupRepository } from "../../../shared/domain/interfaces/IGroupRepository"
-import { IPresentationRepository } from "../../../shared/domain/interfaces/IPresentationRepository"
+import { IPresentationRepository, PresentationUpdateOptions } from "../../../shared/domain/interfaces/IPresentationRepository"
 import { IProjectRepository } from "../../../shared/domain/interfaces/IProjectRepository"
 import { IUserRepository } from "../../../shared/domain/interfaces/IUserRepository"
 import { NotFoundException } from "../../../shared/helpers/exceptions"
@@ -49,16 +49,15 @@ export class UpdatePresentationUseCase {
             }
         }
 
+        const repositoryUpdateOptions: PresentationUpdateOptions = { ...updateOptions };
         if(updateOptions?.classroomId){
             const classroom = await this.classroomRepository.getClassroomById(updateOptions.classroomId);
             if (!classroom){
                 throw new NotFoundException("Sala não está no banco");
             }
-            // Atualizar também o campo sala com o nome do classroom
-            updateOptions.sala = classroom.name;
         }
 
-        const updatedPresentation= await this.presentationRepository.updatePresentation(id, updateOptions)
+        const updatedPresentation= await this.presentationRepository.updatePresentation(id, repositoryUpdateOptions)
 
         if (updatedPresentation == null)
             throw new NotFoundException("Apresentação não está no banco");
@@ -114,9 +113,6 @@ export class UpdatePresentationUseCase {
             const classroom = await this.classroomRepository.getClassroomById(updatedPresentation.classroomId);
             if (classroom) {
                 classroomName = classroom.name;
-            } else {
-                // Fallback para o campo sala se classroom não for encontrado
-                classroomName = updatedPresentation.sala || undefined;
             }
         }
 
@@ -135,7 +131,7 @@ export class UpdatePresentationUseCase {
                 course: group.course
             },
             examinationBoard: {
-                porfessorNameList: professorNameList
+                professorNameList: professorNameList
             },
             classroomName: classroomName
         }

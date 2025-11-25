@@ -1,6 +1,7 @@
 import type { DynamoDBResources } from "./dynamo_datasource";
 import { GroupFilter, GroupUpdateOptions, IGroupRepository } from "../../../../shared/domain/interfaces/IGroupRepository";
 import { Group } from "../../../../shared/domain/entities/group";
+import { ICourseRepository } from "../../../../shared/domain/interfaces/ICourseRepository";
 
 function getGroupPK(groupId: string): string {
   return `GROUP#${groupId}`;
@@ -18,15 +19,21 @@ function getProjectPK(projectId: string): string {
   return `PROJECT#${projectId}`;
 }
 
+function getCoursePK(courseId: string): string {
+  return `COURSE#${courseId}`;
+}
+
 function getCoursePKFromEnum(courseEnum: string): string {
   return `COURSE#${courseEnum}`;
 }
 
 export class GroupRepositoryDynamoDB implements IGroupRepository {
   private db: DynamoDBResources;
+  private courseRepository?: ICourseRepository;
 
-  constructor(db: DynamoDBResources) {
+  constructor(db: DynamoDBResources, courseRepository?: ICourseRepository) {
     this.db = db;
+    this.courseRepository = courseRepository;
   }
 
   async createGroup(group: Group): Promise<Group> {
@@ -77,16 +84,30 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
     };
     await this.db.put(projectReverseLookupItem, projectPK, `GROUP#${group.groupId}`);
 
-    // Criar relacionamento: GROUP#ID + SK: COURSE#ENUM_VALUE
-    const coursePK = getCoursePKFromEnum(group.course);
+    // Determinar courseId para usar nos relacionamentos
+    let courseIdToUse: string | undefined = group.courseId;
+    
+    // Se courseId não está disponível mas temos courseRepository, buscar pelo enum
+    if (!courseIdToUse && this.courseRepository) {
+      const course = await this.courseRepository.getCourseByName(group.course);
+      if (course) {
+        courseIdToUse = course.courseId;
+      }
+    }
+
+    // Criar relacionamento: GROUP#ID + SK: COURSE#ID ou COURSE#ENUM_VALUE
+    const coursePK = courseIdToUse ? getCoursePK(courseIdToUse) : getCoursePKFromEnum(group.course);
+    const courseSK = courseIdToUse ? `COURSE#${courseIdToUse}` : `COURSE#${group.course}`;
+    
     const courseRelationshipItem = {
       PK: pk,
-      SK: `COURSE#${group.course}`,
-      course: group.course
+      SK: courseSK,
+      course: group.course,
+      ...(courseIdToUse && { courseId: courseIdToUse })
     };
-    await this.db.put(courseRelationshipItem, pk, `COURSE#${group.course}`);
+    await this.db.put(courseRelationshipItem, pk, courseSK);
 
-    // Criar reverse lookup: COURSE#ENUM_VALUE + SK: GROUP#ID
+    // Criar reverse lookup: COURSE#ID ou COURSE#ENUM_VALUE + SK: GROUP#ID
     const courseReverseLookupItem = {
       PK: coursePK,
       SK: `GROUP#${group.groupId}`,
@@ -181,8 +202,23 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
       }
     }
 
-    // Filtros por codSubj, yearSem ou course - Scan com FilterExpression
-    if (filter.codSubj || filter.yearSem || filter.course) {
+    // Filtro por courseId - Query COURSE#ID + SK begins_with GROUP# (eficiente)
+    if (filter.courseId) {
+      const coursePK = getCoursePK(filter.courseId);
+      const items = await this.db.queryAll(coursePK, "GROUP#");
+      
+      const groupIds = items.map(item => item.groupId || item.SK?.replace("GROUP#", "")).filter(Boolean);
+      
+      for (const groupId of groupIds) {
+        const group = await this.getGroupById(groupId);
+        if (group && !groups.find(g => g.groupId === group.groupId)) {
+          groups.push(group);
+        }
+      }
+    }
+
+    // Filtros por codSubj ou yearSem - Scan com FilterExpression
+    if (filter.codSubj || filter.yearSem) {
       const filterConditions: string[] = [];
       const expressionAttributeNames: Record<string, string> = { "#pk": "PK", "#sk": "SK" };
       const expressionAttributeValues: Record<string, any> = { 
@@ -202,12 +238,6 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
         expressionAttributeValues[":yearSem"] = filter.yearSem;
       }
 
-      if (filter.course) {
-        filterConditions.push("#course = :course");
-        expressionAttributeNames["#course"] = "course";
-        expressionAttributeValues[":course"] = filter.course;
-      }
-
       const filterExpression = `begins_with(#pk, :groupPrefix) AND #sk = :metadata AND ${filterConditions.join(" AND ")}`;
       
       const items = await this.db.scanAll({
@@ -225,7 +255,7 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
     }
 
     // Se nenhum filtro foi aplicado, retornar todos os grupos
-    if (!filter.userId && !filter.projectId && !filter.codSubj && !filter.yearSem && !filter.course) {
+    if (!filter.userId && !filter.projectId && !filter.courseId && !filter.codSubj && !filter.yearSem) {
       return await this.fetchGroup();
     }
 
@@ -262,11 +292,12 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
     const projectPK = getProjectPK(group.projectId);
     await this.db.delete(projectPK, `GROUP#${groupId}`);
 
-    // Deletar relacionamento: GROUP#ID + SK: COURSE#ENUM_VALUE
-    await this.db.delete(pk, `COURSE#${group.course}`);
+    // Deletar relacionamento: GROUP#ID + SK: COURSE#ID ou COURSE#ENUM_VALUE
+    const courseSK = group.courseId ? `COURSE#${group.courseId}` : `COURSE#${group.course}`;
+    await this.db.delete(pk, courseSK);
 
-    // Deletar reverse lookup: COURSE#ENUM_VALUE + SK: GROUP#ID
-    const coursePK = getCoursePKFromEnum(group.course);
+    // Deletar reverse lookup: COURSE#ID ou COURSE#ENUM_VALUE + SK: GROUP#ID
+    const coursePK = group.courseId ? getCoursePK(group.courseId) : getCoursePKFromEnum(group.course);
     await this.db.delete(coursePK, `GROUP#${groupId}`);
 
     console.log(`[DynamoDB] Grupo deletado: ${pk}`);
@@ -344,20 +375,35 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
     }
     if (updateOptions.course) {
       // Se course mudou, atualizar relacionamentos
-      // Deletar relacionamento antigo
-      await this.db.delete(pk, `COURSE#${currentGroup.course}`);
-      const oldCoursePK = getCoursePKFromEnum(currentGroup.course);
+      // Determinar courseId para usar nos relacionamentos
+      let courseIdToUse: string | undefined = updateOptions.courseId;
+      
+      // Se courseId não está disponível mas temos courseRepository, buscar pelo enum
+      if (!courseIdToUse && this.courseRepository) {
+        const course = await this.courseRepository.getCourseByName(updateOptions.course);
+        if (course) {
+          courseIdToUse = course.courseId;
+        }
+      }
+
+      // Deletar relacionamento antigo (pode ser por courseId ou enum)
+      const oldCourseSK = currentGroup.courseId ? `COURSE#${currentGroup.courseId}` : `COURSE#${currentGroup.course}`;
+      await this.db.delete(pk, oldCourseSK);
+      const oldCoursePK = currentGroup.courseId ? getCoursePK(currentGroup.courseId) : getCoursePKFromEnum(currentGroup.course);
       await this.db.delete(oldCoursePK, `GROUP#${groupId}`);
       
-      // Criar novo relacionamento
+      // Criar novo relacionamento usando courseId se disponível
+      const newCoursePK = courseIdToUse ? getCoursePK(courseIdToUse) : getCoursePKFromEnum(updateOptions.course);
+      const newCourseSK = courseIdToUse ? `COURSE#${courseIdToUse}` : `COURSE#${updateOptions.course}`;
+      
       const courseRelationshipItem = {
         PK: pk,
-        SK: `COURSE#${updateOptions.course}`,
-        course: updateOptions.course
+        SK: newCourseSK,
+        course: updateOptions.course,
+        ...(courseIdToUse && { courseId: courseIdToUse })
       };
-      await this.db.put(courseRelationshipItem, pk, `COURSE#${updateOptions.course}`);
+      await this.db.put(courseRelationshipItem, pk, newCourseSK);
       
-      const newCoursePK = getCoursePKFromEnum(updateOptions.course);
       const courseReverseLookupItem = {
         PK: newCoursePK,
         SK: `GROUP#${groupId}`,
@@ -366,6 +412,39 @@ export class GroupRepositoryDynamoDB implements IGroupRepository {
       await this.db.put(courseReverseLookupItem, newCoursePK, `GROUP#${groupId}`);
       
       updateDict.course = updateOptions.course;
+      if (courseIdToUse) {
+        updateDict.courseId = courseIdToUse;
+      }
+    }
+    
+    // Se apenas courseId foi fornecido (sem course), atualizar relacionamentos também
+    if (updateOptions.courseId && !updateOptions.course && currentGroup.courseId !== updateOptions.courseId) {
+      // Deletar relacionamento antigo
+      const oldCourseSK = currentGroup.courseId ? `COURSE#${currentGroup.courseId}` : `COURSE#${currentGroup.course}`;
+      await this.db.delete(pk, oldCourseSK);
+      const oldCoursePK = currentGroup.courseId ? getCoursePK(currentGroup.courseId) : getCoursePKFromEnum(currentGroup.course);
+      await this.db.delete(oldCoursePK, `GROUP#${groupId}`);
+      
+      // Criar novo relacionamento usando o novo courseId
+      const newCoursePK = getCoursePK(updateOptions.courseId);
+      const newCourseSK = `COURSE#${updateOptions.courseId}`;
+      
+      const courseRelationshipItem = {
+        PK: pk,
+        SK: newCourseSK,
+        course: currentGroup.course,
+        courseId: updateOptions.courseId
+      };
+      await this.db.put(courseRelationshipItem, pk, newCourseSK);
+      
+      const courseReverseLookupItem = {
+        PK: newCoursePK,
+        SK: `GROUP#${groupId}`,
+        groupId: groupId
+      };
+      await this.db.put(courseReverseLookupItem, newCoursePK, `GROUP#${groupId}`);
+      
+      updateDict.courseId = updateOptions.courseId;
     }
 
     const updatedGroup = await this.db.update(pk, sk, updateDict);

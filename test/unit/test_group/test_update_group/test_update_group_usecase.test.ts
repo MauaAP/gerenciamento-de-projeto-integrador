@@ -4,6 +4,7 @@ import { GroupRepoMock } from "app/shared/repositories/mocks/group_repository_mo
 import { PartnerRepoMock } from "app/shared/repositories/mocks/partner_repository_mock";
 import { ProjectRepoMock } from "app/shared/repositories/mocks/project_repository_mock";
 import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock";
+import { CourseRepoMock } from "app/shared/repositories/mocks/course_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest"
 
 describe("UpdateGroupUseCase", () => {
@@ -11,6 +12,7 @@ describe("UpdateGroupUseCase", () => {
     let userRepo: UserRepoMock;
     let projectRepo: ProjectRepoMock;
     let partnerRepo: PartnerRepoMock;
+    let courseRepo: CourseRepoMock;
     let useCase: UpdateGroupUseCase
 
 
@@ -19,7 +21,8 @@ describe("UpdateGroupUseCase", () => {
             userRepo = new UserRepoMock();
             projectRepo = new ProjectRepoMock();
             partnerRepo = new PartnerRepoMock();
-            useCase = new UpdateGroupUseCase(groupRepo, userRepo, projectRepo, partnerRepo);
+            courseRepo = new CourseRepoMock();
+            useCase = new UpdateGroupUseCase(groupRepo, userRepo, projectRepo, partnerRepo, courseRepo);
     });
 
     it("should update the group in repository mock and return it, with user names and project title", async () => {

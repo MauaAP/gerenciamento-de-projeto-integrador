@@ -5,6 +5,7 @@ import { PartnerRepoMock } from "app/shared/repositories/mocks/partner_repositor
 import { PresentationRepoMock } from "app/shared/repositories/mocks/presentation_repository_mock";
 import { ProjectRepoMock } from "app/shared/repositories/mocks/project_repository_mock";
 import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock";
+import { ClassroomRepoMock } from "app/shared/repositories/mocks/classroom_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest"
 
 describe("GetExaminationBoardUsecase", () => {
@@ -14,6 +15,7 @@ describe("GetExaminationBoardUsecase", () => {
     let userRepo: UserRepoMock;
     let projectRepo: ProjectRepoMock;
     let partnerRepo: PartnerRepoMock;
+    let classroomRepo: ClassroomRepoMock;
     let useCase: GetPresentationUseCase;
     
     beforeEach(() => {
@@ -23,7 +25,8 @@ describe("GetExaminationBoardUsecase", () => {
         userRepo = new UserRepoMock();
         projectRepo = new ProjectRepoMock();
         partnerRepo = new PartnerRepoMock();
-        useCase = new GetPresentationUseCase(presentationRepo, groupRepo, examinationBoardRepo, userRepo, projectRepo, partnerRepo);
+        classroomRepo = new ClassroomRepoMock();
+        useCase = new GetPresentationUseCase(presentationRepo, groupRepo, examinationBoardRepo, userRepo, projectRepo, partnerRepo, classroomRepo);
     });
 
     it("should get the presentation by id and return it, with group, examination board, user names and project title", async () => {
@@ -43,7 +46,7 @@ describe("GetExaminationBoardUsecase", () => {
         expect(result[0].group.project.partnerName).toBe("Mastercard");
         expect(result[0].group.project.extensionHours).toBeUndefined();
         expect(result[0].group.course).toBe("CIÊNCIAS DA COMPUTAÇÃO");
-        expect(result[0].examinationBoard.porfessorNameList).toEqual([
+        expect(result[0].examinationBoard.professorNameList).toEqual([
             "Roberto Carlos",
             "Bruce Wayne"
         ]);
@@ -66,7 +69,7 @@ describe("GetExaminationBoardUsecase", () => {
         expect(result[0].group.project.partnerName).toBe("Poliedro");
         expect(result[0].group.project.extensionHours).toBe(216000);
         expect(result[0].group.course).toBe("CIÊNCIAS DA COMPUTAÇÃO");
-        expect(result[0].examinationBoard.porfessorNameList).toEqual([
+        expect(result[0].examinationBoard.professorNameList).toEqual([
             "Roberto Carlos",
             "Ana Maria Braga",
             "Bruce Wayne"
@@ -84,7 +87,7 @@ describe("GetExaminationBoardUsecase", () => {
         expect(result[1].group.project.partnerName).toBe("Klabin");
         expect(result[1].group.project.extensionHours).toBe(216000);
         expect(result[1].group.course).toBe("RELAÇÕES INTERNACIONAIS");
-        expect(result[1].examinationBoard.porfessorNameList).toEqual([
+        expect(result[1].examinationBoard.professorNameList).toEqual([
             "Roberto Carlos",
             "Bruce Wayne"
         ]);

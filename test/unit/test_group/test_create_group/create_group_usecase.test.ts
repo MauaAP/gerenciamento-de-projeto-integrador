@@ -4,6 +4,7 @@ import { GroupRepoMock } from "app/shared/repositories/mocks/group_repository_mo
 import { PartnerRepoMock } from "app/shared/repositories/mocks/partner_repository_mock";
 import { ProjectRepoMock } from "app/shared/repositories/mocks/project_repository_mock";
 import { UserRepoMock } from "app/shared/repositories/mocks/user_repository_mock";
+import { CourseRepoMock } from "app/shared/repositories/mocks/course_repository_mock";
 import { describe, it, expect, beforeEach } from "vitest";
 
 describe("CreateGroupUseCase", () => {
@@ -11,6 +12,7 @@ describe("CreateGroupUseCase", () => {
     let userRepo: UserRepoMock;
     let projectRepo: ProjectRepoMock;
     let partnerRepo: PartnerRepoMock;
+    let courseRepo: CourseRepoMock;
     let useCase: CreateGroupUseCase;
 
     beforeEach(() => {
@@ -18,7 +20,8 @@ describe("CreateGroupUseCase", () => {
         userRepo = new UserRepoMock();
         projectRepo = new ProjectRepoMock();
         partnerRepo= new PartnerRepoMock();
-        useCase = new CreateGroupUseCase(groupRepo, userRepo, projectRepo, partnerRepo);
+        courseRepo = new CourseRepoMock();
+        useCase = new CreateGroupUseCase(groupRepo, userRepo, projectRepo, partnerRepo, courseRepo);
     });
 
     it("should create a new group and return it with user names and project title", async () => {

@@ -27,6 +27,8 @@ export class CreateGroupUseCase {
     ) {}
 
     async execute({ codSubj, userIdList, yearSem, projectId, course, courseId }: CreateGroupDTO): Promise<GroupOficialModel> {
+        let finalCourseId: string | undefined = courseId;
+        
         // Validar courseId se fornecido
         if (courseId) {
             const existingCourse = await this.courseRepository.getCourseById(courseId);
@@ -36,6 +38,12 @@ export class CreateGroupUseCase {
             // Validar que o course enum corresponde ao courseId fornecido
             if (existingCourse.name !== course) {
                 throw new BadRequestException("O courseId fornecido não corresponde ao course enum");
+            }
+        } else {
+            // Se courseId não foi fornecido, buscar pelo enum
+            const courseByName = await this.courseRepository.getCourseByName(course);
+            if (courseByName) {
+                finalCourseId = courseByName.courseId;
             }
         }
 
@@ -65,7 +73,7 @@ export class CreateGroupUseCase {
 
         const groupId = crypto.randomUUID();
 
-        const newGroup = new Group(groupId, codSubj, userIdList, yearSem, projectId, course);
+        const newGroup = new Group(groupId, codSubj, userIdList, yearSem, projectId, course, finalCourseId);
 
         await this.groupRepository.createGroup(newGroup)
 

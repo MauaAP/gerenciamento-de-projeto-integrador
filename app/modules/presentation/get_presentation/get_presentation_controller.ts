@@ -31,7 +31,7 @@ export class GetPresentationController {
                 examinationBoardId,
                 status
             },
-            userId: userFromToken.userId,
+            userId: userFromToken.id,
             userRole: userFromToken.role
         });
 
@@ -51,8 +51,8 @@ export class GetPresentationController {
                     },
                     course: presentation.group.course
                 },
-                ExaminationBoard: {
-                    porfessorNameList: presentation.examinationBoard.porfessorNameList
+                examinationBoard: {
+                    professorNameList: presentation.examinationBoard.professorNameList
                 },
                 classroomName: presentation.classroomName
             }))

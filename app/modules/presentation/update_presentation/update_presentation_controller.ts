@@ -58,8 +58,8 @@ export class UpdatePresentationController{
                     },
                     course: updatedPresentation.group.course
                 },
-                ExaminationBoard: {
-                    porfessorNameList: updatedPresentation.examinationBoard.porfessorNameList
+                examinationBoard: {
+                    professorNameList: updatedPresentation.examinationBoard.professorNameList
                 },
                 classroomName: updatedPresentation.classroomName
             }

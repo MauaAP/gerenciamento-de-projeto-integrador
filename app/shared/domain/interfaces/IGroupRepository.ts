@@ -6,7 +6,7 @@ export type GroupFilter = {
     codSubj?: string;
     yearSem?: number;
     projectId?: string;
-    course?: COURSE;
+    courseId?: string;
 };
 
 export type GroupUpdateOptions = {

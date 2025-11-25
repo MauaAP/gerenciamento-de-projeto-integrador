@@ -48,7 +48,7 @@ export class CreatePresentationController {
                     course: newPresentation.group.course
                 },
                 examinationBoard: {
-                    professorNameList: newPresentation.examinationBoard.porfessorNameList
+                    professorNameList: newPresentation.examinationBoard.professorNameList
                 },
                 classroomName: newPresentation.classroomName
             }
