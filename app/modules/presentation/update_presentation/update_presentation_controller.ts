@@ -18,7 +18,7 @@ export class UpdatePresentationController{
             );
         }
 
-        const allowedRoles= ["ADMIN", "MODERATOR"];
+        const allowedRoles= ["ADMIN", "MODERATOR", "PROFESSOR"];
         
         if(!allowedRoles.includes(userFromToken.role)) {
             throw new ForbiddenException(
