@@ -27,7 +27,7 @@ describe("GetPresentationUseCase - Zod validation", () => {
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("Você deve informar id ou filtros (exatemente um)")
+            expect(error.message).toBe("Você deve informar: (1) id, OU (2) filtros (date/groupId/examinationBoardId), OU (3) status (será usado com seu user_id do token)")
             expect(error.statusCode).toBe(400)
         }
     });
@@ -43,7 +43,7 @@ describe("GetPresentationUseCase - Zod validation", () => {
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("Você deve informar id ou filtros (exatemente um)")
+            expect(error.message).toBe("Você deve informar: (1) id, OU (2) filtros (date/groupId/examinationBoardId), OU (3) status (será usado com seu user_id do token)")
             expect(error.statusCode).toBe(400)
         }
     });

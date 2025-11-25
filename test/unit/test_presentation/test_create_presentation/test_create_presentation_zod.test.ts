@@ -8,11 +8,14 @@ describe("CreatePresentationSchema - Zod validation", () => {
         expect(parseBody(CreatePresentationRequest, {
             date: 1750854600000,
             groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-            examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
+            examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583c",
+            classroomId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
         })).toEqual({
             date: 1750854600000,
             groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-            examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
+            examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583c",
+            classroomId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            status: "SCHEDULED"
         });
     });
 
