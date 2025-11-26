@@ -37,7 +37,7 @@ export class UploadPresentationXlsxUseCase {
         private readonly partnerRepository: IPartnerRepository,
         private readonly classroomRepository: IClassroomRepository,
         private readonly courseRepository: ICourseRepository
-    ) {}
+    ) { }
 
     async execute(presentationData: PresentationXlsxInterface[]): Promise<void> {
         let currentGroupCode = "";
@@ -45,11 +45,11 @@ export class UploadPresentationXlsxUseCase {
         let currentDate = "";
         let currentHour = "";
         let currentClassroom = "";
-        let currentUserIdList = new Set<string>(); 
+        let currentUserIdList = new Set<string>();
         let currentProfessorIdList = new Set<string>();
 
-        for(const row of presentationData) {
-            const rowGroupCode= row["Tu-Gp"];
+        for (const row of presentationData) {
+            const rowGroupCode = row["Tu-Gp"];
 
             if (rowGroupCode !== currentGroupCode) {
 
@@ -67,7 +67,7 @@ export class UploadPresentationXlsxUseCase {
 
                 currentGroupCode = rowGroupCode;
                 currentProjectName = row.Tema;
-                currentDate = row.Data; 
+                currentDate = row.Data;
                 currentHour = row.Hora;
                 currentClassroom = row.Sala;
                 currentUserIdList.clear();
@@ -92,7 +92,7 @@ export class UploadPresentationXlsxUseCase {
 
                 if (professor) {
                     currentProfessorIdList.add(professor.userId);
-                } 
+                }
                 else {
                     console.log(`[Warning] Professor ${professorName} not found in DB.`);
                 }
@@ -110,7 +110,7 @@ export class UploadPresentationXlsxUseCase {
             );
         }
     }
-    
+
     private async savePresentation(
         codGroupName: string,
         fullProject: string,
@@ -119,75 +119,73 @@ export class UploadPresentationXlsxUseCase {
         classroomName: string,
         userIdList: string[],
         professorIdList: string[]
-    ) { 
+    ) {
         const codSubj= "CIC-T1S1"; // esta padrao porque nao temos no excel (nao estou mudando la em baixo)
         const courseName= "CIÊNCIAS DA COMPUTAÇÃO"; // esta padrao porque nao temos no excel (nao estou mudando la em baixo)
-        
+
         let formattedDate = dateStr;
         if (dateStr.includes("/")) {
             const parts = dateStr.split("/");
-            console.log(parts);
-            const month = parts[0].padStart(2, "0");  
-            const day = parts[1].padStart(2, "0");  
+            const day = parts[0].padStart(2, "0");
+            const month = parts[1].padStart(2, "0");
             let year = parts[2];
-            
+
             if (year.length === 2) {
                 year = "20" + year;
             }
-            
+
             formattedDate = `${year}-${month}-${day}`;
         }
 
         let formattedHour = hourStr.replace("h", ":");
         
-        
         // criando parceiro
-        const partner= await this.partnerRepository.getPartnerByname(fullProject.split(" - ")[0]);
-        
-        let partnerId: string= partner ? partner.partnerId : "";
-        
+        const partner = await this.partnerRepository.getPartnerByname(fullProject.split(" - ")[0]);
+
+        let partnerId: string = partner ? partner.partnerId : "";
+
         if (!partner) {
-            const newPartner= await this.partnerRepository.createPartner(new Partner(
+            const newPartner = await this.partnerRepository.createPartner(new Partner(
                 crypto.randomUUID(),
-                fullProject.split(" - ")[0], 
+                fullProject.split(" - ")[0],
                 toEnum("EDUCACIONAL"))
             );
-            
-            partnerId= newPartner.partnerId;
+
+            partnerId = newPartner.partnerId;
         }
-        
+
         // criando projeto
-        const project= await this.projectRepository.getProjectByTitle(fullProject.split(" - ")[1]);
-        
-        let projectId: string= project ? project.projectId : "";
-        
+        const project = await this.projectRepository.getProjectByTitle(fullProject.split(" - ")[1]);
+
+        let projectId: string = project ? project.projectId : "";
+
         if (!project) {
-            const newProject= await this.projectRepository.createProject( new Project(
+            const newProject = await this.projectRepository.createProject(new Project(
                 crypto.randomUUID(),
                 fullProject.split(" - ")[1],
                 partnerId, undefined) //passei a extensionHours como undefined pois nao se tem na tabela
             );
-            
-            projectId= newProject.projectId;
+
+            projectId = newProject.projectId;
         }
-        
+
         // criando grupo
-        const yearSem= parseInt(formattedDate.split("-")[0] + (parseInt(formattedDate.split("-")[1]) <=6 ? "01" : "02"));
-        
-        const course= await this.courseRepository.getCourseByName(courseName);
-        
-        let courseId: string= course ? course.courseId : "";
-        
+        const yearSem = parseInt(formattedDate.split("-")[0] + (parseInt(formattedDate.split("-")[1]) <= 6 ? "01" : "02"));
+
+        const course = await this.courseRepository.getCourseByName(courseName);
+
+        let courseId: string = course ? course.courseId : "";
+
         if (!course) {
-            const newCourse= await this.courseRepository.createCourse( new Course(
+            const newCourse = await this.courseRepository.createCourse(new Course(
                 crypto.randomUUID(),
                 toEnumCourse(courseName))
             );
 
-            courseId= newCourse.courseId;
+            courseId = newCourse.courseId;
         }
 
-        const group= await this.groupRepository.createGroup(new Group(
+        const group = await this.groupRepository.createGroup(new Group(
             crypto.randomUUID(),
             codSubj,
             userIdList,
@@ -196,41 +194,40 @@ export class UploadPresentationXlsxUseCase {
             toEnumCourse(courseName),
             courseId
         ))
-    
+
         // criando banca
-        const examinationBoard= await this.examinationBoardRepository.getExaminationBoardByProfessorsId(professorIdList);
-        
-        let examinationBoardId: string= examinationBoard ? examinationBoard.examinationBoardId : "";
-        
+        const examinationBoard = await this.examinationBoardRepository.getExaminationBoardByProfessorsId(professorIdList);
+
+        let examinationBoardId: string = examinationBoard ? examinationBoard.examinationBoardId : "";
+
         if (!examinationBoard) {
-            const newExaminationBoard= await this.examinationBoardRepository.createExaminationBoard( new ExaminationBoard(
+            const newExaminationBoard = await this.examinationBoardRepository.createExaminationBoard(new ExaminationBoard(
                 crypto.randomUUID(),
                 professorIdList)
             );
-            
-            examinationBoardId= newExaminationBoard.examinationBoardId;
+
+            examinationBoardId = newExaminationBoard.examinationBoardId;
         }
 
 
         // criando apresentação
-        const classroom= await this.classroomRepository.getClassroomByName(classroomName);
-        
-        let classroomId= classroom ? classroom.classroomId : "";
-        
+        const classroom = await this.classroomRepository.getClassroomByName(classroomName);
+
+        let classroomId = classroom ? classroom.classroomId : "";
+
         if (!classroom) {
-            const newClassroom= await this.classroomRepository.createClassroom( new Classroom(
+            const newClassroom = await this.classroomRepository.createClassroom(new Classroom(
                 crypto.randomUUID(),
                 classroomName,
                 10) //passei a capacity como 10 pq nao tem na tabela e também nao é relevante
             );
-            
-            classroomId= newClassroom.classroomId;
+
+            classroomId = newClassroom.classroomId;
         }
-        
+
         const dateString = `${formattedDate}T${formattedHour}:00`;
-        
-        const timestamp= new Date(dateString).getTime();
-        
+        const timestamp = new Date(dateString).getTime();
+
         await this.presentationRepository.createPresentation(
             new Presentation(
                 crypto.randomUUID(),
