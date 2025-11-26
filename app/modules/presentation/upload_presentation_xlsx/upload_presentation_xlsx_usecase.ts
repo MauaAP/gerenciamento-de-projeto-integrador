@@ -120,7 +120,7 @@ export class UploadPresentationXlsxUseCase {
         userIdList: string[],
         professorIdList: string[]
     ) { 
-        const codSubj= "TTI201"; // esta padrao porque nao temos no excel (nao estou mudando la em baixo)
+        const codSubj= "CIC-T1S1"; // esta padrao porque nao temos no excel (nao estou mudando la em baixo)
         const courseName= "CIÊNCIAS DA COMPUTAÇÃO"; // esta padrao porque nao temos no excel (nao estou mudando la em baixo)
         
         let formattedDate = dateStr;
