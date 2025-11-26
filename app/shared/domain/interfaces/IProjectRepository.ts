@@ -14,6 +14,8 @@ export interface IProjectRepository {
     getProjectById(projectId: string): Promise<Project | null>
 
     getProjectByPartnerId(partnerId: string): Promise<Project[] | null>
+    //metodo que eu adicionei a baixo
+    getProjectByTitle(title: string): Promise<Project | null>
 
     deleteProjectById(projectId: string): Promise<Project | null>
 

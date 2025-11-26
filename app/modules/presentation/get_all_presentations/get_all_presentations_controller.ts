@@ -25,6 +25,8 @@ export class GetAllPresentationsController {
             presentations: presentationsList.map((presentation) => ({
                 id: presentation.id,
                 date: presentation.date,
+                classroomName: presentation.classroomName,
+                status: presentation.status,
                 group: {
                     codSubj: presentation.group.codSubj,
                     userNameList: presentation.group.userNameList,
@@ -39,7 +41,6 @@ export class GetAllPresentationsController {
                 examinationBoard: {
                     professorNameList: presentation.examinationBoard.professorNameList
                 },
-                classroomName: presentation.classroomName
             }))
         });
         res.status(200).json(response)

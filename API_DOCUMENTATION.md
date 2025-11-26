@@ -608,7 +608,7 @@ O token é obtido através do endpoint `/api/login`.
 {
   "date": "number (obrigatório, milissegundos)",
   "groupId": "string (36 caracteres, obrigatório)",
-  "examinationBoartId": "string (36 caracteres, obrigatório)",
+  "examinationBoardId": "string (36 caracteres, obrigatório)",
   "sala": "string (obrigatório, mínimo 1 caractere)"
 }
 ```
@@ -683,7 +683,7 @@ O token é obtido através do endpoint `/api/login`.
 - `id` (string, 36 caracteres) - OU
 - `date` (number, milissegundos) - OU
 - `groupId` (string, 36 caracteres) - OU
-- `examinationBoartId` (string, 36 caracteres)
+- `examinationBoardId` (string, 36 caracteres)
 
 **Nota:** Deve informar exatamente um parâmetro (id OU filtros)
 
@@ -726,7 +726,7 @@ O token é obtido através do endpoint `/api/login`.
   "id": "string (36 caracteres, obrigatório)",
   "date": "number (milissegundos, opcional)",
   "groupId": "string (36 caracteres, opcional)",
-  "examinationBoartId": "string (36 caracteres, opcional)",
+  "examinationBoardId": "string (36 caracteres, opcional)",
   "sala": "string (opcional)"
 }
 ```

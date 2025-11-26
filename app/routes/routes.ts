@@ -6,6 +6,8 @@ import DeleteUserPresenter from "../modules/user/delete_user/delete_user_present
 import GetAllUsersPresenter from "../modules/user/get_all_users/get_all_users_presenter";
 import GetUserPresenter from "../modules/user/get_user/get_user_presenter";
 import UpdateUserPresenter from "../modules/user/update_user/update_user_presenter";
+import UploadUserXlsxPresenter from "../modules/user/upload_user_xlsx/upload_user_xlsx_presenter";
+import UploadPresentationXlsxPresenter from "../modules/presentation/upload_presentation_xlsx/upload_presentation_xlsx_presenter";
 import CreatePartnerPresenter from "../modules/partner/create_partner/create_partner_presenter";
 import DeletePartnerPresenter from "../modules/partner/delete_partner/delete_partner_presenter";
 import GetAllPartnersPresenter from "../modules/partner/get_all_partners/get_all_partners_presenter";
@@ -54,6 +56,7 @@ export const routes = (app: Express) => {
   app.use("/api", GetAllUsersPresenter);
   app.use("/api", GetUserPresenter);
   app.use("/api", UpdateUserPresenter);
+  app.use("/api", UploadUserXlsxPresenter);
 
   // Partner
   app.use("/api", CreatePartnerPresenter);
@@ -82,6 +85,7 @@ export const routes = (app: Express) => {
   app.use("/api", GetAllPresentationsPresenter);
   app.use("/api", GetPresentationPresenter);
   app.use("/api", UpdatePresentationPresenter);
+  app.use("/api", UploadPresentationXlsxPresenter);
 
   // ExaminationBoard
   app.use("/api", CreateExaminationBoardPresenter);

@@ -18,7 +18,7 @@ export enum COURSE{
     SIN = "SISTEMAS DE INFORMAÇÃO"
 }
 
-export function toEnum(value: string): COURSE {
+export function toEnumCourse(value: string): COURSE {
     switch(value) {
         case "ADMINISTRAÇÃO":
             return COURSE.ADM;

@@ -81,6 +81,35 @@ export class ExaminationBoardRepositoryDynamoDB implements IExaminationBoardRepo
         return filteredBoards.length > 0 ? filteredBoards : null;
     }
 
+    //implementação do metodo que eu adicionei
+    async getExaminationBoardByProfessorsId(professorIdList: string[]): Promise<ExaminationBoard | null> {
+        // Buscar todas as bancas
+        const allBoards = await this.fetchExaminationBoard();
+        
+        // Filtrar bancas que tenham exatamente a mesma lista de professores
+        const foundBoard = allBoards.find(board => {
+            // Verificar se as listas têm o mesmo tamanho
+            if (board.professorIdList.length !== professorIdList.length) {
+                return false;
+            }
+            
+            // Ordenar ambas as listas para comparação
+            const sortedBoard = [...board.professorIdList].sort();
+            const sortedInput = [...professorIdList].sort();
+            
+            // Verificar se todos os elementos são iguais
+            return sortedBoard.every((id, index) => id === sortedInput[index]);
+        });
+
+        console.log(
+            `[DynamoDB] Busca por lista de ProfessorIds: ${professorIdList.join(", ")} - ${
+                foundBoard ? "Encontrado" : "Não encontrado"
+            }`
+        );
+
+        return foundBoard || null;
+    }
+
     async deleteExaminationBoard(examinationBoardId: string): Promise<ExaminationBoard | null> {
         const examinationBoard = await this.getExaminationBoardById(examinationBoardId);
 

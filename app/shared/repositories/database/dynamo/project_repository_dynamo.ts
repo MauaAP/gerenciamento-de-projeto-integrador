@@ -106,6 +106,29 @@ export class ProjectRepositoryDynamoDB implements IProjectRepository {
     return projects.length > 0 ? projects : null;
   }
   
+  //implementação do metodo que eu adicionei
+  async getProjectByTitle(title: string): Promise<Project | null> {
+    const items = await this.db.scanAll({
+      FilterExpression: "#title = :title AND begins_with(#pk, :projectPrefix) AND #sk = :metadata",
+      ExpressionAttributeNames: { 
+        "#title": "title",
+        "#pk": "PK",
+        "#sk": "SK"
+      },
+      ExpressionAttributeValues: { 
+        ":title": title,
+        ":projectPrefix": "PROJECT#",
+        ":metadata": "METADATA"
+      },
+    });
+    console.log(
+      `[DynamoDB] Busca por título: ${title} - ${
+        items.length > 0 ? "Encontrado" : "Não encontrado"
+      }`
+    );
+    return items.length > 0 ? Project.fromJson(items[0]) : null;
+  }
+  
   async deleteProjectById(projectId: string): Promise<Project | null> {
     const project= await this.getProjectById(projectId);
 
