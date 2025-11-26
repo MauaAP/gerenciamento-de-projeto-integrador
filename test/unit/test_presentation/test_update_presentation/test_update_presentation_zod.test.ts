@@ -8,12 +8,12 @@ describe("UpdatePresentationSchema -Zod validation", () => {
             id: "470f1e7b-f645-4da6-9b59-2e7a9684b0cf",
             date: 1672531199000,
             groupId: "123e4567-e89b-12d3-a456-426614174000",
-            examinationBoartId: "987e6543-e21b-12d3-a456-426614174000"
+            examinationBoardId: "987e6543-e21b-12d3-a456-426614174000"
         })).toEqual({
             id: "470f1e7b-f645-4da6-9b59-2e7a9684b0cf",
             date: 1672531199000,
             groupId: "123e4567-e89b-12d3-a456-426614174000",
-            examinationBoartId: "987e6543-e21b-12d3-a456-426614174000"
+            examinationBoardId: "987e6543-e21b-12d3-a456-426614174000"
         });
     })
 
@@ -37,13 +37,13 @@ describe("UpdatePresentationSchema -Zod validation", () => {
         });
     });
 
-    it("should pass the zod validation, updating only examinationBoartId", () => {
+    it("should pass the zod validation, updating only examinationBoardId", () => {
         expect(parseBody(UpdatePresentationRequest, {
             id: "e9c7d747-9e8e-4d34-935e-473c2c16be83",
-            examinationBoartId: "987e6543-e21b-12d3-a456-426614174000"
+            examinationBoardId: "987e6543-e21b-12d3-a456-426614174000"
         })).toEqual({
             id: "e9c7d747-9e8e-4d34-935e-473c2c16be83",
-            examinationBoartId: "987e6543-e21b-12d3-a456-426614174000"
+            examinationBoardId: "987e6543-e21b-12d3-a456-426614174000"
         });
     });
 
@@ -129,11 +129,11 @@ describe("UpdatePresentationSchema -Zod validation", () => {
         }
     });
 
-    it("should throw (O examinationBoartId deve ser dado em string) if examinationBoartId is not a string", () => {
+    it("should throw (O examinationBoardId deve ser dado em string) if examinationBoardId is not a string", () => {
         try {
             parseBody(UpdatePresentationRequest, {
                 id: "e9c7d747-9e8e-4d34-935e-473c2c16be83",
-                examinationBoartId: 123456789012345678901234567890123456
+                examinationBoardId: 123456789012345678901234567890123456
             } as any)
         }
         catch (error: any) {
@@ -143,11 +143,11 @@ describe("UpdatePresentationSchema -Zod validation", () => {
         }
     });
 
-    it("should throw (O examinationBoart id deve conter 36 caracteres) if examinationBoartId has less than 36 characters", () => {
+    it("should throw (O examinationBoard id deve conter 36 caracteres) if examinationBoardId has less than 36 characters", () => {
         try {
             parseBody(UpdatePresentationRequest, {
                 id: "e9c7d747-9e8e-4d34-935e-473c2c16be83",
-                examinationBoartId: "987e6543-e21b-12d3"
+                examinationBoardId: "987e6543-e21b-12d3"
             })
         }
         catch (error: any) {

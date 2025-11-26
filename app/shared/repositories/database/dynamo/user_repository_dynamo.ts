@@ -99,6 +99,29 @@ export class UserRepositoryDynamoDB implements IUserRepository {
     return items.length > 0 ? User.fromJson(items[0]) : null;
   }
 
+  //implementação do metodo que eu adicionei
+  async getUserByProfessorName(name: string): Promise<User | null> {
+    const items = await this.db.scanAll({
+      FilterExpression: "#name = :name AND (#sk = :profile) AND (#role = :professor)",
+      ExpressionAttributeNames: { 
+        "#name": "name",
+        "#sk": "SK",
+        "#role": "role"
+      },
+      ExpressionAttributeValues: { 
+        ":name": name,
+        ":profile": "PROFILE",
+        ":professor": "PROFESSOR"
+      },
+    });
+    console.log(
+      `[DynamoDB] Busca por nome de professor: ${name} - ${
+        items.length > 0 ? "Encontrado" : "Não encontrado"
+      }`
+    );
+    return items.length > 0 ? User.fromJson(items[0]) : null;
+  }
+
   async updateUser(
     userId: string,
     updateOptions: UserUpdateOptions

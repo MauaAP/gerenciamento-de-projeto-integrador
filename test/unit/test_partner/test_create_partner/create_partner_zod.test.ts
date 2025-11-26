@@ -20,7 +20,7 @@ describe("CreatePartnerUseCase - Zod validation", () => {
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("Sector é obrigatório")
+            expect(error.message).toBe("Sector é obrigatório. Valores aceitos: EDUCACIONAL, GOVERNAMENTAL, INDUSTRIAL, SAÚDE, ONG, AMBIENTAL, FINANCEIRO")
             expect(error.statusCode).toBe(400)
         }
     });

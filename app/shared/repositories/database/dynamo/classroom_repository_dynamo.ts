@@ -64,6 +64,29 @@ export class ClassroomRepositoryDynamoDB implements IClassroomRepository {
     return null;
   }
 
+  //implementação do metodo que eu adicionei
+  async getClassroomByName(name: string): Promise<Classroom | null> {
+    const items = await this.db.scanAll({
+      FilterExpression: "#name = :name AND begins_with(#pk, :classroomPrefix) AND #sk = :metadata",
+      ExpressionAttributeNames: { 
+        "#name": "name",
+        "#pk": "PK",
+        "#sk": "SK"
+      },
+      ExpressionAttributeValues: { 
+        ":name": name,
+        ":classroomPrefix": "CLASSROOM#",
+        ":metadata": "METADATA"
+      },
+    });
+    console.log(
+      `[DynamoDB] Busca por nome: ${name} - ${
+        items.length > 0 ? "Encontrado" : "Não encontrado"
+      }`
+    );
+    return items.length > 0 ? Classroom.fromJson(items[0]) : null;
+  }
+
   async deleteClassroom(classroomId: string): Promise<Classroom | null> {
     const classroom = await this.getClassroomById(classroomId);
 

@@ -36,6 +36,8 @@ export class CreatePresentationController {
             presentation: {
                 id: newPresentation.id,
                 date: newPresentation.date,
+                classroomName: newPresentation.classroomName,
+                status: newPresentation.status,
                 group: {
                     codSubj: newPresentation.group.codSubj,
                     userNameList: newPresentation.group.userNameList,
@@ -50,7 +52,6 @@ export class CreatePresentationController {
                 examinationBoard: {
                     professorNameList: newPresentation.examinationBoard.professorNameList
                 },
-                classroomName: newPresentation.classroomName
             }
         });
         res.status(201).json(response)

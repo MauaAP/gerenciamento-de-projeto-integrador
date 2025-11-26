@@ -1,8 +1,8 @@
 import { Project } from "../../domain/entities/project";
 import { IProjectRepository, ProjectUpdateOptions } from "../../../shared/domain/interfaces/IProjectRepository";
 
-export class ProjectRepoMock implements IProjectRepository{
-    private projects : Project[] = [
+export class ProjectRepoMock implements IProjectRepository {
+    private projects: Project[] = [
         new Project(
             "470f1e7b-f645-4da6-9b59-2e7a9684b0cf",
             "Desenvolvimento do site do Rokuzen",
@@ -57,22 +57,26 @@ export class ProjectRepoMock implements IProjectRepository{
     }
 
     async getProjectByPartnerId(partnerId: string): Promise<Project[] | null> {
-        const result= this.projects.filter((project) => project.partnerId === partnerId)
+        const result = this.projects.filter((project) => project.partnerId === partnerId)
         return result.length > 0 ? result : null
     }
 
+    async getProjectByTitle(title: string): Promise<Project | null> {
+        throw new Error("getProjectByTitle not implemented in mock");
+    }
+
     async deleteProjectById(projectId: string): Promise<Project | null> {
-        const index= this.projects.findIndex((project) => project.projectId === projectId);
-        if (index === -1){
+        const index = this.projects.findIndex((project) => project.projectId === projectId);
+        if (index === -1) {
             return null
         }
         return this.projects.splice(index, 1)[0]
     }
 
     async updateProject(projectId: string, updateOptions: ProjectUpdateOptions): Promise<Project | null> {
-        const project= this.projects.find((project) => project.projectId === projectId) || null;
+        const project = this.projects.find((project) => project.projectId === projectId) || null;
 
-        if(project === null){
+        if (project === null) {
             return null;
         }
 

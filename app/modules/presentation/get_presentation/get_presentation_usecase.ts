@@ -25,6 +25,8 @@ interface GetPresentationInputInterface {
 export interface PresentationOficialModel {
     id: string;
     date: number;
+    classroomName?: string;
+    status: string;
     group: {
         codSubj: string;
         userNameList: string[];
@@ -39,7 +41,6 @@ export interface PresentationOficialModel {
     examinationBoard: {
         professorNameList: string[];
     };
-    classroomName?: string;
 }
 
 export class GetPresentationUseCase {
@@ -51,9 +52,9 @@ export class GetPresentationUseCase {
         private readonly projectRepository: IProjectRepository,
         private readonly partnerRepository: IPartnerRepository,
         private readonly classroomRepository: IClassroomRepository
-    ) {}
+    ) { }
 
-    async execute({id, presentationFilter, userId, userRole}: GetPresentationInputInterface): Promise<PresentationOficialModel[]>{
+    async execute({ id, presentationFilter, userId, userRole }: GetPresentationInputInterface): Promise<PresentationOficialModel[]> {
         let selectedPresentation: Presentation[] | Presentation | null = null;
 
         // Se status foi passado e userId/userRole estão disponíveis, usar métodos específicos por role
@@ -81,11 +82,14 @@ export class GetPresentationUseCase {
 
         const presentations = Array.isArray(selectedPresentation) ? selectedPresentation : [selectedPresentation];
 
+        // Ordenar apresentações por data (ascendente)
+        presentations.sort((a, b) => a.date - b.date);
+
         const presentationOficialModel = await Promise.all(
             presentations.map(async (presentation) => {
-                
+
                 // aqui pego o grupo
-                const group= await this.groupRepository.getGroupById(presentation.groupId);
+                const group = await this.groupRepository.getGroupById(presentation.groupId);
 
                 if (!group) {
                     throw new NotFoundException(`Grupo com ID ${presentation.groupId} não encontrado`);
@@ -102,13 +106,13 @@ export class GetPresentationUseCase {
                 }
 
                 //taking group projectTitle
-                const project= await this.projectRepository.getProjectById(group.projectId);
+                const project = await this.projectRepository.getProjectById(group.projectId);
 
                 if (!project) {
                     throw new NotFoundException(`Projeto com ID ${group.projectId} não encontrado`);
                 }
 
-                const partner= await this.partnerRepository.getPartnerById(project.partnerId)
+                const partner = await this.partnerRepository.getPartnerById(project.partnerId)
 
                 if (!partner) {
                     throw new NotFoundException(`Parceiro com ID ${project.partnerId} não encontrado`);
@@ -139,6 +143,8 @@ export class GetPresentationUseCase {
                 return {
                     id: presentation.presentationId,
                     date: presentation.date,
+                    classroomName: presentation.classroomId ? (await this.classroomRepository.getClassroomById(presentation.classroomId))?.name : undefined,
+                    status: presentation.status,
                     group: {
                         codSubj: group.codSubj,
                         userNameList: userNameList,
@@ -152,8 +158,7 @@ export class GetPresentationUseCase {
                     },
                     examinationBoard: {
                         professorNameList: professorNameList
-                    },
-                    classroomName: presentation.classroomId ? (await this.classroomRepository.getClassroomById(presentation.classroomId))?.name : undefined
+                    }
                 }
             })
         );

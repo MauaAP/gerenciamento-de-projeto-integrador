@@ -81,7 +81,7 @@ describe("GetGroupSchema -Zod validation", () => {
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("course deve ser dado no enum COURSE")
+            expect(error.message).toBe("Você deve informar id ou filtros (exatemente um))")
             expect(error.statusCode).toBe(400)
         }
     });

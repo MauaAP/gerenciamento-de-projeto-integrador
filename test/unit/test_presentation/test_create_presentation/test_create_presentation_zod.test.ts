@@ -8,11 +8,14 @@ describe("CreatePresentationSchema - Zod validation", () => {
         expect(parseBody(CreatePresentationRequest, {
             date: 1750854600000,
             groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-            examinationBoartId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
+            examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583c",
+            classroomId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
         })).toEqual({
             date: 1750854600000,
             groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-            examinationBoartId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
+            examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583c",
+            classroomId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            status: "SCHEDULED"
         });
     });
 
@@ -20,7 +23,7 @@ describe("CreatePresentationSchema - Zod validation", () => {
         try {
             parseBody(CreatePresentationRequest, {
                 groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-                examinationBoartId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
+                examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
             });
         }
         catch (error: any) {
@@ -35,7 +38,7 @@ describe("CreatePresentationSchema - Zod validation", () => {
             parseBody(CreatePresentationRequest, {
                 date: "1750854600000",
                 groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-                examinationBoartId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
+                examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
             });
         }
         catch (error: any) {
@@ -50,7 +53,7 @@ describe("CreatePresentationSchema - Zod validation", () => {
             parseBody(CreatePresentationRequest, {
                 date: 1750854600000,
                 groupId: 123,
-                examinationBoartId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
+                examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
             });
         }
         catch (error: any) {
@@ -65,7 +68,7 @@ describe("CreatePresentationSchema - Zod validation", () => {
             parseBody(CreatePresentationRequest, {
                 date: 1750854600000,
                 groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb",
-                examinationBoartId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
+                examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583c"
             });
         }
         catch (error: any) {
@@ -75,32 +78,32 @@ describe("CreatePresentationSchema - Zod validation", () => {
         }
     });
 
-    it("should throw BadRequestException if examinationBoartId is not string", () => {
+    it("should throw BadRequestException if examinationBoardId is not string", () => {
         try {
             parseBody(CreatePresentationRequest, {
                 date: 1750854600000,
                 groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-                examinationBoartId: 456
+                examinationBoardId: 456
             });
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("O examinationBoartId deve ser dado em string")
+            expect(error.message).toBe("O examinationBoardId deve ser dado em string")
             expect(error.statusCode).toBe(400)
         }
     });
 
-    it("should throw BadRequestException if examinationBoartId is not 36 characters", () => {
+    it("should throw BadRequestException if examinationBoardId is not 36 characters", () => {
         try {
             parseBody(CreatePresentationRequest, {
                 date: 1750854600000,
                 groupId: "14e97d3c-d309-43d4-bfa0-7724e1e54fb2",
-                examinationBoartId: "3896e005-bc5c-4839-a43b-463ae9c3583"
+                examinationBoardId: "3896e005-bc5c-4839-a43b-463ae9c3583"
             });
         }
         catch (error: any) {
             expect(error.constructor.name).toBe("BadRequestException");
-            expect(error.message).toBe("O examinationBoartId deve conter 36 caracteres")
+            expect(error.message).toBe("O examinationBoardId deve conter 36 caracteres")
             expect(error.statusCode).toBe(400)
         }
     });

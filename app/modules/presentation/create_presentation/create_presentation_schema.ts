@@ -25,6 +25,8 @@ export const CreatePresentationRequest= z.object({
 export const PresentationSchema= z.object({
     id: z.string(),
     date: z.number(),
+    classroomName: z.string(),
+    status: z.string(),
     group: z.object({
         codSubj: z.string(),
         userNameList: z.array(z.string()),
@@ -39,7 +41,6 @@ export const PresentationSchema= z.object({
     examinationBoard: z.object({
         professorNameList: z.array(z.string())
     }),
-    classroomName: z.string()
 });
 
 export const CreatePresentationResponse= z.object({
