@@ -10,7 +10,7 @@ const repository = new UserRepository();
 const createUserUsecase = new CreateUserUseCase(repository.userRepo);
 const createUserController = new CreateUserController(createUserUsecase);
 
-router.post("/user", async (req: Request, res: Response) => {
+router.post("/user", authenticateToken, async (req: Request, res: Response) => {
   await createUserController.handler(req, res);
 });
 
