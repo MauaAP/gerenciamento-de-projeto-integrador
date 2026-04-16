@@ -30,7 +30,7 @@ export class GetAllUsersController {
             message: "Lista de Usuários retornado com sucesso",
             userList: userList.map((user: User) => {
                 // Validar cada usuário antes de mapear
-                if (!user || !user.userId || !user.name || !user.email) {
+                if (!user || !user.userId || !user.name || !user.email || !user.role) {
                     console.warn("[GetAllUsersController] Usuário inválido encontrado:", user);
                     return null;
                 }
@@ -38,6 +38,7 @@ export class GetAllUsersController {
                     id: user.userId,
                     name: user.name,
                     email: user.email,
+                    role: user.role,
                 };
             }).filter(user => user !== null), // Remover usuários inválidos
         });

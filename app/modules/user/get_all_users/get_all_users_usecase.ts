@@ -19,6 +19,7 @@ export class GetAllUsersUseCase {
                 user && 
                 user.userId && 
                 user.email && 
+                user.role &&
                 user.name
             );
             
